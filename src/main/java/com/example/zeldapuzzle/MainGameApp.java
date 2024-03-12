@@ -3,6 +3,7 @@ package com.example.zeldapuzzle;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
@@ -11,6 +12,8 @@ import com.almasb.fxgl.entity.level.tiled.TMXLevelLoaderKt;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.PhysicsWorld;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
 
@@ -110,17 +113,6 @@ public class MainGameApp extends GameApplication {
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
 
-
-
-
-
-
-        //Position
-
-
-
-
-
     }
 
     @Override
@@ -130,7 +122,8 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
                 super.onCollisionBegin(player, door);
-                door.removeFromWorld();
+                shoot((int) door.getX(),(int)door.getY());
+
 //                background.removeFromWorld();
             }
         });
@@ -161,6 +154,11 @@ public class MainGameApp extends GameApplication {
 
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,SMALLTREE
+    }
+
+    private void shoot(int x, int y) {
+        Vec2 arrowVecteur = new Vec2(1200,600);
+        getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
     }
 
     public static void main(String[] args) {
