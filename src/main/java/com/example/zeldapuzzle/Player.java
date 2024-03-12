@@ -1,19 +1,30 @@
 package com.example.zeldapuzzle;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.component.Component;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
-public class Player extends Component {
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class Player extends Component  {
 
 
-    private double speed = 2;
+    private double speed = 4;
 
 
     @Override
     public void onAdded() {
 
-
     }
+
+
 
     @Override
     public void onUpdate(double tpf) {
