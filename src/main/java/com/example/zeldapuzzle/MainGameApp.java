@@ -96,7 +96,7 @@ public class MainGameApp extends GameApplication {
 
 //    @Override
 //    protected void initAssets() throws Exception {
-//
+//a
 //    }
 
     @Override
