@@ -23,9 +23,7 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 public class MainGameApp extends GameApplication {
 
     private Entity player;
-
     private Entity platform;
-
     private Entity dungeonEntry;
     private Entity background;
     private Viewport viewport;
@@ -104,15 +102,14 @@ public class MainGameApp extends GameApplication {
 
         //EntityFactory
         getGameWorld().addEntityFactory(new GameEntityFactory());
-//        background = spawn("background");
-//        dungeonEntry = spawn("dungeonEntry");
-//        dungeonEntry.setX(850);
-//        dungeonEntry.setY(-130);
-//        player = spawn("player");
-//        viewport = getGameScene().getViewport();
-//        viewport.bindToEntity(player,player.getX(), player.getY());
+        background = spawn("background");
+        dungeonEntry = spawn("dungeonEntry");
+        dungeonEntry.setX(850);
+        dungeonEntry.setY(-130);
+        player = spawn("player");
+        viewport = getGameScene().getViewport();
+        viewport.bindToEntity(player,player.getX(), player.getY());
 
-        FXGL.setLevelFromMap("tmx/level1.tmx");
 
 
 
