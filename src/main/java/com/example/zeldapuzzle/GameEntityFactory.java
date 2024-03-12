@@ -87,7 +87,19 @@ public class GameEntityFactory implements EntityFactory {
                 .with(new CollidableComponent(true))
                 .buildAndAttach();
 
-
+    }
+    @Spawns("dungeon")
+    public Entity dungeon(SpawnData data) {
+        Image dungeon;
+        try {
+            dungeon = new Image(new FileInputStream("src/main/resources/assets/textures/dongeon.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(dungeon);
+        return entityBuilder(data)
+                .view(imageView)
+                .buildAndAttach();
     }
     @Spawns("smallTree")
     public Entity smallTree(SpawnData data) {

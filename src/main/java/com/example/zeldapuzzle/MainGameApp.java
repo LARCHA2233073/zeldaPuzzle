@@ -12,6 +12,7 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import javafx.scene.input.KeyCode;
+import org.jetbrains.annotations.Nullable;
 
 
 import java.net.MalformedURLException;
@@ -25,8 +26,11 @@ public class MainGameApp extends GameApplication {
     private Entity player;
     private Entity platform;
     private Entity dungeonEntry;
+    private Entity dungeon;
+
     private Entity background;
     private Viewport viewport;
+
     @Override
     protected void initSettings(GameSettings settings) {
     settings.setWidth(800);
@@ -40,6 +44,7 @@ public class MainGameApp extends GameApplication {
 
     @Override
     protected void initInput() {
+
         Input input = getInput();
 
         input.addAction(new UserAction("getPosition") {
@@ -90,7 +95,9 @@ public class MainGameApp extends GameApplication {
                 player.getComponent(Player.class).moveDown();
             }
         }, KeyCode.S);
+
     }
+
 
 //    @Override
 //    protected void initAssets() throws Exception {
@@ -110,17 +117,7 @@ public class MainGameApp extends GameApplication {
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
 
-
-
-
-
-
         //Position
-
-
-
-
-
     }
 
     @Override
@@ -131,7 +128,16 @@ public class MainGameApp extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity door) {
                 super.onCollisionBegin(player, door);
                 door.removeFromWorld();
-//                background.removeFromWorld();
+
+                //enlevé la scene
+                getGameWorld().removeEntity(background);
+                getGameWorld().removeEntity(dungeonEntry);
+
+                //rajouter la scene du donjon
+
+                dungeon = spawn("dungeon");
+
+
             }
         });
     }
