@@ -7,6 +7,7 @@ module com.example.zeldapuzzle {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
 
-    opens com.example.zeldapuzzle to javafx.fxml;
     exports com.example.zeldapuzzle;
+    opens assets.levels.tmx;
+
 }
