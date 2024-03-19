@@ -2,29 +2,50 @@ package com.example.zeldapuzzle;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.core.math.Vec2;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
 import com.almasb.fxgl.dsl.components.OffscreenInvisibleComponent;
 import com.almasb.fxgl.dsl.components.OffscreenPauseComponent;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.level.Level;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoaderKt;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.PhysicsWorld;
+import javafx.geometry.Point2D;
 import com.almasb.fxgl.texture.Texture;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import org.jetbrains.annotations.Nullable;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
+
 public class MainGameApp extends GameApplication {
 
     private Entity player;
+    private Entity platform;
+    private Entity dungeonEntry;
+    private Entity dungeon;
+
+    private Entity background;
+    private Viewport viewport;
+
     @Override
     protected void initSettings(GameSettings settings) {
     settings.setWidth(800);
@@ -40,6 +61,27 @@ public class MainGameApp extends GameApplication {
     protected void initInput() {
         Input input = getInput();
 
+        input.addAction(new UserAction("getPosition") {
+            @Override
+            protected void onAction() {
+                System.out.println("X : " + player.getX() + " Y : " + player.getY());;
+            }
+        }, KeyCode.P);
+        input.addAction(new UserAction("zoom+") {
+            @Override
+            protected void onAction() {viewport.setZoom(viewport.getZoom()+0.05);
+            }
+        }, KeyCode.UP);
+        input.addAction(new UserAction("zoom-") {
+            @Override
+            protected void onAction() {viewport.setZoom(viewport.getZoom()-0.05);
+            }
+        }, KeyCode.DOWN);
+        input.addAction(new UserAction("resetZoom") {
+            @Override
+            protected void onAction() {viewport.setZoom(1);
+            }
+        }, KeyCode.DIGIT0);
         input.addAction(new UserAction("Move right") {
             @Override
             protected void onAction() {
@@ -67,7 +109,9 @@ public class MainGameApp extends GameApplication {
                 player.getComponent(Player.class).moveDown();
             }
         }, KeyCode.S);
+
     }
+
 
 //    @Override
 //    protected void initAssets() throws Exception {
@@ -76,32 +120,45 @@ public class MainGameApp extends GameApplication {
 
     @Override
     protected void initGame(){
-        Image image = new Image("https://w7.pngwing.com/pngs/810/275/png-transparent-the-legend-of-zelda-a-link-to-the-past-princess-zelda-zelda-ii-the-adventure-of-link-pixel-toys-rectangle-symmetry-video-game.png");
-        Image image3 = null;
-        try {
-            image3 = new Image(new FileInputStream("src/main/resources/assets/textures/zelda1.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        Image image2 = new Image("https://i.seadn.io/gae/kpoyimC6bMVwC27nbg13G7vHxIj4adgVK9gCSnZQOCIgeuOsuxSXboKOWpqnI4KDFOIiYNx6Woci6Oh9VK2YzdIRdi347nc5KI9vbg?auto=format&dpr=1&w=1000");
-        ImageView imageView = new ImageView(image3);
-    player = FXGL.entityBuilder()
-            .at(100,100)
-            .view(imageView)
-            .scale(0.2,0.2)
-            .with(new Player())
-            .buildAndAttach();
 
+        //EntityFactory
+        getGameWorld().addEntityFactory(new GameEntityFactory());
+        background = spawn("background");
+        dungeonEntry = spawn("dungeonEntry");
+        dungeonEntry.setX(850);
+        dungeonEntry.setY(-130);
+        player = spawn("player");
+        viewport = getGameScene().getViewport();
+        viewport.bindToEntity(player,player.getX(), player.getY());
+
+        //Position
     }
 
     @Override
     protected void initPhysics(){
 
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.DOOR) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity door) {
+                super.onCollisionBegin(player, door);
+                shoot((int) door.getX(),(int)door.getY());
+
+//                background.removeFromWorld();
+            }
+        });
     }
 
     @Override
     protected void initUI(){
-
+//        Rectangle grass = new Rectangle(500,500,Color.GREEN);
+//        Rectangle grassRed = new Rectangle(300,300,Color.RED);
+//        grass.viewOrderProperty().set(1.0);
+//        grassRed.viewOrderProperty().set(0.5);
+//        FXGL.getGameScene().addUINode(grass);
+//        FXGL.getGameScene().addUINode(grassRed);
+//        FXGL.getGameScene().setUIMouseTransparent(true);
+//        FXGL.getGameScene().setBackgroundColor(Color.GREEN);
+//        FXGL.getUIFactoryService().newText("OKKK");
     }
 
 
@@ -109,6 +166,19 @@ public class MainGameApp extends GameApplication {
 //    protected void onUpdate(){
 //
 //    }
+
+    private void setLevel(Level level){
+        getGameWorld().getEntities().forEach(e -> e.removeFromWorld());
+    }
+
+    public enum EntityType {
+        PLAYER,DOOR,PLATFORM,SMALLTREE
+    }
+
+    private void shoot(int x, int y) {
+        Vec2 arrowVecteur = new Vec2(1200,600);
+        getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
+    }
 
     public static void main(String[] args) {
         launch(args);
