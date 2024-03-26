@@ -32,7 +32,18 @@ public class spriteAnimations extends GameApplication {
                 player.getComponent(AnimationComponent.class).moveLeft();
             }
         }, KeyCode.A);
-
+        FXGL.getInput().addAction(new UserAction("Up") {
+            @Override
+            protected void onAction() {
+                player.getComponent(AnimationComponent.class).moveUp();
+            }
+        }, KeyCode.W);
+        FXGL.getInput().addAction(new UserAction("Down") {
+            @Override
+            protected void onAction() {
+                player.getComponent(AnimationComponent.class).moveDown();
+            }
+        }, KeyCode.S);
     }
 
     @Override

@@ -17,16 +17,19 @@ import java.io.FileNotFoundException;
 
 public class AnimationComponent extends Component {
 
+    boolean trueIfVertical;
     private int speedx = 0;
     private int speedy = 0;
 
     private AnimatedTexture texture;
-    private AnimationChannel animWalkUp, animIdle, animWalk;
+    private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight;
 
     public AnimationComponent() throws FileNotFoundException {
         animIdle = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk.png")), 9, 64, 64, Duration.seconds(1), 0, 0);
-        animWalk = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animWalkLeft = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk2.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         texture = new AnimatedTexture(animIdle);
     }
 
@@ -38,52 +41,76 @@ public class AnimationComponent extends Component {
 
     @Override
     public void onUpdate(double tpf) {
-        entity.translateX(speedx * tpf);
 
-        FXGL.onKey(KeyCode.W, () -> {
+        if (trueIfVertical) {
             entity.translateY(speedy * tpf);
-            if (speedy != 0) {
+
+            //up
+            if (speedy < 0) {
                 if (texture.getAnimationChannel() == animIdle) {
                     texture.loopAnimationChannel(animWalkUp);
                 }
 
-                speedy = (int) (speedy * 0.9);
-
-                if (FXGLMath.abs(speedy) < 1) {
-                    speedy = 0;
-                    texture.loopAnimationChannel(animIdle);
+            }
+            //down
+            else {
+                if (texture.getAnimationChannel() == animIdle) {
+                    texture.loopAnimationChannel(animWalkDown);
                 }
+
             }
-            moveUp();
-        });
-
-        if (speedx != 0) {
-
-            if (texture.getAnimationChannel() == animIdle) {
-                texture.loopAnimationChannel(animWalk);
+            speedy = (int) (speedy * 0.9);
+            if (FXGLMath.abs(speedy) < 1) {
+                speedy = 0;
+                texture.loopAnimationChannel(animIdle);
             }
 
+        }
+        else {
+
+            entity.translateX(speedx * tpf);
+
+            //left
+            if (speedx < 0) {
+                if (texture.getAnimationChannel() == animIdle) {
+                    texture.loopAnimationChannel(animWalkLeft);
+                }
+
+            }
+            //right
+            else {
+                if (texture.getAnimationChannel() == animIdle) {
+                    texture.loopAnimationChannel(animWalkRight);
+                }
+
+            }
             speedx = (int) (speedx * 0.9);
-
             if (FXGLMath.abs(speedx) < 1) {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);
             }
+
         }
     }
 
+
     public void moveRight() {
         speedx = 150;
+        trueIfVertical = false;
 
-        getEntity().setScaleX(1);
     }
 
     public void moveLeft() {
         speedx = -150;
+        trueIfVertical = false;
 
-        getEntity().setScaleX(-1);
     }
     public void moveUp() {
+        speedy = -150;
+        trueIfVertical = true;
+    }
+    public void moveDown() {
         speedy = 150;
+        trueIfVertical = true;
     }
 }
