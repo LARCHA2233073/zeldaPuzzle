@@ -5,17 +5,21 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
+import com.almasb.fxgl.entity.components.BoundingBoxComponent;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.physics.PhysicsUnitConverter;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Rectangle;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,7 +41,10 @@ public class GameEntityFactory implements EntityFactory {
 
 
          */
+        Image imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/character.png"));
         //Physics
+
+        HitBox box = new HitBox(BoundingShape.box(45,55));
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 //        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
@@ -45,6 +52,7 @@ public class GameEntityFactory implements EntityFactory {
                 .type(MainGameApp.EntityType.PLAYER)
                 .at(100, 100)
                 .scale(2, 2)
+                .bbox(box)
                 .with(new AnimationComponent())
                 .with(new CollidableComponent(true))
                 .with(physics)

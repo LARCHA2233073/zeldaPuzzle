@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 
 public class Player extends Component {
 
-
     private double speed = 4;
 
     private PhysicsComponent physics;
@@ -32,8 +31,6 @@ public class Player extends Component {
     public void onAdded() {
 
     }
-
-
 
     @Override
     public void onUpdate(double tpf) {
@@ -51,7 +48,6 @@ public class Player extends Component {
 
     public void moveleft(){
         entity.translateX(speed * -1);
-
         physics = entity.getComponent(PhysicsComponent.class);
         Vec2 vec2 =new Vec2(-4,0);
 //        physics.setVelocityX(-100);
