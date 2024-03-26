@@ -22,6 +22,8 @@ import com.almasb.fxgl.texture.Texture;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import org.jetbrains.annotations.Nullable;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -142,8 +144,6 @@ public class MainGameApp extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity door) {
                 super.onCollisionBegin(player, door);
                 shoot((int) door.getX(),(int)door.getY());
-
-//                background.removeFromWorld();
             }
         });
     }
@@ -178,6 +178,7 @@ public class MainGameApp extends GameApplication {
     private void shoot(int x, int y) {
         Vec2 arrowVecteur = new Vec2(1200,600);
         getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
+
     }
 
     public static void main(String[] args) {
