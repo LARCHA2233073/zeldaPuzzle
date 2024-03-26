@@ -10,6 +10,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +25,8 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 public class GameEntityFactory implements EntityFactory {
 
     @Spawns("player")
-    public Entity spawnPlayer(SpawnData data){
+    public Entity spawnPlayer(SpawnData data) throws FileNotFoundException {
+        /*
         Image imagePlayer;
         try {
             imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/zelda3.png"));
@@ -33,10 +35,22 @@ public class GameEntityFactory implements EntityFactory {
         }
         ImageView imageView = new ImageView(imagePlayer);
 
+
+         */
         //Physics
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 //        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
+        return FXGL.entityBuilder()
+                .type(MainGameApp.EntityType.PLAYER)
+                .at(100, 100)
+                .scale(2, 2)
+                .with(new AnimationComponent())
+                .with(new CollidableComponent(true))
+                .with(physics)
+                .buildAndAttach();
+
+        /*
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.PLAYER)
                 .at(100,100)
@@ -46,6 +60,8 @@ public class GameEntityFactory implements EntityFactory {
 //                .with(new CollidableComponent(true))
                 .with(physics)
                 .buildAndAttach();
+
+         */
     }
 
     @Spawns("Tree")
