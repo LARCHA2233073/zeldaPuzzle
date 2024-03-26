@@ -10,6 +10,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -35,15 +36,29 @@ public class GameEntityFactory implements EntityFactory {
         //Physics
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-        HitBox hitBox = new HitBox(BoundingShape.box(5,5));
+//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.PLAYER)
                 .at(100,100)
                 .viewWithBBox(imageView)
                 .scale(0.2,0.2)
                 .with(new Player())
-                .with(new CollidableComponent(true))
+//                .with(new CollidableComponent(true))
+                .with(physics)
                 .buildAndAttach();
+    }
+
+    @Spawns("Tree")
+    public Entity Tree(SpawnData data) {
+
+        return entityBuilder(data)
+                .type(MainGameApp.EntityType.SMALLTREE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+
     }
 
     @Spawns("background")
@@ -64,10 +79,16 @@ public class GameEntityFactory implements EntityFactory {
 
     @Spawns("platform")
     public Entity newPlatform(SpawnData data) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setHeight(30);
+        rectangle.setWidth(1000);
+
         return FXGL.entityBuilder(data)
+                .at(200,480)
                 .type(MainGameApp.EntityType.PLATFORM)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .viewWithBBox(rectangle)
                 .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
                 .build();
     }
 
@@ -81,10 +102,13 @@ public class GameEntityFactory implements EntityFactory {
         }
         ImageView imageView = new ImageView(dungeonImage);
         Rectangle rectangle = new Rectangle(150,150,Color.BLUE);
+
         return entityBuilder(data)
+                .at(850,-130)
                 .type(MainGameApp.EntityType.DOOR)
                 .viewWithBBox(rectangle)
                 .with(new CollidableComponent(true))
+                .with(new PhysicsComponent())
                 .buildAndAttach();
 
     }
