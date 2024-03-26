@@ -99,7 +99,6 @@ public class AnimationComponent extends Component {
         trueIfVertical = false;
 
     }
-
     public void moveLeft() {
         speedx = -150;
         trueIfVertical = false;
