@@ -1,12 +1,12 @@
-package com.example.zeldapuzzle;
+package com.example.zeldapuzzle.animation;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.texture.AnimatedTexture;
-import com.almasb.fxgl.texture.AnimationChannel;
+import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.scene.input.KeyCode;
 
 import java.io.FileNotFoundException;
@@ -32,6 +32,7 @@ public class spriteAnimations extends GameApplication {
                 player.getComponent(AnimationComponent.class).moveLeft();
             }
         }, KeyCode.A);
+
     }
 
     @Override

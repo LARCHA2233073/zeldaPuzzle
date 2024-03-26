@@ -101,6 +101,7 @@ public class GameEntityFactory implements EntityFactory {
                 .view(imageView)
                 .buildAndAttach();
     }
+
     @Spawns("smallTree")
     public Entity smallTree(SpawnData data) {
 

@@ -129,9 +129,11 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
                 super.onCollisionBegin(player, door);
-                shoot((int) door.getX(),(int)door.getY());
+              //  shoot((int) door.getX(),(int)door.getY());
+                background.removeFromWorld();
+                spawn("dungeon");
 
-//                background.removeFromWorld();
+
             }
         });
     }
