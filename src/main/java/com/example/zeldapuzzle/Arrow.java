@@ -40,6 +40,7 @@ public class Arrow extends Entity{
         this.setX(x);
         this.setY(y);
 
+
         arrow.setOnMousePressed(event -> {
             System.out.println("Bravo");
             listeDonne.add(event.getSceneX());

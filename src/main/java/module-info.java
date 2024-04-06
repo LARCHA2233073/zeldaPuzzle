@@ -7,8 +7,11 @@
     requires org.kordamp.bootstrapfx.core;
      requires com.almasb.fxgl.all;
      requires annotations;
+     requires java.desktop;
+
+     opens assets.levels;
 
      exports com.example.zeldapuzzle;
-     exports com.example.zeldapuzzle.Inventaire;
+     exports com.example.zeldapuzzle.animation;
 
  }

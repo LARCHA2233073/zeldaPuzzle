@@ -1,0 +1,51 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Test.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "#tilset-test": {
+            "scaleInDock": 1
+        },
+        ":/automap-tiles.tsx": {
+            "scaleInDock": 1
+        },
+        "Test.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 613.3333333333333,
+                "y": 1665.3333333333333
+            }
+        },
+        "Test.tmx#tiles-asset": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels.tmx",
+    "last.imagePath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels.tmx",
+    "map.height": 30,
+    "map.lastUsedExportFilter": "Fichiers de carte JSON (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "openFiles": [
+        "Test.tmx"
+    ],
+    "project": "zeldaTest.tiled-project",
+    "recentFiles": [
+        "Test.tmx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}
