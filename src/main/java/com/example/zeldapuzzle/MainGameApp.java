@@ -191,7 +191,6 @@ public class MainGameApp extends GameApplication {
                 getPhysicsWorld().setGravity(0,10000);
                 setPlayer(player);
 
-
             }
         });
         FXGL.getPhysicsWorld().setGravity(0,0);
