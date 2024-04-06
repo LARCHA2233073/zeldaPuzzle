@@ -41,7 +41,6 @@ public class Player extends Component {
     }
 
     public void moveRight(){
-        entity.translateX(speed);
         physics = entity.getComponent(PhysicsComponent.class);
         Vec2 vec2 =new Vec2(4,0);
 //        physics.setVelocityX(100);
@@ -50,7 +49,6 @@ public class Player extends Component {
     }
 
     public void moveleft(){
-        entity.translateX(speed * -1);
         physics = entity.getComponent(PhysicsComponent.class);
         Vec2 vec2 =new Vec2(-4,0);
 //        physics.setVelocityX(-100);
@@ -59,7 +57,6 @@ public class Player extends Component {
     }
 
     public void moveUp(){
-        entity.translateY(speed * -1);
         physics = entity.getComponent(PhysicsComponent.class);
         Vec2 vec2 =new Vec2(0,4);
 //        physics.setVelocityX(-100);
@@ -68,7 +65,6 @@ public class Player extends Component {
     }
 
     public void moveDown(){
-        entity.translateY(speed);
         physics = entity.getComponent(PhysicsComponent.class);
         Vec2 vec2 =new Vec2(0,-4);
 //        physics.setVelocityX(-100);
