@@ -1,8 +1,11 @@
 package com.example.zeldapuzzle.animation;
 
 import com.almasb.fxgl.core.math.FXGLMath;
+import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.event.EventHandler;
@@ -17,6 +20,7 @@ import java.io.FileNotFoundException;
 
 public class AnimationComponent extends Component {
 
+    private PhysicsComponent physics;
     boolean trueIfVertical;
     private int speedx = 0;
     private int speedy = 0;
@@ -43,7 +47,7 @@ public class AnimationComponent extends Component {
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-            entity.translateY(speedy * tpf);
+          //  entity.translateY(speedy * tpf);
 
             //up
             if (speedy < 0) {
@@ -68,7 +72,7 @@ public class AnimationComponent extends Component {
         }
         else {
 
-            entity.translateX(speedx * tpf);
+           // entity.translateX(speedx * tpf);
 
             //left
             if (speedx < 0) {
@@ -98,18 +102,35 @@ public class AnimationComponent extends Component {
         speedx = 150;
         trueIfVertical = false;
 
+        physics = getEntity().getComponent(PhysicsComponent.class);
+        Vec2 vec2 = new Vec2(4, 0);
+        physics.setBodyLinearVelocity(vec2);
     }
+
+
+
     public void moveLeft() {
         speedx = -150;
         trueIfVertical = false;
 
+        physics = getEntity().getComponent(PhysicsComponent.class);
+        Vec2 vec2 = new Vec2(-4, 0);
+        physics.setBodyLinearVelocity(vec2);
     }
     public void moveUp() {
         speedy = -150;
         trueIfVertical = true;
+
+        physics = getEntity().getComponent(PhysicsComponent.class);
+        Vec2 vec2 = new Vec2(0, 4);
+        physics.setBodyLinearVelocity(vec2);
     }
     public void moveDown() {
         speedy = 150;
         trueIfVertical = true;
+
+        physics = getEntity().getComponent(PhysicsComponent.class);
+        Vec2 vec2 = new Vec2(0, -4);
+        physics.setBodyLinearVelocity(vec2);
     }
 }

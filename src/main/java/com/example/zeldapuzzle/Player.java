@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 
 public class Player extends Component {
 
-
     private double speed = 4;
 
     private PhysicsComponent physics;
@@ -32,8 +31,6 @@ public class Player extends Component {
     public void onAdded() {
 
     }
-
-
 
     @Override
     public void onUpdate(double tpf) {

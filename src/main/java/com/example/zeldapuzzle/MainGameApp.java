@@ -13,6 +13,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.scene.input.KeyCode;
 
 
@@ -57,7 +58,6 @@ public class MainGameApp extends GameApplication {
                 System.out.println("X : " + player.getX() + " Y : " + player.getY());;
             }
 
-
         }, KeyCode.P);
         input.addAction(new UserAction("zoom+") {
             @Override
@@ -77,7 +77,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move right") {
             @Override
             protected void onAction() {
-                player.getComponent(Player.class).moveRight();
+                player.getComponent(AnimationComponent.class).moveRight();
             }
             @Override
             protected void onActionEnd() {
@@ -91,7 +91,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move left") {
             @Override
             protected void onAction() {
-                player.getComponent(Player.class).moveleft();
+                player.getComponent(AnimationComponent.class).moveLeft();
             }
             @Override
             protected void onActionEnd() {
@@ -105,7 +105,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {
-                player.getComponent(Player.class).moveUp();
+                player.getComponent(AnimationComponent.class).moveUp();
             }
 
             @Override
@@ -120,7 +120,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
-                player.getComponent(Player.class).moveDown();
+                player.getComponent(AnimationComponent.class).moveDown();
             }
             @Override
             protected void onActionEnd() {
@@ -173,20 +173,11 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
                 super.onCollisionBegin(player, door);
-                shoot((int) door.getX(),(int)door.getY());
+                shoot((int) door.getX(), (int) door.getY());
                 player.getComponent(PhysicsComponent.class).pause();
-
-//                background.removeFromWorld();
             }
-
-
-
         });
         FXGL.getPhysicsWorld().setGravity(0,0);
-
-
-
-
     }
 
     @Override
