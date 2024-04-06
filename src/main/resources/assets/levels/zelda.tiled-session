@@ -18,8 +18,8 @@
             "scale": 0.29628125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1596.4560700348068,
-                "y": 459.02330977744975
+                "x": 2808.1426009914567,
+                "y": 1788.8408395738848
             }
         },
         "Test2.tmx#tilsetduvillage": {
@@ -36,8 +36,8 @@
             "scale": 0.75,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 288,
-                "y": 885.3333333333333
+                "x": 1137.3333333333335,
+                "y": 761.3333333333333
             }
         },
         "donjonPasFini.tmx#tilsetbackground": {
@@ -45,11 +45,23 @@
         },
         "donjonPasFini.tmx#tilsetduvillage": {
             "scaleInDock": 1
+        },
+        "level1.tmx": {
+            "scale": 0.836,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 522.7272727272726,
+                "y": 517.9425837320574
+            }
+        },
+        "level1.tmx#tiles_spritesheet": {
+            "scaleInDock": 1
         }
     },
     "last.externalTilesetPath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels",
     "last.imagePath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels",
     "map.height": 30,
+    "map.lastUsedExportFilter": "",
     "map.lastUsedFormat": "tmx",
     "map.width": 100,
     "openFiles": [

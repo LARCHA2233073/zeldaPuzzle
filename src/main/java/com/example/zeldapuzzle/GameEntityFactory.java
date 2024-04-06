@@ -140,6 +140,17 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
+    @Spawns("stationTire")
+    public Entity stationTire(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.STATIONTIRE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
     @Spawns("boite")
     public Entity boite(SpawnData data) {
 

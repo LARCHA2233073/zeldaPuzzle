@@ -193,6 +193,14 @@ public class MainGameApp extends GameApplication {
 
             }
         });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATIONTIRE) {
+            @Override
+            protected void onCollision(Entity player, Entity stationTire) {
+                getGameScene().setBackgroundColor(Color.BEIGE);
+
+            }
+        });
+
         FXGL.getPhysicsWorld().setGravity(0,0);
     }
 
@@ -220,7 +228,7 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE
     }
 
     private void shoot(int x, int y) {
