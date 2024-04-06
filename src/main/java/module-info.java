@@ -9,5 +9,6 @@
      requires annotations;
 
      exports com.example.zeldapuzzle;
+     exports com.example.zeldapuzzle.Inventaire;
 
-}
+ }

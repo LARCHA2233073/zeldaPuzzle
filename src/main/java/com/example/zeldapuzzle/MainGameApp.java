@@ -12,7 +12,10 @@ import com.almasb.fxgl.entity.level.tiled.TMXLevelLoaderKt;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
+import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -22,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -35,6 +39,8 @@ public class MainGameApp extends GameApplication {
 
     private Entity background;
     private Viewport viewport;
+    private GameEntityFactory gameEntityFactory;
+
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -131,7 +137,24 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
                 super.onCollisionBegin(player, door);
-                shoot((int) door.getX(),(int)door.getY());
+                Entity arrow = spawn("arrow");
+                arrow.setX(dungeonEntry.getX());
+                arrow.setY(dungeonEntry.getY());
+
+                //Acitvation
+                arrow.getViewComponent().getChildren().get(0).setOnMousePressed(event -> {
+                    System.out.println("Bravo");
+                });
+
+                //Relachement
+                arrow.getViewComponent().getChildren().get(0).setOnMouseReleased(event -> {
+                    System.out.println("t bon");
+                    arrow.removeFromWorld();
+                    Entity arrowMove = spawn("arrowMove");
+
+
+                });
+
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.zeldapuzzle;
 
+import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
@@ -10,6 +11,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -113,4 +115,38 @@ public class GameEntityFactory implements EntityFactory {
 
 
     }
+    @Spawns("arrow")
+    public Entity arrow(SpawnData data) {
+        Rectangle arrow = new Rectangle(100,100,Color.RED);
+        return entityBuilder(data)
+                .viewWithBBox(arrow)
+                .buildAndAttach();
+    }
+
+    @Spawns("arrowMove")
+    public Entity arrowMove(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        Vec2 arrowVecteur = new Vec2(6000,6000);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                physics.applyBodyForce(arrowVecteur,arrowVecteur);
+
+            }
+        };
+        physics.setBodyType(BodyType.DYNAMIC);
+        physics.setOnPhysicsInitialized(runnable);
+        FixtureDef fd = new FixtureDef();
+        fd.setDensity(0.7f);
+        fd.setRestitution(0.3f);
+        physics.setFixtureDef(fd);
+        Rectangle arrow = new Rectangle(100,100,Color.RED);
+        return entityBuilder(data)
+                .at(850,-130)
+                .viewWithBBox(arrow)
+                .with(physics)
+                .buildAndAttach();
+    }
+
+
 }
