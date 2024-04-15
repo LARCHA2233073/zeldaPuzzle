@@ -38,7 +38,7 @@
 </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
-  <object id="3" type="SmallTree" x="-4" y="1048" width="1930" height="118"/>
+  <object id="3" type="Tree" x="-4" y="1048" width="1930" height="118"/>
  </objectgroup>
  <layer name="Calque de Tuiles 2" width="30" height="30">
   <data encoding="csv">

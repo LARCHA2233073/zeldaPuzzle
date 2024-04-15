@@ -8,6 +8,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
+import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
@@ -15,6 +16,7 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 
 
 import java.io.FileInputStream;
@@ -33,7 +35,16 @@ public class MainGameApp extends GameApplication {
     private Entity background;
     private Viewport viewport;
 
-    private PhysicsComponent physics;
+    private PhysicsComponent physics =  new PhysicsComponent();;
+
+    private AnimationComponent animation = new AnimationComponent();
+
+
+
+    public MainGameApp() throws FileNotFoundException {
+        physics.setBodyType(BodyType.DYNAMIC);
+
+    }
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -44,7 +55,7 @@ public class MainGameApp extends GameApplication {
     settings.setIntroEnabled(false);
     settings.setMainMenuEnabled(true);
     settings.setDeveloperMenuEnabled(true);
-
+    settings.setFullScreenAllowed(true);
 
     }
 
@@ -148,7 +159,6 @@ public class MainGameApp extends GameApplication {
         dungeonEntry = spawn("dungeonEntry");
 //        dungeonEntry.setX(850);
 //        dungeonEntry.setY(-130);
-        platform = spawn("platform");
         player = spawn("player");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
@@ -171,11 +181,25 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
-                super.onCollisionBegin(player, door);
-                shoot((int) door.getX(), (int) door.getY());
-                player.getComponent(PhysicsComponent.class).pause();
+                FXGL.setLevelFromMap("donjonPasFini.tmx");
+                player = spawn("player");
+                player.setScaleUniform(1.3);
+                viewport.bindToEntity(player,320, 500);
+                player.setPosition(100,850);
+                getGameScene().setBackgroundColor(Color.BLACK);
+                getPhysicsWorld().setGravity(0,10000);
+                setPlayer(player);
+
             }
         });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATIONTIRE) {
+            @Override
+            protected void onCollision(Entity player, Entity stationTire) {
+                getGameScene().setBackgroundColor(Color.BEIGE);
+
+            }
+        });
+
         FXGL.getPhysicsWorld().setGravity(0,0);
     }
 
@@ -203,12 +227,16 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE
     }
 
     private void shoot(int x, int y) {
         Vec2 arrowVecteur = new Vec2(1200,600);
         getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
+    }
+
+    public void setPlayer(Entity player) {
+        this.player = player;
     }
 
     public static void main(String[] args) {
