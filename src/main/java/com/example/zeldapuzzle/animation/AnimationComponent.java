@@ -47,7 +47,7 @@ public class AnimationComponent extends Component {
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-          //  entity.translateY(speedy * tpf);
+            entity.translateY(speedy * tpf);
 
             //up
             if (speedy < 0) {
@@ -72,7 +72,7 @@ public class AnimationComponent extends Component {
         }
         else {
 
-           // entity.translateX(speedx * tpf);
+            entity.translateX(speedx * tpf);
 
             //left
             if (speedx < 0) {
@@ -106,9 +106,6 @@ public class AnimationComponent extends Component {
         Vec2 vec2 = new Vec2(4, 0);
         physics.setBodyLinearVelocity(vec2);
     }
-
-
-
     public void moveLeft() {
         speedx = -150;
         trueIfVertical = false;
