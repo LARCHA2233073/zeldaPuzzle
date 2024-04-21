@@ -24,10 +24,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 
 public class GameEntityFactory implements EntityFactory {
+    ArrayList<Double> listeDonne = new ArrayList<>();
+
+    Entity arrowMove;
 
     @Spawns("player")
     public Entity spawnPlayer(SpawnData data) throws FileNotFoundException {
@@ -225,8 +230,22 @@ public class GameEntityFactory implements EntityFactory {
     }
     @Spawns("arrow")
     public Entity arrow(SpawnData data) {
-        Rectangle arrow = new Rectangle(100,100,Color.RED);
+
+        Rectangle arrow = new Rectangle(40,10,Color.RED);
+        arrow.setOnMousePressed(event -> {
+            listeDonne.add(event.getSceneX());
+            listeDonne.add(event.getSceneY());
+        });
+
+        arrow.setOnMouseReleased(event -> {
+            listeDonne.add(event.getSceneX());
+            listeDonne.add(event.getSceneY());
+            arrowMove = spawn("arrowMove");
+
+        });
+
         return entityBuilder(data)
+                .type(MainGameApp.EntityType.ARROW)
                 .viewWithBBox(arrow)
                 .buildAndAttach();
     }
@@ -234,24 +253,23 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("arrowMove")
     public Entity arrowMove(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
-        Vec2 arrowVecteur = new Vec2(6000,6000);
+        Vec2 arrowVecteur = new Vec2((listeDonne.get(0) - listeDonne.get(2))*10,(listeDonne.get(1) - listeDonne.get(3)) * -10);
+        listeDonne.clear();
+        arrow(data).removeFromWorld();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 physics.applyBodyForce(arrowVecteur,arrowVecteur);
-
             }
         };
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setOnPhysicsInitialized(runnable);
-        FixtureDef fd = new FixtureDef();
-        fd.setDensity(0.7f);
-        fd.setRestitution(0.3f);
-        physics.setFixtureDef(fd);
-        Rectangle arrow = new Rectangle(100,100,Color.RED);
+        Rectangle arrow = new Rectangle(40,10,Color.RED);
         return entityBuilder(data)
-                .at(850,-130)
+                .at(561.333,817.333)
                 .viewWithBBox(arrow)
+                .type(MainGameApp.EntityType.ARROWMOVE)
+                .collidable()
                 .with(physics)
                 .buildAndAttach();
     }

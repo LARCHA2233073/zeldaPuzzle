@@ -33,6 +33,8 @@ public class MainGameApp extends GameApplication {
     private Entity dungeon;
 
     private Entity background;
+
+    private Entity arrow;
     private Viewport viewport;
 
     private PhysicsComponent physics =  new PhysicsComponent();;
@@ -157,23 +159,10 @@ public class MainGameApp extends GameApplication {
         getGameWorld().addEntityFactory(new GameEntityFactory());
         FXGL.setLevelFromMap("StartingMap.tmx");
         dungeonEntry = spawn("dungeonEntry");
-//        dungeonEntry.setX(850);
-//        dungeonEntry.setY(-130);
         player = spawn("player");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
-//        try {
-//             fileInputStream = new FileInputStream("assets/levels/BeginingMap3.tmx");
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//        TMXLevelLoader tmxLevelLoader = new TMXLevelLoader();
-//        tmxLevelLoader.parse(fileInputStream);
-
-
-
-        //Position
     }
 
     @Override
@@ -188,20 +177,30 @@ public class MainGameApp extends GameApplication {
                 viewport.bindToEntity(player,320, 500);
                 player.setPosition(100,850);
                 getGameScene().setBackgroundColor(Color.BLACK);
-                getPhysicsWorld().setGravity(0,10000);
+                getPhysicsWorld().setGravity(0,1500);
                 setPlayer(player);
 
             }
         });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATIONTIRE) {
             @Override
-            protected void onCollision(Entity player, Entity stationTire) {
-                getGameScene().setBackgroundColor(Color.BEIGE);
+            protected void onCollisionBegin(Entity player, Entity stationTire) {
+                arrow = spawn("arrow");
+                arrow.setX(stationTire.getX());
+                arrow.setY(stationTire.getY());
 
             }
         });
 
-        FXGL.getPhysicsWorld().setGravity(0,0);
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.ARROWMOVE) {
+            @Override
+            protected void onCollisionBegin(Entity cible, Entity arrowMove) {
+                cible.removeFromWorld();
+                System.out.println("OK");
+                arrowMove.removeFromWorld();
+
+            }
+        });
     }
 
     @Override
@@ -228,12 +227,7 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE
-    }
-
-    private void shoot(int x, int y) {
-        Vec2 arrowVecteur = new Vec2(1200,600);
-        getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE
     }
 
     public void setPlayer(Entity player) {

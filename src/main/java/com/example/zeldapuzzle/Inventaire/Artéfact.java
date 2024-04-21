@@ -15,10 +15,6 @@ public class Artéfact extends Equipement{
     public void jeter() {
     }
 
-    @Override
-    public void Équiper(Player player) {
-        super.Équiper(player);
-    }
 
 
 
