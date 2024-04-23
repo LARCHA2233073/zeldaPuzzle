@@ -7,13 +7,15 @@ import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
+import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
+import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -197,6 +199,7 @@ public class MainGameApp extends GameApplication {
 
         FXGL.getPhysicsWorld().setGravity(0,0);
     }
+
 
     @Override
     protected void initUI(){
