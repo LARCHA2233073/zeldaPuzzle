@@ -14,7 +14,8 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.example.zeldapuzzle.animation.AnimationComponent;
+import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
+import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -40,7 +41,7 @@ public class MainGameApp extends GameApplication {
 
     private PhysicsComponent physics =  new PhysicsComponent();;
 
-    private AnimationComponent animation = new AnimationComponent();
+    private AnimationComponentPlayer animation = new AnimationComponentPlayer();
 
     private  int numberOfTarget = 5;
 
@@ -93,7 +94,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move right") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveRight();
+                player.getComponent(AnimationComponentPlayer.class).moveRight();
             }
             @Override
             protected void onActionEnd() {
@@ -107,7 +108,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move left") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveLeft();
+                player.getComponent(AnimationComponentPlayer.class).moveLeft();
             }
             @Override
             protected void onActionEnd() {
@@ -121,7 +122,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveUp();
+                player.getComponent(AnimationComponentPlayer.class).moveUp();
             }
 
             @Override
@@ -136,7 +137,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveDown();
+                player.getComponent(AnimationComponentPlayer.class).moveDown();
             }
             @Override
             protected void onActionEnd() {
@@ -159,7 +160,11 @@ public class MainGameApp extends GameApplication {
     protected void initGame(){
 
         //EntityFactory
-        getGameWorld().addEntityFactory(new GameEntityFactory());
+        try {
+            getGameWorld().addEntityFactory(new GameEntityFactory());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         FXGL.setLevelFromMap("StartingMap.tmx");
         dungeonEntry = spawn("dungeonEntry");
         player = spawn("player");
@@ -257,7 +262,7 @@ public class MainGameApp extends GameApplication {
 
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
-        SWORD
+        SWORD,MOBPASSIVE,POMME
     }
 
     public void setPlayer(Entity player) {
