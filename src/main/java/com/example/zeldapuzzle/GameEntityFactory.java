@@ -1,5 +1,6 @@
 package com.example.zeldapuzzle;
 
+import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
@@ -12,21 +13,26 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsUnitConverter;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 
 public class GameEntityFactory implements EntityFactory {
+    ArrayList<Double> listeDonne = new ArrayList<>();
+
+    Entity arrowMove;
 
     @Spawns("player")
     public Entity spawnPlayer(SpawnData data) throws FileNotFoundException {
@@ -44,14 +50,13 @@ public class GameEntityFactory implements EntityFactory {
         Image imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/character.png"));
         //Physics
 
-        HitBox box = new HitBox(BoundingShape.box(45
-                ,55));
+        HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 //        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.PLAYER)
-                .at(100, 100)
+                .at(400, 100)
                 .scale(2, 2)
                 .bbox(box)
                 .with(new AnimationComponent())
@@ -102,20 +107,81 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
-    @Spawns("platform")
-    public Entity newPlatform(SpawnData data) {
-        Rectangle rectangle = new Rectangle();
-        rectangle.setHeight(30);
-        rectangle.setWidth(1000);
+
+
+
+
+    @Spawns("plateform")
+    public Entity plateform(SpawnData data) {
 
         return FXGL.entityBuilder(data)
-                .at(200,480)
                 .type(MainGameApp.EntityType.PLATFORM)
-                .viewWithBBox(rectangle)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
+
     }
+
+    @Spawns("triangle")
+    public Entity triangle(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.TRIANGLE)
+                .bbox(new HitBox(BoundingShape.polygon(0,0,65.3333,-21.111,62.6667,4)))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+
+    @Spawns("cible")
+    public Entity cible(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.CIBLE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("stationTire")
+    public Entity stationTire(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.STATIONTIRE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("boite")
+    public Entity boite(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.BOITE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("statue")
+    public Entity statue(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.STATUE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
 
     @Spawns("dungeonEntry")
     public Entity dungeonEntry(SpawnData data) {
@@ -150,7 +216,6 @@ public class GameEntityFactory implements EntityFactory {
                 .view(imageView)
                 .buildAndAttach();
     }
-
     @Spawns("smallTree")
     public Entity smallTree(SpawnData data) {
 
@@ -163,4 +228,51 @@ public class GameEntityFactory implements EntityFactory {
 
 
     }
+    @Spawns("arrow")
+    public Entity arrow(SpawnData data) {
+
+        Rectangle arrow = new Rectangle(40,10,Color.RED);
+        arrow.setOnMousePressed(event -> {
+            listeDonne.add(event.getSceneX());
+            listeDonne.add(event.getSceneY());
+        });
+
+        arrow.setOnMouseReleased(event -> {
+            listeDonne.add(event.getSceneX());
+            listeDonne.add(event.getSceneY());
+            arrowMove = spawn("arrowMove");
+
+        });
+
+        return entityBuilder(data)
+                .type(MainGameApp.EntityType.ARROW)
+                .viewWithBBox(arrow)
+                .buildAndAttach();
+    }
+
+    @Spawns("arrowMove")
+    public Entity arrowMove(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        Vec2 arrowVecteur = new Vec2((listeDonne.get(0) - listeDonne.get(2))*10,(listeDonne.get(1) - listeDonne.get(3)) * -10);
+        listeDonne.clear();
+        arrow(data).removeFromWorld();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                physics.applyBodyForce(arrowVecteur,arrowVecteur);
+            }
+        };
+        physics.setBodyType(BodyType.DYNAMIC);
+        physics.setOnPhysicsInitialized(runnable);
+        Rectangle arrow = new Rectangle(40,10,Color.RED);
+        return entityBuilder(data)
+                .at(561.333,817.333)
+                .viewWithBBox(arrow)
+                .type(MainGameApp.EntityType.ARROWMOVE)
+                .collidable()
+                .with(physics)
+                .buildAndAttach();
+    }
+
+
 }
