@@ -2,23 +2,19 @@ package com.example.zeldapuzzle.animation;
 
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.core.math.Vec2;
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
-import javafx.event.EventHandler;
+import com.example.zeldapuzzle.SensorComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 
-public class AnimationComponent extends Component {
+public class AnimationComponentMobPassive extends Component {
 
     private PhysicsComponent physics = new PhysicsComponent();
     boolean trueIfVertical;
@@ -28,26 +24,34 @@ public class AnimationComponent extends Component {
     private AnimatedTexture texture;
     private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight;
 
-    public AnimationComponent() throws FileNotFoundException {
-        animIdle = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk.png")), 9, 64, 64, Duration.seconds(1), 0, 0);
-        animWalkLeft = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk2.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
-        animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
-        animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
-        animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+    public AnimationComponentMobPassive() throws FileNotFoundException {
+        animIdle = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkLeft.png")), 9, 64, 64, Duration.seconds(1), 0, 0);
+        animWalkLeft = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkLeft.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         texture = new AnimatedTexture(animIdle);
+
     }
 
     @Override
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(16, 21));
         entity.getViewComponent().addChild(texture);
+        /*try {
+            entity.addComponent(new SensorComponent());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+         */
     }
 
     @Override
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-            entity.translateY(speedy * tpf);
+            entity.translateY( (speedy) * tpf);
 
             //up
             if (speedy < 0) {
@@ -72,7 +76,7 @@ public class AnimationComponent extends Component {
         }
         else {
 
-            entity.translateX(speedx * tpf);
+            entity.translateX((speedx) * tpf);
 
             //left
             if (speedx < 0) {
@@ -96,7 +100,6 @@ public class AnimationComponent extends Component {
 
         }
     }
-
 
     public void moveRight() {
         speedx = 150;
@@ -133,5 +136,12 @@ public class AnimationComponent extends Component {
 
     public PhysicsComponent getPhysics() {
         return physics;
+    }
+
+    public void setSpeedx(int speedx) {
+        this.speedx = speedx;
+    }
+    public void setSpeedy(int speedx) {
+        this.speedy = speedx;
     }
 }
