@@ -4,9 +4,7 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.input.UserAction;
-import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.scene.input.KeyCode;
 
 import java.io.FileNotFoundException;
@@ -22,26 +20,26 @@ public class spriteAnimations extends GameApplication {
         FXGL.getInput().addAction(new UserAction("Right") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveRight();
+                player.getComponent(AnimationComponentPlayer.class).moveRight();
             }
         }, KeyCode.D);
 
         FXGL.getInput().addAction(new UserAction("Left") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveLeft();
+                player.getComponent(AnimationComponentPlayer.class).moveLeft();
             }
         }, KeyCode.A);
         FXGL.getInput().addAction(new UserAction("Up") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveUp();
+                player.getComponent(AnimationComponentPlayer.class).moveUp();
             }
         }, KeyCode.W);
         FXGL.getInput().addAction(new UserAction("Down") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveDown();
+                player.getComponent(AnimationComponentPlayer.class).moveDown();
             }
         }, KeyCode.S);
     }
@@ -51,7 +49,7 @@ public class spriteAnimations extends GameApplication {
         try {
             player = FXGL.entityBuilder()
                     .at(200, 200)
-                    .with(new AnimationComponent())
+                    .with(new AnimationComponentPlayer())
                     .buildAndAttach();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

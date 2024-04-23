@@ -6,33 +6,31 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import com.almasb.fxgl.entity.components.BoundingBoxComponent;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
-import com.almasb.fxgl.physics.PhysicsUnitConverter;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
-import com.example.zeldapuzzle.animation.AnimationComponent;
+import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.geometry.Point2D;
+import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
+import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
+import static java.lang.System.nanoTime;
 
 public class GameEntityFactory implements EntityFactory {
-    ArrayList<Double> listeDonne = new ArrayList<>();
 
-    Entity arrowMove;
+    public GameEntityFactory() throws FileNotFoundException {
+    }
 
     @Spawns("player")
     public Entity spawnPlayer(SpawnData data) throws FileNotFoundException {
@@ -59,7 +57,7 @@ public class GameEntityFactory implements EntityFactory {
                 .at(400, 100)
                 .scale(1.3, 1.3)
                 .bbox(box)
-                .with(new AnimationComponent())
+                .with(new AnimationComponentPlayer())
                 .with(new CollidableComponent(true))
                 .with(physics)
                 .buildAndAttach();
@@ -242,6 +240,24 @@ public class GameEntityFactory implements EntityFactory {
                 .view(imageView)
                 .buildAndAttach();
     }
+    AnimationComponentMobPassive animationComponentMobPassive = new AnimationComponentMobPassive();
+    @Spawns("mobPassive")
+    public Entity mobPassive(SpawnData data) throws FileNotFoundException {
+
+        HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
+        //movement AI
+        return FXGL.entityBuilder()
+                .type(MainGameApp.EntityType.MOBPASSIVE)
+                .at(400, 100)
+                .scale(2, 2)
+                .bbox(box)
+                .with(animationComponentMobPassive)
+                .with(new CollidableComponent(true))
+                .with(physics)
+                .buildAndAttach();
+    }
     @Spawns("smallTree")
     public Entity smallTree(SpawnData data) {
 
@@ -256,22 +272,8 @@ public class GameEntityFactory implements EntityFactory {
     }
     @Spawns("arrow")
     public Entity arrow(SpawnData data) {
-
-        Rectangle arrow = new Rectangle(40,10,Color.RED);
-        arrow.setOnMousePressed(event -> {
-            listeDonne.add(event.getSceneX());
-            listeDonne.add(event.getSceneY());
-        });
-
-        arrow.setOnMouseReleased(event -> {
-            listeDonne.add(event.getSceneX());
-            listeDonne.add(event.getSceneY());
-            arrowMove = spawn("arrowMove");
-
-        });
-
+        Rectangle arrow = new Rectangle(100,100,Color.RED);
         return entityBuilder(data)
-                .type(MainGameApp.EntityType.ARROW)
                 .viewWithBBox(arrow)
                 .buildAndAttach();
     }
@@ -279,26 +281,30 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("arrowMove")
     public Entity arrowMove(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
-        Vec2 arrowVecteur = new Vec2((listeDonne.get(0) - listeDonne.get(2))*10,(listeDonne.get(1) - listeDonne.get(3)) * -10);
-        listeDonne.clear();
-        arrow(data).removeFromWorld();
+        Vec2 arrowVecteur = new Vec2(6000,6000);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 physics.applyBodyForce(arrowVecteur,arrowVecteur);
+
             }
         };
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setOnPhysicsInitialized(runnable);
-        Rectangle arrow = new Rectangle(40,10,Color.RED);
+        FixtureDef fd = new FixtureDef();
+        fd.setDensity(0.7f);
+        fd.setRestitution(0.3f);
+        physics.setFixtureDef(fd);
+        Rectangle arrow = new Rectangle(100,100,Color.RED);
         return entityBuilder(data)
-                .at(561.333,817.333)
+                .at(850,-130)
                 .viewWithBBox(arrow)
-                .type(MainGameApp.EntityType.ARROWMOVE)
-                .collidable()
                 .with(physics)
+                .collidable()
                 .buildAndAttach();
     }
 
-
+    public AnimationComponentMobPassive getAnimationComponentMobPassive() {
+        return animationComponentMobPassive;
+    }
 }
