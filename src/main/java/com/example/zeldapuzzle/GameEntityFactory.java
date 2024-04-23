@@ -10,6 +10,9 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
+import javafx.geometry.Point2D;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.scene.image.Image;
@@ -225,6 +228,50 @@ public class GameEntityFactory implements EntityFactory {
                 .bbox(box)
                 .with(animationComponentMobPassive)
                 .with(new CollidableComponent(true))
+                .with(physics)
+                .buildAndAttach();
+    }
+    @Spawns("smallTree")
+    public Entity smallTree(SpawnData data) {
+
+        return entityBuilder(data)
+                .from(data)
+                .type(MainGameApp.EntityType.SMALLTREE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .buildAndAttach();
+
+
+    }
+    @Spawns("arrow")
+    public Entity arrow(SpawnData data) {
+        Rectangle arrow = new Rectangle(100,100,Color.RED);
+        return entityBuilder(data)
+                .viewWithBBox(arrow)
+                .buildAndAttach();
+    }
+
+    @Spawns("arrowMove")
+    public Entity arrowMove(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        Vec2 arrowVecteur = new Vec2(6000,6000);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                physics.applyBodyForce(arrowVecteur,arrowVecteur);
+
+            }
+        };
+        physics.setBodyType(BodyType.DYNAMIC);
+        physics.setOnPhysicsInitialized(runnable);
+        FixtureDef fd = new FixtureDef();
+        fd.setDensity(0.7f);
+        fd.setRestitution(0.3f);
+        physics.setFixtureDef(fd);
+        Rectangle arrow = new Rectangle(100,100,Color.RED);
+        return entityBuilder(data)
+                .at(850,-130)
+                .viewWithBBox(arrow)
                 .with(physics)
                 .buildAndAttach();
     }

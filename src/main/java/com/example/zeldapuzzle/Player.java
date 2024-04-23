@@ -25,6 +25,10 @@ public class Player extends Component {
 
     private double speed = 4;
 
+    private int vie = 100;
+
+    private int shield = 50;
+
     private PhysicsComponent physics;
 
     @Override
@@ -66,6 +70,18 @@ public class Player extends Component {
         Vec2 vec2 =new Vec2(0,-4);
 //        physics.setVelocityX(-100);
         physics.setBodyLinearVelocity(vec2);
+
+    }
+
+    public void setVie(int vie) {
+        this.vie = vie;
+    }
+
+    public int getVie() {
+        return vie;
+    }
+
+    public void équipé(Equipement equipement) {
 
     }
 

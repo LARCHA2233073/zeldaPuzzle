@@ -25,7 +25,7 @@ public class Arrow extends Entity{
 
     ArrayList<Double> listeDonne = new ArrayList<>();
 
-    PhysicsComponent physics = new PhysicsComponent();
+    PhysicsComponent physics ;
 
     Vec2 vec2;
 
@@ -33,12 +33,12 @@ public class Arrow extends Entity{
     public Arrow(Vec2 vec2,int x,int y)  {
 
         //Creation du rectangle
+
         arrow = new Rectangle(100,100,Color.RED);
         this.getViewComponent().addChild(arrow);
         this.vec2=vec2;
         this.setX(x);
         this.setY(y);
-        desactivéPhysique();
 
 
         arrow.setOnMousePressed(event -> {
@@ -51,7 +51,6 @@ public class Arrow extends Entity{
             this.activerPhysique();
             System.out.println("t bon");
             System.out.println(listeDonne);
-            getGameScene().update(0);
 
         });
     }
@@ -65,12 +64,12 @@ public class Arrow extends Entity{
 
             }
         };
+        physics.setBodyType(BodyType.DYNAMIC);
         physics.setOnPhysicsInitialized(runnable);
         FixtureDef fd = new FixtureDef();
         fd.setDensity(0.7f);
         fd.setRestitution(0.3f);
         physics.setFixtureDef(fd);
-        physics.setBodyType(BodyType.DYNAMIC);
         this.addComponent(physics);
     }
 
