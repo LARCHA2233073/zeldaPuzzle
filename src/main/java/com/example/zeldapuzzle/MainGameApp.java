@@ -7,14 +7,13 @@ import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
-import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.example.zeldapuzzle.animation.AnimationComponent;
+import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
+import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -23,25 +22,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.nanoTime;
 
 
 public class MainGameApp extends GameApplication {
 
+    private Entity mobPassive;
     private Entity player;
     private Entity platform;
     private Entity dungeonEntry;
     private Entity dungeon;
-
     private Entity background;
-
-    private Entity arrow;
     private Viewport viewport;
-
     private PhysicsComponent physics =  new PhysicsComponent();;
-
-    private AnimationComponent animation = new AnimationComponent();
-
-
+    private GameEntityFactory gameEntityFactory = new GameEntityFactory();
 
     public MainGameApp() throws FileNotFoundException {
         physics.setBodyType(BodyType.DYNAMIC);
@@ -90,7 +85,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move right") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveRight();
+                player.getComponent(AnimationComponentPlayer.class).moveRight();
             }
             @Override
             protected void onActionEnd() {
@@ -104,7 +99,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move left") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveLeft();
+                player.getComponent(AnimationComponentPlayer.class).moveLeft();
             }
             @Override
             protected void onActionEnd() {
@@ -118,7 +113,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveUp();
+                player.getComponent(AnimationComponentPlayer.class).moveUp();
             }
 
             @Override
@@ -133,7 +128,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
-                player.getComponent(AnimationComponent.class).moveDown();
+                player.getComponent(AnimationComponentPlayer.class).moveDown();
             }
             @Override
             protected void onActionEnd() {
@@ -156,18 +151,28 @@ public class MainGameApp extends GameApplication {
     protected void initGame(){
 
         //EntityFactory
-        getGameWorld().addEntityFactory(new GameEntityFactory());
+        getGameWorld().addEntityFactory(gameEntityFactory);
         FXGL.setLevelFromMap("StartingMap.tmx");
         dungeonEntry = spawn("dungeonEntry");
+//        dungeonEntry.setX(850);
+//        dungeonEntry.setY(-130);
         player = spawn("player");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
+//        try {
+//             fileInputStream = new FileInputStream("assets/levels/BeginingMap3.tmx");
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//        TMXLevelLoader tmxLevelLoader = new TMXLevelLoader();
+//        tmxLevelLoader.parse(fileInputStream);
+        mobPassive = spawn("mobPassive");
+        mobMovement(gameEntityFactory.getAnimationComponentMobPassive());
     }
 
     @Override
     protected void initPhysics(){
-
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
@@ -177,30 +182,20 @@ public class MainGameApp extends GameApplication {
                 viewport.bindToEntity(player,320, 500);
                 player.setPosition(100,850);
                 getGameScene().setBackgroundColor(Color.BLACK);
-                getPhysicsWorld().setGravity(0,1500);
+                getPhysicsWorld().setGravity(0,10000);
                 setPlayer(player);
 
             }
         });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATIONTIRE) {
             @Override
-            protected void onCollisionBegin(Entity player, Entity stationTire) {
-                arrow = spawn("arrow");
-                arrow.setX(stationTire.getX());
-                arrow.setY(stationTire.getY());
+            protected void onCollision(Entity player, Entity stationTire) {
+                getGameScene().setBackgroundColor(Color.BEIGE);
 
             }
         });
 
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.ARROWMOVE) {
-            @Override
-            protected void onCollisionBegin(Entity cible, Entity arrowMove) {
-                cible.removeFromWorld();
-                System.out.println("OK");
-                arrowMove.removeFromWorld();
-
-            }
-        });
+        FXGL.getPhysicsWorld().setGravity(0,0);
     }
 
     @Override
@@ -227,7 +222,12 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,MOBPASSIVE
+    }
+
+    private void shoot(int x, int y) {
+        Vec2 arrowVecteur = new Vec2(1200,600);
+        getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
     }
 
     public void setPlayer(Entity player) {
@@ -238,8 +238,43 @@ public class MainGameApp extends GameApplication {
         launch(args);
     }
 
+    public Entity getMobPassive() {
+        return mobPassive;
+    }
+    public void mobMovement (AnimationComponentMobPassive animationComponentMobPassive) {
+        if (currentTimeMillis() % 5000 == 0 ){
 
+            int random = (int) (Math.random() * 4);
 
+            if (random == 0) {
+                animationComponentMobPassive.moveDown();
+                if (currentTimeMillis() % 2000 == 0) {
+                    animationComponentMobPassive.setSpeedy(0);
+                    animationComponentMobPassive.setSpeedx(0);
+                }
+            }
+            if (random == 1) {
+                animationComponentMobPassive.moveLeft();
+                if (currentTimeMillis() % 2000 == 0) {
+                    animationComponentMobPassive.setSpeedy(0);
+                    animationComponentMobPassive.setSpeedx(0);
+                }
+            }
+            if (random == 2) {
+                animationComponentMobPassive.moveUp();
+                if (currentTimeMillis() % 2000 == 0) {
+                    animationComponentMobPassive.setSpeedy(0);
+                    animationComponentMobPassive.setSpeedx(0);
+                }
+            }
+            if (random == 3) {
+                animationComponentMobPassive.moveRight();
+                if (currentTimeMillis() % 2000 == 0) {
+                    animationComponentMobPassive.setSpeedy(0);
+                    animationComponentMobPassive.setSpeedx(0);
+                }
+            }
+        }
 
-
+    }
 }
