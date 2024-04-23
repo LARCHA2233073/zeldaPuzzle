@@ -45,6 +45,8 @@ public class MainGameApp extends GameApplication {
 
     private  int numberOfTarget = 5;
 
+    private Entity pomme;
+
 
 
     public MainGameApp() throws FileNotFoundException {
@@ -172,6 +174,8 @@ public class MainGameApp extends GameApplication {
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
         getPhysicsWorld().setGravity(0,0);
+        pomme = spawn("pomme");
+
     }
 
     @Override
