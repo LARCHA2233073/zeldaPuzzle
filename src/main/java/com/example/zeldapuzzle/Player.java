@@ -82,8 +82,6 @@ public class Player extends Component {
         return vie;
     }
 
-    public void équipé(Equipement equipement) {
 
-    }
 
 }
