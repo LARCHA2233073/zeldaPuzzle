@@ -57,7 +57,7 @@ public class GameEntityFactory implements EntityFactory {
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.PLAYER)
                 .at(400, 100)
-                .scale(2, 2)
+                .scale(1.3, 1.3)
                 .bbox(box)
                 .with(new AnimationComponent())
                 .with(new CollidableComponent(true))
@@ -90,6 +90,20 @@ public class GameEntityFactory implements EntityFactory {
 
 
     }
+
+    @Spawns("sword")
+    public Entity sword(SpawnData data) {
+
+        return entityBuilder(data)
+                .type(MainGameApp.EntityType.SWORD)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+
+    }
+
 
     @Spawns("background")
     public Entity background(SpawnData data) {
@@ -137,7 +151,19 @@ public class GameEntityFactory implements EntityFactory {
 
     @Spawns("cible")
     public Entity cible(SpawnData data) {
+        Rectangle rectangle = new Rectangle(27,32,Color.GOLD);
+        rectangle.setOpacity(0.1);
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.CIBLE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .view(rectangle)
+                .build();
 
+    }
+    @Spawns("cible1")
+    public Entity cible1(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.CIBLE)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))

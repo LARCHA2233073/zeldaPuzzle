@@ -17,6 +17,7 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.example.zeldapuzzle.animation.AnimationComponent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 
 import java.io.FileInputStream;
@@ -40,6 +41,8 @@ public class MainGameApp extends GameApplication {
     private PhysicsComponent physics =  new PhysicsComponent();;
 
     private AnimationComponent animation = new AnimationComponent();
+
+    private  int numberOfTarget = 5;
 
 
 
@@ -84,7 +87,7 @@ public class MainGameApp extends GameApplication {
         }, KeyCode.DOWN);
         input.addAction(new UserAction("resetZoom") {
             @Override
-            protected void onAction() {viewport.setZoom(1);
+            protected void onAction() {viewport.setZoom(1.2);
             }
         }, KeyCode.DIGIT0);
         input.addAction(new UserAction("Move right") {
@@ -163,6 +166,7 @@ public class MainGameApp extends GameApplication {
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
+        getPhysicsWorld().setGravity(0,0);
     }
 
     @Override
@@ -171,9 +175,9 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
+                //changer de niveau
                 FXGL.setLevelFromMap("donjonPasFini.tmx");
                 player = spawn("player");
-                player.setScaleUniform(1.3);
                 viewport.bindToEntity(player,320, 500);
                 player.setPosition(100,850);
                 getGameScene().setBackgroundColor(Color.BLACK);
@@ -195,9 +199,41 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.ARROWMOVE) {
             @Override
             protected void onCollisionBegin(Entity cible, Entity arrowMove) {
+                //enlever la cible
+                numberOfTarget--;
                 cible.removeFromWorld();
-                System.out.println("OK");
+
+                //message pour le joueur
+                String message = "nombre de cible restante " + numberOfTarget + "/5";
+                FXGL.getNotificationService().pushNotification(message);
+
+                //enlever la fleche
                 arrowMove.removeFromWorld();
+
+                //changer de carte
+                if (numberOfTarget == 0){
+                    FXGL.setLevelFromMap("donjonFini.tmx");
+                    player = spawn("player");
+                    viewport.bindToEntity(player,320, 500);
+                    player.setPosition(561.333,817.333);
+                    getGameScene().setBackgroundColor(Color.BLACK);
+                    getPhysicsWorld().setGravity(0,1500);
+                    setPlayer(player);
+                }
+
+            }
+        });
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATUE) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity statue) {
+                FXGL.setLevelFromMap("StartingMap.tmx");
+                player = spawn("player");
+                viewport.bindToEntity(player,320, 500);
+                player.setPosition(400,100);
+                getGameScene().setBackgroundColor(Color.WHITE);
+                getPhysicsWorld().setGravity(0,0);
+                setPlayer(player);
 
             }
         });
@@ -205,15 +241,8 @@ public class MainGameApp extends GameApplication {
 
     @Override
     protected void initUI(){
-//        Rectangle grass = new Rectangle(500,500,Color.GREEN);
-//        Rectangle grassRed = new Rectangle(300,300,Color.RED);
-//        grass.viewOrderProperty().set(1.0);
-//        grassRed.viewOrderProperty().set(0.5);
-//        FXGL.getGameScene().addUINode(grass);
-//        FXGL.getGameScene().addUINode(grassRed);
-//        FXGL.getGameScene().setUIMouseTransparent(true);
-//        FXGL.getGameScene().setBackgroundColor(Color.GREEN);
-//        FXGL.getUIFactoryService().newText("OKKK");
+
+
     }
 
 
@@ -227,7 +256,8 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
+        SWORD
     }
 
     public void setPlayer(Entity player) {

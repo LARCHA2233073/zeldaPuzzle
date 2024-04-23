@@ -14,44 +14,105 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "BeginingMap3.tmx": {
+            "scale": 0.3047916666666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 958.0314422419685,
+                "y": 1423.9234449760766
+            }
+        },
+        "BeginingMap3.tmx#test": {
+            "scaleInDock": 1
+        },
+        "StartingMap.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 348,
+                "y": 535.9999999999999
+            }
+        },
+        "StartingMap.tmx#Tuille_village": {
+            "dynamicWrapping": false
+        },
+        "StartingMap.tmx#objet": {
+            "scaleInDock": 1
+        },
+        "StartingMap.tmx#test": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "StartingMap.tmx#tilset1": {
+            "scaleInDock": 1
+        },
+        "StartingMap.tmx#tilset2": {
+            "scaleInDock": 1
+        },
+        "StartingMap.tmx#tilset3": {
+            "scaleInDock": 1
+        },
+        "StartingMap.tmx#tuilleVillage": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
         "Test2.tmx": {
             "scale": 0.29628125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2808.1426009914567,
-                "y": 1788.8408395738848
+                "x": 2801.392258200612,
+                "y": 1782.0904967830397
             }
         },
         "Test2.tmx#tilsetduvillage": {
             "scaleInDock": 1
         },
         "Texture/TX Village Props.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
-        "donjonPasFini.tmx": {
+        "donjonFini.tmx": {
             "expandedObjectLayers": [
                 3
             ],
             "scale": 0.75,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 1137.3333333333335,
-                "y": 761.3333333333333
+                "x": 233.33333333333331,
+                "y": 712
+            }
+        },
+        "donjonFini.tmx#tilsetbackground": {
+            "scaleInDock": 1
+        },
+        "donjonFini.tmx#tilsetduvillage": {
+            "scaleInDock": 1
+        },
+        "donjonPasFini.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1418.6666666666665,
+                "y": 704
             }
         },
         "donjonPasFini.tmx#tilsetbackground": {
             "scaleInDock": 1
         },
         "donjonPasFini.tmx#tilsetduvillage": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "level1.tmx": {
             "scale": 0.836,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 522.7272727272726,
-                "y": 517.9425837320574
+                "x": 521.5311004784689,
+                "y": 515.5502392344498
             }
         },
         "level1.tmx#tiles_spritesheet": {
@@ -75,5 +136,9 @@
         "Texture/TX Village Props.tsx"
     ],
     "tileset.embedInMap": true,
-    "tileset.lastUsedFilter": "Tous les Fichiers (*)"
+    "tileset.lastUsedFilter": "Tous les Fichiers (*)",
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
 }
