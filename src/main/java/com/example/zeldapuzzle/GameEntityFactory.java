@@ -44,7 +44,8 @@ public class GameEntityFactory implements EntityFactory {
         Image imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/character.png"));
         //Physics
 
-        HitBox box = new HitBox(BoundingShape.box(45,55));
+        HitBox box = new HitBox(BoundingShape.box(45
+                ,55));
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 //        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
