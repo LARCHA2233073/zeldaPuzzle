@@ -163,9 +163,17 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("cible")
     public Entity cible(SpawnData data) {
         Rectangle rectangle = new Rectangle(27,32,Color.GOLD);
+        Image imageCible;
+        try {
+            imageCible = new Image(new FileInputStream("src/main/resources/assets/textures/Cible.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(imageCible);
         rectangle.setOpacity(0.1);
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.CIBLE)
+                .view(imageView)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
