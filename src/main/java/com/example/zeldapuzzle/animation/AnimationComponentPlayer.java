@@ -42,7 +42,7 @@ public class AnimationComponentPlayer extends Component {
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-            entity.translateY(speedy * tpf);
+         //`   entity.translateY(speedy * tpf);
 
             //up
             if (speedy < 0) {
@@ -58,7 +58,7 @@ public class AnimationComponentPlayer extends Component {
                 }
 
             }
-            speedy = (int) (speedy * 0.9);
+            speedy = (int) (speedy * 0.6);
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -67,7 +67,7 @@ public class AnimationComponentPlayer extends Component {
         }
         else {
 
-            entity.translateX(speedx * tpf);
+       //     entity.translateX(speedx * tpf);
 
             //left
             if (speedx < 0) {
@@ -83,7 +83,7 @@ public class AnimationComponentPlayer extends Component {
                 }
 
             }
-            speedx = (int) (speedx * 0.9);
+            speedx = (int) (speedx * 0.6);
             if (FXGLMath.abs(speedx) < 1) {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);

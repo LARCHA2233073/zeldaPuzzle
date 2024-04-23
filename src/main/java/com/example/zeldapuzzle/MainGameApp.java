@@ -22,6 +22,9 @@ import javafx.scene.paint.Color;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static java.lang.System.currentTimeMillis;
@@ -164,15 +167,27 @@ public class MainGameApp extends GameApplication {
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
-//        try {
-//             fileInputStream = new FileInputStream("assets/levels/BeginingMap3.tmx");
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//        TMXLevelLoader tmxLevelLoader = new TMXLevelLoader();
-//        tmxLevelLoader.parse(fileInputStream);
+
         mobPassive = spawn("mobPassive");
-        mobMovement(gameEntityFactory.getAnimationComponentMobPassive());
+        Runnable helloRunnable = new Runnable() {
+            public void run() {
+                gameEntityFactory.getAnimationComponentMobPassive().stopMovement();
+                gameEntityFactory.getAnimationComponentMobPassive().setSpeedx(0);
+                gameEntityFactory.getAnimationComponentMobPassive().setSpeedy(0);
+
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(helloRunnable, 0L, (long) 3.5, TimeUnit.SECONDS);
+
+        Runnable helloRunnable1 = new Runnable() {
+            public void run() {
+                mobMovement(gameEntityFactory.getAnimationComponentMobPassive());
+            }
+        };
+        ScheduledExecutorService executor1 = Executors.newScheduledThreadPool(1);
+        executor1.scheduleAtFixedRate(helloRunnable1, 0, 3, TimeUnit.SECONDS);
+
         getPhysicsWorld().setGravity(0,0);
     }
 
@@ -252,7 +267,7 @@ public class MainGameApp extends GameApplication {
         return mobPassive;
     }
     public void mobMovement (AnimationComponentMobPassive animationComponentMobPassive) {
-        if (currentTimeMillis() % 5000 == 0 ){
+        animationComponentMobPassive.changeBodyType(BodyType.DYNAMIC);
 
             int random = (int) (Math.random() * 4);
 
@@ -284,7 +299,6 @@ public class MainGameApp extends GameApplication {
                     animationComponentMobPassive.setSpeedx(0);
                 }
             }
-        }
-
     }
+
 }

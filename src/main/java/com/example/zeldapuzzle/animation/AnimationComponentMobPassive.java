@@ -4,6 +4,7 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.example.zeldapuzzle.SensorComponent;
@@ -13,7 +14,7 @@ import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-
+//essayer de regler le probleme de vitesse en changeant le speedy avec les vecteurs etc.
 public class AnimationComponentMobPassive extends Component {
 
     private PhysicsComponent physics = new PhysicsComponent();
@@ -38,22 +39,17 @@ public class AnimationComponentMobPassive extends Component {
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(16, 21));
         entity.getViewComponent().addChild(texture);
-        /*try {
-            entity.addComponent(new SensorComponent());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
 
-         */
     }
 
     @Override
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-            entity.translateY( (speedy) * tpf);
+         //   entity.translateY( (speedy) * tpf);
 
             //up
+
             if (speedy < 0) {
                 if (texture.getAnimationChannel() == animIdle) {
                     texture.loopAnimationChannel(animWalkUp);
@@ -67,7 +63,7 @@ public class AnimationComponentMobPassive extends Component {
                 }
 
             }
-            speedy = (int) (speedy * 0.9);
+            speedy = (int) (speedy * 0.5);
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -76,7 +72,7 @@ public class AnimationComponentMobPassive extends Component {
         }
         else {
 
-            entity.translateX((speedx) * tpf);
+       //     entity.translateX((speedx) * tpf);
 
             //left
             if (speedx < 0) {
@@ -92,7 +88,7 @@ public class AnimationComponentMobPassive extends Component {
                 }
 
             }
-            speedx = (int) (speedx * 0.9);
+            speedx = (int) (speedx * 0.5);
             if (FXGLMath.abs(speedx) < 1) {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -143,5 +139,14 @@ public class AnimationComponentMobPassive extends Component {
     }
     public void setSpeedy(int speedx) {
         this.speedy = speedx;
+    }
+    public void stopMovement() {
+        physics = getEntity().getComponent(PhysicsComponent.class);
+        physics.setBodyLinearVelocity(new Vec2(0,0));
+        physics.setBodyType(BodyType.STATIC);
+}
+    public void changeBodyType(BodyType bodyType) {
+        physics = getEntity().getComponent(PhysicsComponent.class);
+        physics.setBodyType(bodyType);
     }
 }
