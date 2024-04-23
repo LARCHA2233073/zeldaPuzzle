@@ -274,6 +274,7 @@ public class GameEntityFactory implements EntityFactory {
                 .at(850,-130)
                 .viewWithBBox(arrow)
                 .with(physics)
+                .collidable()
                 .buildAndAttach();
     }
 
