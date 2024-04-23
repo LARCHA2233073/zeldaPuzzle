@@ -36,6 +36,8 @@ public class MainGameApp extends GameApplication {
     private Entity dungeonEntry;
     private Entity dungeon;
     private Entity background;
+
+    private Entity arrow;
     private Viewport viewport;
     private PhysicsComponent physics =  new PhysicsComponent();;
     private GameEntityFactory gameEntityFactory = new GameEntityFactory();
@@ -171,6 +173,7 @@ public class MainGameApp extends GameApplication {
 //        tmxLevelLoader.parse(fileInputStream);
         mobPassive = spawn("mobPassive");
         mobMovement(gameEntityFactory.getAnimationComponentMobPassive());
+        getPhysicsWorld().setGravity(0,0);
     }
 
     @Override
@@ -184,22 +187,31 @@ public class MainGameApp extends GameApplication {
                 viewport.bindToEntity(player,320, 500);
                 player.setPosition(100,850);
                 getGameScene().setBackgroundColor(Color.BLACK);
-                getPhysicsWorld().setGravity(0,10000);
+                getPhysicsWorld().setGravity(0,1500);
                 setPlayer(player);
 
             }
         });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATIONTIRE) {
             @Override
-            protected void onCollision(Entity player, Entity stationTire) {
-                getGameScene().setBackgroundColor(Color.BEIGE);
+            protected void onCollisionBegin(Entity player, Entity stationTire) {
+                arrow = spawn("arrow");
+                arrow.setX(stationTire.getX());
+                arrow.setY(stationTire.getY());
 
             }
         });
 
-        FXGL.getPhysicsWorld().setGravity(0,0);
-    }
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.ARROWMOVE) {
+            @Override
+            protected void onCollisionBegin(Entity cible, Entity arrowMove) {
+                cible.removeFromWorld();
+                System.out.println("OK");
+                arrowMove.removeFromWorld();
 
+            }
+        });
+    }
 
     @Override
     protected void initUI(){
@@ -225,7 +237,7 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,MOBPASSIVE
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,MOBPASSIVE
     }
 
     public void setPlayer(Entity player) {
