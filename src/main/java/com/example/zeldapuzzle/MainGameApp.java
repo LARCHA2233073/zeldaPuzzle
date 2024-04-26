@@ -16,13 +16,24 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -47,6 +58,9 @@ public class MainGameApp extends GameApplication {
 
     private Entity pomme;
 
+    private GridPane gridPane;
+
+    ImageView[][] imageViewTab = new ImageView[40][4];
 
 
     public MainGameApp() throws FileNotFoundException {
@@ -58,7 +72,7 @@ public class MainGameApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
     settings.setWidth(800);
     settings.setHeight(800);
-    settings.setTitle("Zelda 2D Game");
+    settings.setTitle("Zelda 2D Game par ماستن");
     settings.setVersion("1");
     settings.setIntroEnabled(false);
     settings.setMainMenuEnabled(true);
@@ -70,7 +84,23 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initInput() {
         Input input = getInput();
+        input.addAction(new UserAction("inventaire") {
+            @Override
+            protected void onActionBegin() {
+                //ajout dans le gridpane format(colonnes,lignes)
+                for (int i = 0; i <=3; i++){
+                    for (int j = 0; j <=9; j ++){
+                        gridPane.add(imageViewTab[j][i] ,j,i);
+                    }
+                }
+            }
 
+            @Override
+            protected void onActionEnd() {
+                gridPane.getChildren().clear();
+            }
+
+        }, KeyCode.TAB);
         input.addAction(new UserAction("getPosition") {
             @Override
             protected void onAction() {
@@ -251,6 +281,109 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initUI(){
 
+        //case
+
+        //sourcede l'image
+        Image image1;
+        try {
+             image1 = new Image(new FileInputStream("src/main/resources/assets/textures/caseInventaire.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        //case (node)
+//        ImageView imageView1_0 = new ImageView(image1);
+//        ImageView imageView2_0= new ImageView(image1);
+//        ImageView imageView3_0 = new ImageView(image1);
+//        ImageView imageView4_0 = new ImageView(image1);
+//        ImageView imageView5_0 = new ImageView(image1);
+//        ImageView imageView6_0 = new ImageView(image1);
+//        ImageView imageView7_0 = new ImageView(image1);
+//        ImageView imageView8_0 = new ImageView(image1);
+//        ImageView imageView9_0 = new ImageView(image1);
+//        ImageView imageView10_0 = new ImageView(image1);
+//
+//        ImageView imageView1_1 = new ImageView(image1);
+//        ImageView imageView2_1= new ImageView(image1);
+//        ImageView imageView3_1 = new ImageView(image1);
+//        ImageView imageView4_1 = new ImageView(image1);
+//        ImageView imageView5_1 = new ImageView(image1);
+//        ImageView imageView6_1 = new ImageView(image1);
+//        ImageView imageView7_1 = new ImageView(image1);
+//        ImageView imageView8_1 = new ImageView(image1);
+//        ImageView imageView9_1 = new ImageView(image1);
+//        ImageView imageView10_1 = new ImageView(image1);
+//
+//        ImageView imageView1_2= new ImageView(image1);
+//        ImageView imageView2_2= new ImageView(image1);
+//        ImageView imageView3_2 = new ImageView(image1);
+//        ImageView imageView4_2 = new ImageView(image1);
+//        ImageView imageView5_2 = new ImageView(image1);
+//        ImageView imageView6_2 = new ImageView(image1);
+//        ImageView imageView7_2 = new ImageView(image1);
+//        ImageView imageView8_2 = new ImageView(image1);
+//        ImageView imageView9_2 = new ImageView(image1);
+//        ImageView imageView10_2 = new ImageView(image1);
+//
+//        ImageView imageView1_3 = new ImageView(image1);
+//        ImageView imageView2_3= new ImageView(image1);
+//        ImageView imageView3_3 = new ImageView(image1);
+//        ImageView imageView4_3 = new ImageView(image1);
+//        ImageView imageView5_3 = new ImageView(image1);
+//        ImageView imageView6_3 = new ImageView(image1);
+//        ImageView imageView7_3 = new ImageView(image1);
+//        ImageView imageView8_3 = new ImageView(image1);
+//        ImageView imageView9_3 = new ImageView(image1);
+//        ImageView imageView10_3= new ImageView(image1);
+
+        //ajouter les imageviews dans un tableau format(colonnes,lignes)
+        for (int i = 0; i <=3; i++){
+            for (int j = 0; j <=9; j ++){
+                imageViewTab[j][i] = new ImageView(image1);
+            }
+        }
+
+
+
+        BorderPane borderPane = new BorderPane();
+
+        gridPane= new GridPane();
+
+//        //ajout dans le gridpane format(colonnes,lignes)
+//        for (int i = 0; i <=3; i++){
+//            System.out.println("y= " + i);
+//
+//            for (int j = 0; j <=9; j ++){
+//                System.out.println("x= " + j );
+//                gridPane.add(imageViewTab[j][i] ,j,i);
+//            }
+//        }
+
+
+        //parametre du GridPane
+        gridPane.setPadding(new Insets(95,10,10,50  ));
+        gridPane.setHgap(0);
+        gridPane.setVgap(0);
+        gridPane.setAlignment(Pos.CENTER_RIGHT);
+        gridPane.setGridLinesVisible(true);
+
+
+        Button button = new Button("");
+        button.setStyle("-fx-background-color: MediumSeaGreen");
+
+        //barre de vie
+        ProgressBar barreDeVie = new ProgressBar();
+        barreDeVie.setProgress(1);
+        barreDeVie.setStyle("-fx-accent: red;");
+        barreDeVie.setPrefWidth(225);
+        barreDeVie.setPrefHeight(21);
+
+        //BorderPane
+        borderPane.setLeft(barreDeVie);
+        borderPane.setCenter(gridPane);
+
+        getGameScene().addUINode(borderPane);
+        getGameScene().getRoot().setCenterShape(true);
 
     }
 

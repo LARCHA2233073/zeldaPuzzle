@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Test2.tmx",
+    "activeFile": "donjonPasFini.tmx",
     "expandedProjectPaths": [
         "Texture",
         "."
@@ -18,8 +18,8 @@
             "scale": 0.3047916666666667,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 954.7505126452495,
-                "y": 1420.6425153793575
+                "x": 958.0314422419684,
+                "y": 962.952836637047
             }
         },
         "BeginingMap3.tmx#test": {
@@ -30,16 +30,17 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 386.66666666666663,
-                "y": 462.6666666666667
+                "x": 338.66666666666663,
+                "y": 690.6666666666665
             }
         },
         "StartingMap.tmx#Tuille_village": {
             "dynamicWrapping": false
         },
         "StartingMap.tmx#objet": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "StartingMap.tmx#objetBack": {
@@ -53,6 +54,7 @@
             "scaleInDock": 1
         },
         "StartingMap.tmx#tilset2": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "StartingMap.tmx#tilset3": {
@@ -72,8 +74,8 @@
             "scale": 0.3047916666666667,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 961.3123718386877,
-                "y": 1427.2043745727956
+                "x": 958.0314422419684,
+                "y": 962.952836637047
             }
         },
         "Test.tmx#tiles-asset": {
@@ -83,11 +85,12 @@
             "scale": 0.29628125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2801.392258200612,
-                "y": 1782.0904967830397
+                "x": 1599.831241430229,
+                "y": 1.6875856977111425
             }
         },
         "Test2.tmx#tilsetduvillage": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "Texture/TX Village Props.tsx": {
@@ -102,8 +105,8 @@
             "scale": 0.75,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 232,
-                "y": 710.6666666666665
+                "x": 1600,
+                "y": 479.3333333333333
             }
         },
         "donjonFini.tmx#tilsetbackground": {
@@ -118,10 +121,10 @@
                 3
             ],
             "scale": 0.75,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 482.66666666666663,
-                "y": 938.6666666666665
+                "x": 952,
+                "y": 892
             }
         },
         "donjonPasFini.tmx#tilsetbackground": {
@@ -136,8 +139,8 @@
             "scale": 0.836,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 521.5311004784689,
-                "y": 515.5502392344498
+                "x": 726.0765550239234,
+                "y": 349.88038277511964
             }
         },
         "level1.tmx#tiles_spritesheet": {
@@ -152,12 +155,22 @@
     "map.width": 100,
     "openFiles": [
         "Test2.tmx",
-        "donjonPasFini.tmx"
+        "donjonPasFini.tmx",
+        "donjonFini.tmx",
+        "StartingMap.tmx",
+        "level1.tmx",
+        "BeginingMap3.tmx",
+        "Test.tmx"
     ],
     "project": "zelda.tiled-project",
     "recentFiles": [
-        "donjonPasFini.tmx",
         "Test2.tmx",
+        "Test.tmx",
+        "BeginingMap3.tmx",
+        "level1.tmx",
+        "StartingMap.tmx",
+        "donjonFini.tmx",
+        "donjonPasFini.tmx",
         "Texture/TX Village Props.tsx"
     ],
     "tileset.embedInMap": true,
