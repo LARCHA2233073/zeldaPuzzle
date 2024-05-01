@@ -12,6 +12,7 @@ import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
@@ -19,6 +20,7 @@ import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,6 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -60,7 +63,25 @@ public class MainGameApp extends GameApplication {
 
     private GridPane gridPane;
 
+    private GridPane gridPaneNombre;
+
     ImageView[][] imageViewTab = new ImageView[40][4];
+
+    private int placeInventaireX = 0; //de 0 a 9
+
+    private int placeInventaireY = 0; //de 0 a 3
+
+    private int nombreDePomme = 0;
+
+    private Image imageInventaire;
+
+    private boolean isPomme = false;
+
+    private Image imagePomme;
+
+  private Label labelNombreDePomme;
+
+    private StackPane stackPane;
 
 
     public MainGameApp() throws FileNotFoundException {
@@ -276,89 +297,99 @@ public class MainGameApp extends GameApplication {
 
             }
         });
+
+
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.POMME) {
+            @Override
+            protected void onCollisionEnd(Entity player, Entity pomme) {
+                //faire un do while un truc comme ca
+
+                ImageView imageViewPomme = new ImageView(imagePomme);
+
+                if (placeInventaireY != 4 && nombreDePomme !=10) {
+
+                    for (int i = 0; i <= 3; i++) {
+                        for (int j = 0; j <= 9; j++) {
+//                            System.out.println("image view : " + imageViewTab[j][i].getImage().toString() + "image pomme : " + imagePomme.toString());
+                            if (imageViewTab[j][i].getImage() == imagePomme) {
+                                System.out.println("il y a une pomme");
+                                isPomme = true;
+                                if (nombreDePomme != 10) {
+                                    nombreDePomme++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!isPomme){
+                        while (imageViewTab[placeInventaireX][placeInventaireY].getImage() != imageInventaire) {
+//                            System.out.println("image view : " + imageViewTab[placeInventaireX][placeInventaireY].getImage() + "image inventaire : " + imageInventaire.toString());
+                            placeInventaireX++;
+
+                            if(placeInventaireX == 10){
+                                placeInventaireX = 0;
+                                placeInventaireY++;
+                            }
+
+                        }
+                        System.out.println("image view : " + imageViewTab[placeInventaireX][placeInventaireY].getImage() + "image inventaire : " + imageInventaire.toString());
+                        imageViewTab[placeInventaireX][placeInventaireY] = imageViewPomme;
+                        if (placeInventaireX == 9 && placeInventaireY == 3 ){
+                            placeInventaireY = 4;
+                        }
+                    }
+                    for (int i = 0; i <= 3; i++) {
+                        for (int j = 0; j <= 9; j++) {
+//                            System.out.println(imageViewTab[j][i].getImage().toString());
+                        }
+                    }
+                    System.out.println();
+                }
+
+
+            }
+        });
+
+
+
     }
 
     @Override
     protected void initUI(){
-
-        //case
-
-        //sourcede l'image
-        Image image1;
+        //source de l'image inventaire
         try {
-             image1 = new Image(new FileInputStream("src/main/resources/assets/textures/caseInventaire.png"));
+             imageInventaire = new Image(new FileInputStream("src/main/resources/assets/textures/caseInventaire.png"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        //case (node)
-//        ImageView imageView1_0 = new ImageView(image1);
-//        ImageView imageView2_0= new ImageView(image1);
-//        ImageView imageView3_0 = new ImageView(image1);
-//        ImageView imageView4_0 = new ImageView(image1);
-//        ImageView imageView5_0 = new ImageView(image1);
-//        ImageView imageView6_0 = new ImageView(image1);
-//        ImageView imageView7_0 = new ImageView(image1);
-//        ImageView imageView8_0 = new ImageView(image1);
-//        ImageView imageView9_0 = new ImageView(image1);
-//        ImageView imageView10_0 = new ImageView(image1);
-//
-//        ImageView imageView1_1 = new ImageView(image1);
-//        ImageView imageView2_1= new ImageView(image1);
-//        ImageView imageView3_1 = new ImageView(image1);
-//        ImageView imageView4_1 = new ImageView(image1);
-//        ImageView imageView5_1 = new ImageView(image1);
-//        ImageView imageView6_1 = new ImageView(image1);
-//        ImageView imageView7_1 = new ImageView(image1);
-//        ImageView imageView8_1 = new ImageView(image1);
-//        ImageView imageView9_1 = new ImageView(image1);
-//        ImageView imageView10_1 = new ImageView(image1);
-//
-//        ImageView imageView1_2= new ImageView(image1);
-//        ImageView imageView2_2= new ImageView(image1);
-//        ImageView imageView3_2 = new ImageView(image1);
-//        ImageView imageView4_2 = new ImageView(image1);
-//        ImageView imageView5_2 = new ImageView(image1);
-//        ImageView imageView6_2 = new ImageView(image1);
-//        ImageView imageView7_2 = new ImageView(image1);
-//        ImageView imageView8_2 = new ImageView(image1);
-//        ImageView imageView9_2 = new ImageView(image1);
-//        ImageView imageView10_2 = new ImageView(image1);
-//
-//        ImageView imageView1_3 = new ImageView(image1);
-//        ImageView imageView2_3= new ImageView(image1);
-//        ImageView imageView3_3 = new ImageView(image1);
-//        ImageView imageView4_3 = new ImageView(image1);
-//        ImageView imageView5_3 = new ImageView(image1);
-//        ImageView imageView6_3 = new ImageView(image1);
-//        ImageView imageView7_3 = new ImageView(image1);
-//        ImageView imageView8_3 = new ImageView(image1);
-//        ImageView imageView9_3 = new ImageView(image1);
-//        ImageView imageView10_3= new ImageView(image1);
+
+        //source de l'image Pomme
+        try {
+            imagePomme = new Image(new FileInputStream("src/main/resources/assets/textures/PommeBackground.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
 
         //ajouter les imageviews dans un tableau format(colonnes,lignes)
         for (int i = 0; i <=3; i++){
             for (int j = 0; j <=9; j ++){
-                imageViewTab[j][i] = new ImageView(image1);
+                imageViewTab[j][i] = new ImageView(imageInventaire);
             }
         }
 
 
-
+        //creation borderPane et gridPane et stackPane (initialisation des variable)
         BorderPane borderPane = new BorderPane();
+        gridPane = new GridPane();
+        stackPane = new StackPane();
+        gridPaneNombre = new GridPane();
+        labelNombreDePomme = new Label("x" + nombreDePomme);
 
-        gridPane= new GridPane();
-
-//        //ajout dans le gridpane format(colonnes,lignes)
-//        for (int i = 0; i <=3; i++){
-//            System.out.println("y= " + i);
-//
-//            for (int j = 0; j <=9; j ++){
-//                System.out.println("x= " + j );
-//                gridPane.add(imageViewTab[j][i] ,j,i);
-//            }
-//        }
-
+        //ajout du gridPane dans le stackPane
+        stackPane.getChildren().add(gridPane);
 
         //parametre du GridPane
         gridPane.setPadding(new Insets(95,10,10,50  ));
@@ -380,7 +411,7 @@ public class MainGameApp extends GameApplication {
 
         //BorderPane
         borderPane.setLeft(barreDeVie);
-        borderPane.setCenter(gridPane);
+        borderPane.setCenter(stackPane);
 
         getGameScene().addUINode(borderPane);
         getGameScene().getRoot().setCenterShape(true);

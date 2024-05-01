@@ -99,18 +99,19 @@ public class GameEntityFactory implements EntityFactory {
     public Entity pomme(SpawnData data) {
         Image imagePomme;
         try {
-            imagePomme = new Image(new FileInputStream("src/main/resources/assets/textures/Pomme_transparent.png"));
+            imagePomme = new Image(new FileInputStream("src/main/resources/assets/textures/PommeTransparente.png"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         ImageView imageView = new ImageView(imagePomme);
         return entityBuilder(data)
-                .at(400, 100)
+                .at(400, 50)
                 .type(MainGameApp.EntityType.POMME)
                 .viewWithBBox(imageView)
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
+
 
 
     }
