@@ -181,7 +181,7 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
                 //changer de niveau
-                FXGL.setLevelFromMap("donjonPasFini.tmx");
+                FXGL.setLevelFromMap("leDongeon.tmx");
                 player = spawn("player");
                 viewport.bindToEntity(player,320, 500);
                 player.setPosition(100,850);
@@ -262,7 +262,7 @@ public class MainGameApp extends GameApplication {
 
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
-        SWORD,MOBPASSIVE,POMME
+        SWORD,MOBPASSIVE, Grotte1, plateform, barriere, mur, POMME
     }
 
     public void setPlayer(Entity player) {

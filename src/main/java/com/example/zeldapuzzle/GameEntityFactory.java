@@ -25,7 +25,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
@@ -121,19 +125,18 @@ public class GameEntityFactory implements EntityFactory {
                 .view(imageView)
                 .buildAndAttach();
 
-
     }
 
 
 
 
 
-    @Spawns("plateform")
-    public Entity plateform(SpawnData data) {
-
+    @Spawns("mur")
+    public Entity mur(SpawnData data) {
+        System.out.println(data.<Polygon>get("polygon").getPoints());
         return FXGL.entityBuilder(data)
-                .type(MainGameApp.EntityType.PLATFORM)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .type(MainGameApp.EntityType.mur)
+                .bbox(new HitBox(BoundingShape.polygonFromDoubles(data.<Polygon>get("polygon").getPoints())))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
@@ -154,7 +157,6 @@ public class GameEntityFactory implements EntityFactory {
 
     @Spawns("cible")
     public Entity cible(SpawnData data) {
-        Rectangle rectangle = new Rectangle(27,32,Color.GOLD);
         Image imageCible;
         try {
             imageCible = new Image(new FileInputStream("src/main/resources/assets/textures/Cible.png"));
@@ -162,22 +164,9 @@ public class GameEntityFactory implements EntityFactory {
             throw new RuntimeException(e);
         }
         ImageView imageView = new ImageView(imageCible);
-        rectangle.setOpacity(0.1);
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.CIBLE)
-                .view(imageView)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-                .with(new PhysicsComponent())
-                .with(new CollidableComponent(true))
-                .view(rectangle)
-                .build();
-
-    }
-    @Spawns("cible1")
-    public Entity cible1(SpawnData data) {
-        return FXGL.entityBuilder(data)
-                .type(MainGameApp.EntityType.CIBLE)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .viewWithBBox(imageView)
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
