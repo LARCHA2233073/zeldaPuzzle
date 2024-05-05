@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
-import static java.lang.System.nanoTime;
 
 public class GameEntityFactory implements EntityFactory {
     ArrayList<Double> listeDonne = new ArrayList<>();
@@ -62,7 +61,7 @@ public class GameEntityFactory implements EntityFactory {
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.PLAYER)
                 .at(400, 100)
-                .scale(2, 2)
+                .scale(1.3, 1.3)
                 .bbox(box)
                 .with(new AnimationComponentPlayer())
                 .with(new CollidableComponent(true))
@@ -95,6 +94,28 @@ public class GameEntityFactory implements EntityFactory {
 
 
     }
+
+    @Spawns("pomme")
+    public Entity pomme(SpawnData data) {
+        Image imagePomme;
+        try {
+            imagePomme = new Image(new FileInputStream("src/main/resources/assets/textures/PommeTransparente.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(imagePomme);
+        return entityBuilder(data)
+                .at(400, 50)
+                .type(MainGameApp.EntityType.POMME)
+                .viewWithBBox(imageView)
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+
+
+    }
+
 
     @Spawns("background")
     public Entity background(SpawnData data) {
@@ -143,9 +164,16 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("cible")
     public Entity cible(SpawnData data) {
 
+        Image imageCible;
+        try {
+            imageCible = new Image(new FileInputStream("src/main/resources/assets/textures/Cible.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(imageCible);
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.CIBLE)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .viewWithBBox(imageView)
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
@@ -268,7 +296,6 @@ public class GameEntityFactory implements EntityFactory {
         });
 
         return entityBuilder(data)
-                .type(MainGameApp.EntityType.ARROW)
                 .viewWithBBox(arrow)
                 .buildAndAttach();
     }

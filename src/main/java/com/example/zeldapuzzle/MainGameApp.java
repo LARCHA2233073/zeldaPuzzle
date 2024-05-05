@@ -12,23 +12,34 @@ import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
+import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
-import static java.lang.System.currentTimeMillis;
-import static java.lang.System.nanoTime;
 
 
 public class MainGameApp extends GameApplication {
@@ -38,12 +49,43 @@ public class MainGameApp extends GameApplication {
     private Entity platform;
     private Entity dungeonEntry;
     private Entity dungeon;
+
     private Entity background;
 
     private Entity arrow;
     private Viewport viewport;
+
     private PhysicsComponent physics =  new PhysicsComponent();;
+
     private GameEntityFactory gameEntityFactory = new GameEntityFactory();
+    private AnimationComponentPlayer animation = new AnimationComponentPlayer();
+
+    private  int numberOfTarget = 5;
+
+    private Entity pomme;
+
+    private GridPane gridPane;
+
+    private GridPane gridPaneNombre;
+
+    ImageView[][] imageViewTab = new ImageView[40][4];
+
+    private int placeInventaireX = 0; //de 0 a 9
+
+    private int placeInventaireY = 0; //de 0 a 3
+
+    private int nombreDePomme = 0;
+
+    private Image imageInventaire;
+
+    private boolean isPomme = false;
+
+    private Image imagePomme;
+
+  private Label labelNombreDePomme;
+
+    private StackPane stackPane;
+
 
     public MainGameApp() throws FileNotFoundException {
         physics.setBodyType(BodyType.DYNAMIC);
@@ -54,7 +96,7 @@ public class MainGameApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
     settings.setWidth(800);
     settings.setHeight(800);
-    settings.setTitle("Zelda 2D Game");
+    settings.setTitle("Zelda 2D Game par ماستن");
     settings.setVersion("1");
     settings.setIntroEnabled(false);
     settings.setMainMenuEnabled(true);
@@ -66,7 +108,24 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initInput() {
         Input input = getInput();
+        input.addAction(new UserAction("inventaire") {
+                            @Override
+                            protected void onActionBegin() {
+                                //ajout dans le gridpane format(colonnes,lignes)
+                                for (int i = 0; i <= 3; i++) {
+                                    for (int j = 0; j <= 9; j++) {
+                                        gridPane.add(imageViewTab[j][i], j, i);
+                                    }
+                                }
+                            }
 
+
+            @Override
+            protected void onActionEnd() {
+                gridPane.getChildren().clear();
+            }
+
+        }, KeyCode.TAB);
         input.addAction(new UserAction("getPosition") {
             @Override
             protected void onAction() {
@@ -86,7 +145,7 @@ public class MainGameApp extends GameApplication {
         }, KeyCode.DOWN);
         input.addAction(new UserAction("resetZoom") {
             @Override
-            protected void onAction() {viewport.setZoom(1);
+            protected void onAction() {viewport.setZoom(1.2);
             }
         }, KeyCode.DIGIT0);
         input.addAction(new UserAction("Move right") {
@@ -146,65 +205,6 @@ public class MainGameApp extends GameApplication {
             }
         }, KeyCode.S);
 
-        input.addAction(new UserAction("Move Down MOB") {
-            @Override
-            protected void onAction() {
-                mobPassive.getComponent(AnimationComponentMobPassive.class).moveDown();
-            }
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-                physics = mobPassive.getComponent(PhysicsComponent.class);
-                physics.getBody().setType(BodyType.STATIC);
-                physics.getBody().setType(BodyType.DYNAMIC);
-            }
-        }, KeyCode.O);
-
-        input.addAction(new UserAction("Move Up MOB") {
-            @Override
-            protected void onAction() {
-                mobPassive.getComponent(AnimationComponentMobPassive.class).moveUp();
-            }
-
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-                physics = mobPassive.getComponent(PhysicsComponent.class);
-                physics.getBody().setType(BodyType.STATIC);
-                physics.getBody().setType(BodyType.DYNAMIC);
-            }
-        }, KeyCode.L);
-
-        input.addAction(new UserAction("Move left DOWN") {
-            @Override
-            protected void onAction() {
-                mobPassive.getComponent(AnimationComponentMobPassive.class).moveLeft();
-            }
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-                physics = mobPassive.getComponent(PhysicsComponent.class);
-                physics.getBody().setType(BodyType.STATIC);
-                physics.getBody().setType(BodyType.DYNAMIC);
-            }
-        }, KeyCode.M);
-
-        input.addAction(new UserAction("Move right MOB") {
-            @Override
-            protected void onAction() {
-                mobPassive.getComponent(AnimationComponentMobPassive.class).moveRight();
-            }
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-                physics = mobPassive.getComponent(PhysicsComponent.class);
-                physics.getBody().setType(BodyType.STATIC);
-                physics.getBody().setType(BodyType.DYNAMIC);
-            }
-        }, KeyCode.N);
-
-
-
     }
 
 
@@ -216,47 +216,35 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initGame(){
 
-        //EntityFactory
         getGameWorld().addEntityFactory(gameEntityFactory);
+
+        //EntityFactory
+        try {
+            getGameWorld().addEntityFactory(gameEntityFactory);
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         FXGL.setLevelFromMap("StartingMap.tmx");
         dungeonEntry = spawn("dungeonEntry");
-//        dungeonEntry.setX(850);
-//        dungeonEntry.setY(-130);
         player = spawn("player");
-        mobPassive = spawn("mobPassive");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
-
-        Runnable helloRunnable = new Runnable() {
-            public void run() {
-                gameEntityFactory.getAnimationComponentMobPassive().setSpeedy(0);
-                gameEntityFactory.getAnimationComponentMobPassive().setSpeedx(0);
-                gameEntityFactory.getAnimationComponentMobPassive().stopMovement();
-            }
-        };
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(helloRunnable, (long) 5 , (long) 2, TimeUnit.SECONDS);
-
-        Runnable helloRunnable1 = new Runnable() {
-            public void run() {
-                mobMovement(gameEntityFactory.getAnimationComponentMobPassive());
-            }
-        };
-        ScheduledExecutorService executor1 = Executors.newScheduledThreadPool(1);
-        executor1.scheduleAtFixedRate(helloRunnable1, 0, 4, TimeUnit.SECONDS);
-
         getPhysicsWorld().setGravity(0,0);
+        pomme = spawn("pomme");
+
     }
 
     @Override
     protected void initPhysics(){
+
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
+                //changer de niveau
                 FXGL.setLevelFromMap("donjonPasFini.tmx");
                 player = spawn("player");
-                player.setScaleUniform(1.3);
                 viewport.bindToEntity(player,320, 500);
                 player.setPosition(100,850);
                 getGameScene().setBackgroundColor(Color.BLACK);
@@ -278,25 +266,163 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.ARROWMOVE) {
             @Override
             protected void onCollisionBegin(Entity cible, Entity arrowMove) {
+                //enlever la cible
+                numberOfTarget--;
                 cible.removeFromWorld();
-                System.out.println("OK");
+
+                //message pour le joueur
+                String message = "nombre de cible restante " + numberOfTarget + "/5";
+                FXGL.getNotificationService().pushNotification(message);
+
+                //enlever la fleche
                 arrowMove.removeFromWorld();
+
+                //changer de carte
+                if (numberOfTarget == 0){
+                    FXGL.setLevelFromMap("donjonFini.tmx");
+                    player = spawn("player");
+                    viewport.bindToEntity(player,320, 500);
+                    player.setPosition(561.333,817.333);
+                    getGameScene().setBackgroundColor(Color.BLACK);
+                    getPhysicsWorld().setGravity(0,1500);
+                    setPlayer(player);
+                }
 
             }
         });
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.STATUE) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity statue) {
+                FXGL.setLevelFromMap("StartingMap.tmx");
+                player = spawn("player");
+                viewport.bindToEntity(player,320, 500);
+                player.setPosition(400,100);
+                getGameScene().setBackgroundColor(Color.WHITE);
+                getPhysicsWorld().setGravity(0,0);
+                setPlayer(player);
+
+            }
+        });
+
+
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.POMME) {
+            @Override
+            protected void onCollisionEnd(Entity player, Entity pomme) {
+                //faire un do while un truc comme ca
+
+                ImageView imageViewPomme = new ImageView(imagePomme);
+
+                if (placeInventaireY != 4 && nombreDePomme !=10) {
+
+                    for (int i = 0; i <= 3; i++) {
+                        for (int j = 0; j <= 9; j++) {
+//                            System.out.println("image view : " + imageViewTab[j][i].getImage().toString() + "image pomme : " + imagePomme.toString());
+                            if (imageViewTab[j][i].getImage() == imagePomme) {
+                                System.out.println("il y a une pomme");
+                                isPomme = true;
+                                if (nombreDePomme != 10) {
+                                    nombreDePomme++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!isPomme){
+                        while (imageViewTab[placeInventaireX][placeInventaireY].getImage() != imageInventaire) {
+//                            System.out.println("image view : " + imageViewTab[placeInventaireX][placeInventaireY].getImage() + "image inventaire : " + imageInventaire.toString());
+                            placeInventaireX++;
+
+                            if(placeInventaireX == 10){
+                                placeInventaireX = 0;
+                                placeInventaireY++;
+                            }
+
+                        }
+                        System.out.println("image view : " + imageViewTab[placeInventaireX][placeInventaireY].getImage() + "image inventaire : " + imageInventaire.toString());
+                        imageViewTab[placeInventaireX][placeInventaireY] = imageViewPomme;
+                        if (placeInventaireX == 9 && placeInventaireY == 3 ){
+                            placeInventaireY = 4;
+                        }
+                    }
+                    for (int i = 0; i <= 3; i++) {
+                        for (int j = 0; j <= 9; j++) {
+//                            System.out.println(imageViewTab[j][i].getImage().toString());
+                        }
+                    }
+                    System.out.println();
+                }
+
+
+            }
+        });
+
+
+
     }
 
     @Override
     protected void initUI(){
-//        Rectangle grass = new Rectangle(500,500,Color.GREEN);
-//        Rectangle grassRed = new Rectangle(300,300,Color.RED);
-//        grass.viewOrderProperty().set(1.0);
-//        grassRed.viewOrderProperty().set(0.5);
-//        FXGL.getGameScene().addUINode(grass);
-//        FXGL.getGameScene().addUINode(grassRed);
-//        FXGL.getGameScene().setUIMouseTransparent(true);
-//        FXGL.getGameScene().setBackgroundColor(Color.GREEN);
-//        FXGL.getUIFactoryService().newText("OKKK");
+        //source de l'image inventaire
+        try {
+             imageInventaire = new Image(new FileInputStream("src/main/resources/assets/textures/caseInventaire.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //source de l'image Pomme
+        try {
+            imagePomme = new Image(new FileInputStream("src/main/resources/assets/textures/PommeBackground.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //ajouter les imageviews dans un tableau format(colonnes,lignes)
+        for (int i = 0; i <=3; i++){
+            for (int j = 0; j <=9; j ++){
+                imageViewTab[j][i] = new ImageView(imageInventaire);
+            }
+        }
+
+
+        //creation borderPane et gridPane et stackPane (initialisation des variable)
+        BorderPane borderPane = new BorderPane();
+        gridPane = new GridPane();
+        stackPane = new StackPane();
+        gridPaneNombre = new GridPane();
+        labelNombreDePomme = new Label("x" + nombreDePomme);
+
+        //ajout du gridPane dans le stackPane
+        stackPane.getChildren().add(gridPane);
+
+        //parametre du GridPane
+        gridPane.setPadding(new Insets(95,10,10,50  ));
+        gridPane.setHgap(0);
+        gridPane.setVgap(0);
+        gridPane.setAlignment(Pos.CENTER_RIGHT);
+        gridPane.setGridLinesVisible(true);
+
+
+        Button button = new Button("");
+        button.setStyle("-fx-background-color: MediumSeaGreen");
+
+        //barre de vie
+        ProgressBar barreDeVie = new ProgressBar();
+        barreDeVie.setProgress(1);
+        barreDeVie.setStyle("-fx-accent: red;");
+        barreDeVie.setPrefWidth(225);
+        barreDeVie.setPrefHeight(21);
+
+        //BorderPane
+        borderPane.setLeft(barreDeVie);
+        borderPane.setCenter(stackPane);
+
+        getGameScene().addUINode(borderPane);
+        getGameScene().getRoot().setCenterShape(true);
+
     }
 
 
@@ -310,7 +436,8 @@ public class MainGameApp extends GameApplication {
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,MOBPASSIVE
+        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
+        SWORD,MOBPASSIVE,POMME
     }
 
     public void setPlayer(Entity player) {
@@ -341,5 +468,6 @@ public class MainGameApp extends GameApplication {
             }
 
     }
-
 }
+
+
