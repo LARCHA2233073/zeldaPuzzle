@@ -146,6 +146,65 @@ public class MainGameApp extends GameApplication {
             }
         }, KeyCode.S);
 
+        input.addAction(new UserAction("Move Down MOB") {
+            @Override
+            protected void onAction() {
+                mobPassive.getComponent(AnimationComponentMobPassive.class).moveDown();
+            }
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+                physics = mobPassive.getComponent(PhysicsComponent.class);
+                physics.getBody().setType(BodyType.STATIC);
+                physics.getBody().setType(BodyType.DYNAMIC);
+            }
+        }, KeyCode.O);
+
+        input.addAction(new UserAction("Move Up MOB") {
+            @Override
+            protected void onAction() {
+                mobPassive.getComponent(AnimationComponentMobPassive.class).moveUp();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+                physics = mobPassive.getComponent(PhysicsComponent.class);
+                physics.getBody().setType(BodyType.STATIC);
+                physics.getBody().setType(BodyType.DYNAMIC);
+            }
+        }, KeyCode.L);
+
+        input.addAction(new UserAction("Move left DOWN") {
+            @Override
+            protected void onAction() {
+                mobPassive.getComponent(AnimationComponentMobPassive.class).moveLeft();
+            }
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+                physics = mobPassive.getComponent(PhysicsComponent.class);
+                physics.getBody().setType(BodyType.STATIC);
+                physics.getBody().setType(BodyType.DYNAMIC);
+            }
+        }, KeyCode.M);
+
+        input.addAction(new UserAction("Move right MOB") {
+            @Override
+            protected void onAction() {
+                mobPassive.getComponent(AnimationComponentMobPassive.class).moveRight();
+            }
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+                physics = mobPassive.getComponent(PhysicsComponent.class);
+                physics.getBody().setType(BodyType.STATIC);
+                physics.getBody().setType(BodyType.DYNAMIC);
+            }
+        }, KeyCode.N);
+
+
+
     }
 
 
@@ -177,7 +236,7 @@ public class MainGameApp extends GameApplication {
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(helloRunnable, (long) 4 , (long) 2, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(helloRunnable, (long) 5 , (long) 2, TimeUnit.SECONDS);
 
         Runnable helloRunnable1 = new Runnable() {
             public void run() {
@@ -185,7 +244,7 @@ public class MainGameApp extends GameApplication {
             }
         };
         ScheduledExecutorService executor1 = Executors.newScheduledThreadPool(1);
-        executor1.scheduleAtFixedRate(helloRunnable1, 0, 3, TimeUnit.SECONDS);
+        executor1.scheduleAtFixedRate(helloRunnable1, 0, 4, TimeUnit.SECONDS);
 
         getPhysicsWorld().setGravity(0,0);
     }
@@ -268,36 +327,19 @@ public class MainGameApp extends GameApplication {
     public void mobMovement (AnimationComponentMobPassive animationComponentMobPassive) {
       //  animationComponentMobPassive.changeBodyType(BodyType.DYNAMIC);
 
-            int random = (int) ((Math.random() * 5));
+            int random = (int) ((Math.random() * 3) + 1);
 
-            if (random == 0) {
-                animationComponentMobPassive.moveDown();
-                if (currentTimeMillis() % 2000 == 0) {
-                   // animationComponentMobPassive.setSpeedy(0);
-                  //  animationComponentMobPassive.setSpeedx(0);
-                }
+            switch (random) {
+                case 0 :  animationComponentMobPassive.moveDown();
+                    break;
+                case 1 :  animationComponentMobPassive.moveUp();
+                    break;
+                case 2 :  animationComponentMobPassive.moveLeft();
+                    break;
+                case 3 :  animationComponentMobPassive.moveRight();
+                    break;
             }
-            if (random == 1) {
-                animationComponentMobPassive.moveLeft();
-                if (currentTimeMillis() % 2000 == 0) {
-                   // animationComponentMobPassive.setSpeedy(0);
-                   // animationComponentMobPassive.setSpeedx(0);
-                }
-            }
-            if (random == 2) {
-                animationComponentMobPassive.moveUp();
-                if (currentTimeMillis() % 2000 == 0) {
-                   // animationComponentMobPassive.setSpeedy(0);
-                   // animationComponentMobPassive.setSpeedx(0);
-                }
-            }
-            if (random == 3) {
-                animationComponentMobPassive.moveRight();
-                if (currentTimeMillis() % 2000 == 0) {
-                  //  animationComponentMobPassive.setSpeedy(0);
-                   // animationComponentMobPassive.setSpeedx(0);
-                }
-            }
+
     }
 
 }

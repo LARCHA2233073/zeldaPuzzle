@@ -45,7 +45,7 @@ public class AnimationComponentMobPassive extends Component {
         entity.getViewComponent().addChild(texture);
 
     }
-
+/*
     @Override
     public void onUpdate(double tpf) {
 
@@ -53,7 +53,6 @@ public class AnimationComponentMobPassive extends Component {
             entity.translateY( (speedy) * tpf);
 
             //up
-           // if (physics.getLinearVelocity().getY() < vecY.getY())
             if (speedy < 0)
             {
                 if (texture.getAnimationChannel() == animIdle) {
@@ -81,7 +80,6 @@ public class AnimationComponentMobPassive extends Component {
 
             //left
             if (speedx < 0)
-           // if (physics.getLinearVelocity().getX() < vecX.getX())
             {
                 if (texture.getAnimationChannel() == animIdle) {
                     texture.loopAnimationChannel(animWalkLeft);
@@ -104,13 +102,18 @@ public class AnimationComponentMobPassive extends Component {
         }
     }
 
+ */
+
     public void moveRight() {
         speedx = 150;
         trueIfVertical = false;
 
+
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(-4, 0);
+        Vec2 vec2 = new Vec2(4, 0);
         physics.setBodyLinearVelocity(vec2);
+
+        texture.loopAnimationChannel(animWalkRight);
 
 
     }
@@ -122,7 +125,7 @@ public class AnimationComponentMobPassive extends Component {
         Vec2 vec2 = new Vec2(-4, 0);
         physics.setBodyLinearVelocity(vec2);
 
-
+        texture.loopAnimationChannel(animWalkLeft);
     }
     public void moveUp() {
         speedy = -150;
@@ -132,7 +135,7 @@ public class AnimationComponentMobPassive extends Component {
         Vec2 vec2 = new Vec2(0, 4);
         physics.setBodyLinearVelocity(vec2);
 
-
+        texture.loopAnimationChannel(animWalkUp);
     }
     public void moveDown() {
         speedy = 150;
@@ -141,6 +144,8 @@ public class AnimationComponentMobPassive extends Component {
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(0, -4);
         physics.setBodyLinearVelocity(vec2);
+
+        texture.loopAnimationChannel(animWalkDown);
     }
 
     public PhysicsComponent getPhysics() {
@@ -157,6 +162,7 @@ public class AnimationComponentMobPassive extends Component {
         physics = getEntity().getComponent(PhysicsComponent.class);
         physics.setBodyLinearVelocity(new Vec2(0,0));
         physics.setBodyType(BodyType.STATIC);
+        texture.loopAnimationChannel(animIdle);
 }
     public void changeBodyType(BodyType bodyType) {
         physics = getEntity().getComponent(PhysicsComponent.class);
