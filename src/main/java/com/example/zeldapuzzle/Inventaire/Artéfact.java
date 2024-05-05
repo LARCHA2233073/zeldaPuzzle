@@ -1,6 +1,5 @@
 package com.example.zeldapuzzle.Inventaire;
 
-import com.example.zeldapuzzle.Player;
 import javafx.scene.image.ImageView;
 
 public class Artéfact extends Equipement{
