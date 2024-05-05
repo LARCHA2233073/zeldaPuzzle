@@ -7,7 +7,6 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
-import com.example.zeldapuzzle.SensorComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
@@ -15,9 +14,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 //essayer de regler le probleme de vitesse en changeant le speedy avec les vecteurs etc.
-public class AnimationComponentMobPassive extends Component {
 
-    private PhysicsComponent physics = new PhysicsComponent();
+public class AnimationComponentMobPassive extends Component {
+    Point2D vecY = new Point2D(0, -4);
+    Point2D vecX = new Point2D(-4, 0);
+
+    //private PhysicsComponent physics = getEntity().getComponent(PhysicsComponent.class);
+    private PhysicsComponent physics;
     boolean trueIfVertical;
     private int speedx = 0;
     private int speedy = 0;
@@ -26,6 +29,7 @@ public class AnimationComponentMobPassive extends Component {
     private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight;
 
     public AnimationComponentMobPassive() throws FileNotFoundException {
+
         animIdle = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkLeft.png")), 9, 64, 64, Duration.seconds(1), 0, 0);
         animWalkLeft = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkLeft.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/mobPassiveWalkRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
@@ -46,11 +50,12 @@ public class AnimationComponentMobPassive extends Component {
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-         //   entity.translateY( (speedy) * tpf);
+            entity.translateY( (speedy) * tpf);
 
             //up
-
-            if (speedy < 0) {
+           // if (physics.getLinearVelocity().getY() < vecY.getY())
+            if (speedy < 0)
+            {
                 if (texture.getAnimationChannel() == animIdle) {
                     texture.loopAnimationChannel(animWalkUp);
                 }
@@ -63,7 +68,7 @@ public class AnimationComponentMobPassive extends Component {
                 }
 
             }
-            speedy = (int) (speedy * 0.5);
+            speedy = (int) (speedy * 0.9);
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -72,10 +77,12 @@ public class AnimationComponentMobPassive extends Component {
         }
         else {
 
-       //     entity.translateX((speedx) * tpf);
+            entity.translateX((speedx) * tpf);
 
             //left
-            if (speedx < 0) {
+            if (speedx < 0)
+           // if (physics.getLinearVelocity().getX() < vecX.getX())
+            {
                 if (texture.getAnimationChannel() == animIdle) {
                     texture.loopAnimationChannel(animWalkLeft);
                 }
@@ -88,7 +95,7 @@ public class AnimationComponentMobPassive extends Component {
                 }
 
             }
-            speedx = (int) (speedx * 0.5);
+            speedx = (int) (speedx * 0.9);
             if (FXGLMath.abs(speedx) < 1) {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -102,8 +109,10 @@ public class AnimationComponentMobPassive extends Component {
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(4, 0);
+        Vec2 vec2 = new Vec2(-4, 0);
         physics.setBodyLinearVelocity(vec2);
+
+
     }
     public void moveLeft() {
         speedx = -150;
@@ -112,6 +121,8 @@ public class AnimationComponentMobPassive extends Component {
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(-4, 0);
         physics.setBodyLinearVelocity(vec2);
+
+
     }
     public void moveUp() {
         speedy = -150;
@@ -120,6 +131,8 @@ public class AnimationComponentMobPassive extends Component {
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(0, 4);
         physics.setBodyLinearVelocity(vec2);
+
+
     }
     public void moveDown() {
         speedy = 150;

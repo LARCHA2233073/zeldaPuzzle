@@ -164,21 +164,20 @@ public class MainGameApp extends GameApplication {
 //        dungeonEntry.setX(850);
 //        dungeonEntry.setY(-130);
         player = spawn("player");
+        mobPassive = spawn("mobPassive");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
 
-        mobPassive = spawn("mobPassive");
         Runnable helloRunnable = new Runnable() {
             public void run() {
-                gameEntityFactory.getAnimationComponentMobPassive().stopMovement();
-                gameEntityFactory.getAnimationComponentMobPassive().setSpeedx(0);
                 gameEntityFactory.getAnimationComponentMobPassive().setSpeedy(0);
-
+                gameEntityFactory.getAnimationComponentMobPassive().setSpeedx(0);
+                gameEntityFactory.getAnimationComponentMobPassive().stopMovement();
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(helloRunnable, 0L, (long) 3.5, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(helloRunnable, (long) 4 , (long) 2, TimeUnit.SECONDS);
 
         Runnable helloRunnable1 = new Runnable() {
             public void run() {
@@ -267,36 +266,36 @@ public class MainGameApp extends GameApplication {
         return mobPassive;
     }
     public void mobMovement (AnimationComponentMobPassive animationComponentMobPassive) {
-        animationComponentMobPassive.changeBodyType(BodyType.DYNAMIC);
+      //  animationComponentMobPassive.changeBodyType(BodyType.DYNAMIC);
 
-            int random = (int) (Math.random() * 4);
+            int random = (int) ((Math.random() * 5));
 
             if (random == 0) {
                 animationComponentMobPassive.moveDown();
                 if (currentTimeMillis() % 2000 == 0) {
-                    animationComponentMobPassive.setSpeedy(0);
-                    animationComponentMobPassive.setSpeedx(0);
+                   // animationComponentMobPassive.setSpeedy(0);
+                  //  animationComponentMobPassive.setSpeedx(0);
                 }
             }
             if (random == 1) {
                 animationComponentMobPassive.moveLeft();
                 if (currentTimeMillis() % 2000 == 0) {
-                    animationComponentMobPassive.setSpeedy(0);
-                    animationComponentMobPassive.setSpeedx(0);
+                   // animationComponentMobPassive.setSpeedy(0);
+                   // animationComponentMobPassive.setSpeedx(0);
                 }
             }
             if (random == 2) {
                 animationComponentMobPassive.moveUp();
                 if (currentTimeMillis() % 2000 == 0) {
-                    animationComponentMobPassive.setSpeedy(0);
-                    animationComponentMobPassive.setSpeedx(0);
+                   // animationComponentMobPassive.setSpeedy(0);
+                   // animationComponentMobPassive.setSpeedx(0);
                 }
             }
             if (random == 3) {
                 animationComponentMobPassive.moveRight();
                 if (currentTimeMillis() % 2000 == 0) {
-                    animationComponentMobPassive.setSpeedy(0);
-                    animationComponentMobPassive.setSpeedx(0);
+                  //  animationComponentMobPassive.setSpeedy(0);
+                   // animationComponentMobPassive.setSpeedx(0);
                 }
             }
     }
