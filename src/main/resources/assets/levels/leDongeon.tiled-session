@@ -9,14 +9,15 @@
     "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
     "fileStates": {
         "": {
+            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "BeginingMap3.tmx": {
             "scale": 0.6194791666666667,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 955.641499915924,
-                "y": 658.6177904825962
+                "x": 1585.2026231713469,
+                "y": 990.3480746594922
             }
         },
         "BeginingMap3.tmx#test": {
@@ -24,18 +25,15 @@
         },
         "sans titre.tmx": {
             "expandedGroupLayers": [
-                2,
                 12,
+                2,
                 4
             ],
-            "expandedObjectLayers": [
-                12
-            ],
             "scale": 2,
-            "selectedLayer": 10,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 1192.5,
-                "y": 557.25
+                "x": 1253.5,
+                "y": 327.5
             }
         },
         "sans titre.tmx#BG1": {
@@ -65,10 +63,14 @@
         },
         "sans titre.tmx#Village": {
             "scaleInDock": 1
+        },
+        "sans titre.tmx#lance": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
     "last.exportedFilePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
-    "last.imagePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
+    "last.imagePath": "C:/Users/Utilisateur/Pictures",
     "map.height": 1000,
     "map.lastUsedExportFilter": "Fichiers de carte Tiled (*.tmx *.xml)",
     "map.lastUsedFormat": "tmx",
