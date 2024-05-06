@@ -174,6 +174,7 @@ public class MainGameApp extends GameApplication {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
             }
         }, KeyCode.D);
+
         input.addAction(new UserAction("Move left") {
             @Override
             protected void onActionBegin() {
