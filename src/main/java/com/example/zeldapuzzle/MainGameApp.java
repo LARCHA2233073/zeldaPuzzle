@@ -252,7 +252,7 @@ public class MainGameApp extends GameApplication {
         getPhysicsWorld().setGravity(0,0);
 
 
-        //spawn des objets
+        //spawn des objets oui
         FXGL.spawn("pomme");
         FXGL.spawn("pomme").setPosition(50,0);
         FXGL.spawn("banane").setPosition(100,0);
