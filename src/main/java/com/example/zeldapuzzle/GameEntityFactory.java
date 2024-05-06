@@ -35,29 +35,19 @@ public class GameEntityFactory implements EntityFactory {
     ArrayList<Double> listeDonne = new ArrayList<>();
     Entity arrowMove;
 
+
     public GameEntityFactory() throws FileNotFoundException {
     }
 
     @Spawns("player")
     public Entity spawnPlayer(SpawnData data) throws FileNotFoundException {
-        /*
-        Image imagePlayer;
-        try {
-            imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/zelda3.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ImageView imageView = new ImageView(imagePlayer);
 
-
-         */
         Image imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/character.png"));
-        //Physics
 
+        //Physics
         HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.PLAYER)
                 .at(400, 100)
@@ -105,10 +95,27 @@ public class GameEntityFactory implements EntityFactory {
         }
         ImageView imageView = new ImageView(imagePomme);
         return entityBuilder(data)
-                .at(400, 50)
                 .type(MainGameApp.EntityType.POMME)
                 .viewWithBBox(imageView)
-                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+
+
+    }
+
+    @Spawns("banane")
+    public Entity banane(SpawnData data) {
+        Image imageBanane;
+        try {
+            imageBanane = new Image(new FileInputStream("src/main/resources/assets/textures/bananeTransparente.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(imageBanane);
+        return entityBuilder(data)
+                .type(MainGameApp.EntityType.BANANE)
+                .viewWithBBox(imageView)
                 .with(new CollidableComponent(true))
                 .build();
 

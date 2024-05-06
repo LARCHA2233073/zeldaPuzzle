@@ -126,6 +126,7 @@ public class AnimationComponentPlayer extends Component {
         physics.setBodyLinearVelocity(vec2);
     }
 
+
     public PhysicsComponent getPhysics() {
         return physics;
     }
