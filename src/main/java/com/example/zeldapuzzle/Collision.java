@@ -1,4 +1,4 @@
 package com.example.zeldapuzzle;
 
-public class Dongeon {
+public class Collision {
 }

@@ -6,64 +6,39 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import com.almasb.fxgl.entity.components.BoundingBoxComponent;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
-import com.almasb.fxgl.physics.PhysicsUnitConverter;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
-import javafx.geometry.Point2D;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiConsumer;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 
 public class GameEntityFactory implements EntityFactory {
     ArrayList<Double> listeDonne = new ArrayList<>();
-
-    Entity arrowMove;
+   Entity arrowMove;
 
     public GameEntityFactory() throws FileNotFoundException {
     }
 
-    @Spawns("player")
-    public Entity spawnPlayer(SpawnData data) throws FileNotFoundException {
-        /*
-        Image imagePlayer;
-        try {
-            imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/zelda3.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ImageView imageView = new ImageView(imagePlayer);
-
-
-         */
-        Image imagePlayer = new Image(new FileInputStream("src/main/resources/assets/textures/character.png"));
-        //Physics
-
+    @Spawns("playerMapPrincipal")
+    public Entity spawnPlayerMapPrincipal(SpawnData data) throws FileNotFoundException {
         HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         return FXGL.entityBuilder()
-                .type(MainGameApp.EntityType.PLAYER)
+                .type(MainGameApp.EntityType.PLAYERMAPPRINCIPAL)
                 .at(400, 100)
                 .scale(1.3, 1.3)
                 .bbox(box)
@@ -71,19 +46,22 @@ public class GameEntityFactory implements EntityFactory {
                 .with(new CollidableComponent(true))
                 .with(physics)
                 .buildAndAttach();
+    }
 
-        /*
+    @Spawns("playerMapDongeon")
+    public Entity spawnPlayerMapDongeon(SpawnData data) throws FileNotFoundException {
+        HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
         return FXGL.entityBuilder()
-                .type(MainGameApp.EntityType.PLAYER)
-                .at(100,100)
-                .viewWithBBox(imageView)
-                .scale(0.2,0.2)
-                .with(new Player())
-//                .with(new CollidableComponent(true))
+                .type(MainGameApp.EntityType.PLAYERMAPDONGEON)
+                .at(400, 100)
+                .scale(1, 1)
+                .bbox(box)
+                .with(new AnimationComponentPlayer())
+                .with(new CollidableComponent(true))
                 .with(physics)
                 .buildAndAttach();
-
-         */
     }
 
     @Spawns("Tree")
@@ -98,7 +76,6 @@ public class GameEntityFactory implements EntityFactory {
 
 
     }
-
     @Spawns("pomme")
     public Entity pomme(SpawnData data) {
 
@@ -127,16 +104,89 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
-
-
-
-
     @Spawns("mur")
     public Entity mur(SpawnData data) {
-        System.out.println(data.<Polygon>get("polygon").getPoints());
         return FXGL.entityBuilder(data)
-                .type(MainGameApp.EntityType.mur)
+                .type(MainGameApp.EntityType.MUR)
                 .bbox(new HitBox(BoundingShape.polygonFromDoubles(data.<Polygon>get("polygon").getPoints())))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+    @Spawns("positionHaut")
+    public Entity positionHaut(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.POSITIONHAUT)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(false))
+                .build();
+
+    }
+
+    @Spawns("positionBas")
+    public Entity positionBas(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.POSITIONBAS)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(false))
+                .build();
+
+    }
+
+
+    @Spawns("ascenseurD")
+    public Entity ascenseurD(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.ASCENSEURD)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+    @Spawns("ascenseurM")
+    public Entity ascenseurM(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.ASCENSEURM)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("ascenceur")
+    public Entity ascenceur(SpawnData data) {
+
+        Image imageAscenceur;
+        PhysicsComponent physicsComponent = new PhysicsComponent();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                physicsComponent.getBody().setType(BodyType.KINEMATIC);
+            }
+        };
+        physicsComponent.setOnPhysicsInitialized(runnable);
+        try {
+            imageAscenceur = new Image(new FileInputStream("src/main/resources/assets/textures/Ascenceur.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(imageAscenceur);
+        return FXGL.entityBuilder(data)
+                .at(800,608)
+                .type(MainGameApp.EntityType.ASCENSEUR)
+                .viewWithBBox(imageView)
+                .with(physicsComponent)
+                .with(new CollidableComponent(true))
+                .build();
+    }
+
+
+    @Spawns("murTraverse")
+    public Entity murTraverse(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.MURTRAVERSE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
@@ -183,6 +233,17 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
 
     }
+    @Spawns("danger")
+    public Entity danger(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.DANGER)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(false))
+                .build();
+
+    }
+
 
     @Spawns("boite")
     public Entity boite(SpawnData data) {
@@ -318,6 +379,5 @@ public class GameEntityFactory implements EntityFactory {
                 .with(physics)
                 .buildAndAttach();
     }
-
 
 }
