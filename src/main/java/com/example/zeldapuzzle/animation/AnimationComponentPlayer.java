@@ -58,7 +58,7 @@ public class AnimationComponentPlayer extends Component {
                 }
 
             }
-            speedy = (int) (speedy * 0.6);
+            speedy = (int) (speedy * 0.5);
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -83,7 +83,7 @@ public class AnimationComponentPlayer extends Component {
                 }
 
             }
-            speedx = (int) (speedx * 0.6);
+            speedx = (int) (speedx * 0.5);
             if (FXGLMath.abs(speedx) < 1) {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -94,7 +94,7 @@ public class AnimationComponentPlayer extends Component {
 
 
     public void moveRight() {
-        speedx = 150;
+        speedx = 75;
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
@@ -102,7 +102,7 @@ public class AnimationComponentPlayer extends Component {
         physics.setBodyLinearVelocity(vec2);
     }
     public void moveLeft() {
-        speedx = -150;
+        speedx = -75;
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
@@ -110,7 +110,7 @@ public class AnimationComponentPlayer extends Component {
         physics.setBodyLinearVelocity(vec2);
     }
     public void moveUp() {
-        speedy = -150;
+        speedy = -75;
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
@@ -118,7 +118,7 @@ public class AnimationComponentPlayer extends Component {
         physics.setBodyLinearVelocity(vec2);
     }
     public void moveDown() {
-        speedy = 150;
+        speedy = 75;
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);

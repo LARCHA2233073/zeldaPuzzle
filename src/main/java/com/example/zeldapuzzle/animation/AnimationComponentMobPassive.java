@@ -45,64 +45,6 @@ public class AnimationComponentMobPassive extends Component {
         entity.getViewComponent().addChild(texture);
 
     }
-/*
-    @Override
-    public void onUpdate(double tpf) {
-
-        if (trueIfVertical) {
-            entity.translateY( (speedy) * tpf);
-
-            //up
-            if (speedy < 0)
-            {
-                if (texture.getAnimationChannel() == animIdle) {
-                    texture.loopAnimationChannel(animWalkUp);
-                }
-
-            }
-            //down
-            else {
-                if (texture.getAnimationChannel() == animIdle) {
-                    texture.loopAnimationChannel(animWalkDown);
-                }
-
-            }
-            speedy = (int) (speedy * 0.9);
-            if (FXGLMath.abs(speedy) < 1) {
-                speedy = 0;
-                texture.loopAnimationChannel(animIdle);
-            }
-
-        }
-        else {
-
-            entity.translateX((speedx) * tpf);
-
-            //left
-            if (speedx < 0)
-            {
-                if (texture.getAnimationChannel() == animIdle) {
-                    texture.loopAnimationChannel(animWalkLeft);
-                }
-
-            }
-            //right
-            else {
-                if (texture.getAnimationChannel() == animIdle) {
-                    texture.loopAnimationChannel(animWalkRight);
-                }
-
-            }
-            speedx = (int) (speedx * 0.9);
-            if (FXGLMath.abs(speedx) < 1) {
-                speedx = 0;
-                texture.loopAnimationChannel(animIdle);
-            }
-
-        }
-    }
-
- */
 
     public void moveRight() {
         speedx = 150;
@@ -163,9 +105,5 @@ public class AnimationComponentMobPassive extends Component {
         physics.setBodyLinearVelocity(new Vec2(0,0));
         physics.setBodyType(BodyType.STATIC);
         texture.loopAnimationChannel(animIdle);
-}
-    public void changeBodyType(BodyType bodyType) {
-        physics = getEntity().getComponent(PhysicsComponent.class);
-        physics.setBodyType(bodyType);
     }
 }
