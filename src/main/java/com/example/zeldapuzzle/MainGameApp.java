@@ -349,21 +349,21 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity playerMapPrincipal, Entity door) {
                 //changer de niveau
-                FXGL.setLevelFromMap("leDongeon.tmx");
-                playerMapDongeon = spawn("playerMapDongeon");
-                viewport.bindToEntity(playerMapDongeon,400,100);
+                FXGL.setLevelFromMap("donjonPasFini.tmx");
+                playerMapPrincipal = spawn("playerMapPrincipal");
+                viewport.bindToEntity(playerMapPrincipal,320,500);
                 viewport.setZoom(1.5);
-                playerMapDongeon.setPosition(195,400);
+                playerMapPrincipal.setPosition(170,600);
                 ascenceur = spawn("ascenceur");
                 getPhysicsWorld().setGravity(0,1500);
-                setPlayerMapPrincipal(playerMapDongeon);
+                setPlayerMapPrincipal(playerMapPrincipal);
 
 
             }
         });
 
         //Station de tir dans le dongeon
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.STATIONTIRE) {
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.STATIONTIRE) {
             @Override
             protected void onCollisionBegin(Entity player, Entity stationTire) {
                 arrow = spawn("arrow");
@@ -392,10 +392,10 @@ public class MainGameApp extends GameApplication {
                 //changer de carte
                 if (numberOfTarget == 0){
                     FXGL.setLevelFromMap("donjonFini.tmx");
-                    viewport.bindToEntity(playerMapDongeon,400,100);
+                    playerMapPrincipal = spawn("playerMapPrincipal");
+                    viewport.bindToEntity(playerMapPrincipal,400,100);
                     playerMapPrincipal.setPosition(561.333,817.333);
                     getPhysicsWorld().setGravity(0,1500);
-                    setPlayerMapPrincipal(playerMapPrincipal);
                 }
 
             }
@@ -518,15 +518,22 @@ public class MainGameApp extends GameApplication {
 
 
         //Retour a la map
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.STATUE) {
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.STATUE) {
             @Override
             protected void onCollisionBegin(Entity player, Entity statue) {
-                FXGL.setLevelFromMap("StartingMap.tmx");
+                FXGL.setLevelFromMap("MapDeMerde2.tmx");
                 playerMapPrincipal = spawn("playerMapPrincipal");
-                viewport.bindToEntity(playerMapDongeon,400,100);
-                player.setPosition(400,100);
+                viewport.bindToEntity(playerMapPrincipal,400,100);
                 getPhysicsWorld().setGravity(0,0);
-                setPlayerMapPrincipal(playerMapPrincipal);
+                Point2D positionPerso = new Point2D(2088.0,2365.0);
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(positionPerso);
+                    }
+                };
+                playerMapPrincipal.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
 
             }
         });

@@ -281,6 +281,18 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
 
     }
+
+    @Spawns("plateform")
+    public Entity plateform(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.PLATFORM)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
     @Spawns("danger")
     public Entity danger(SpawnData data) {
 
