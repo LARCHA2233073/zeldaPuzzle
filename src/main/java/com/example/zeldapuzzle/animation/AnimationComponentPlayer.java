@@ -58,7 +58,7 @@ public class AnimationComponentPlayer extends Component {
                 }
 
             }
-            speedy = (int) (speedy * 0.5);
+            speedy = (int) (speedy * 0.3);
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
@@ -83,7 +83,7 @@ public class AnimationComponentPlayer extends Component {
                 }
 
             }
-            speedx = (int) (speedx * 0.5);
+            speedx = (int) (speedx * 0.3);
             if (FXGLMath.abs(speedx) < 1) {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);

@@ -15,6 +15,7 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.time.TimerAction;
 import com.example.zeldapuzzle.Inventaire.Banane;
 import com.example.zeldapuzzle.Inventaire.CaseInventaire;
 import com.example.zeldapuzzle.Inventaire.Objet;
@@ -22,6 +23,7 @@ import com.example.zeldapuzzle.Inventaire.Pomme;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,12 +37,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +63,6 @@ public class MainGameApp extends GameApplication {
 
     private String positionAscenceur = "bas";
     private Entity platform;
-    private Entity dungeonEntry;
     private Entity dungeon;
 
     private Entity background;
@@ -82,6 +85,8 @@ public class MainGameApp extends GameApplication {
     private CaseInventaire caseInventaire;
 
 
+    private boolean entrer = true;
+
     private GridPane gridPane;
 
     private GridPane gridPaneNombre;
@@ -98,6 +103,8 @@ public class MainGameApp extends GameApplication {
     private StackPane stackPane;
     private int positionDeImageViewX;
     private int positionDeImageViewY;
+    TimerAction timerActionFeu;
+    private static ProgressBar barreDeVie;
 
     public MainGameApp() throws FileNotFoundException {
         physics.setBodyType(BodyType.DYNAMIC);
@@ -108,7 +115,7 @@ public class MainGameApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
     settings.setWidth(800);
     settings.setHeight(800);
-    settings.setTitle("Zelda 2D Game par ماستن");
+    settings.setTitle("Zelda 2D Game");
     settings.setVersion("1");
     settings.setIntroEnabled(false);
     settings.setMainMenuEnabled(true);
@@ -156,10 +163,12 @@ public class MainGameApp extends GameApplication {
             }
         }, KeyCode.DIGIT0);
         input.addAction(new UserAction("Move right") {
+
             @Override
             protected void onAction() {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveRight();
             }
+
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
@@ -236,6 +245,7 @@ public class MainGameApp extends GameApplication {
             gridPane.getChildren().clear();
             gridPaneNombre.getChildren().clear();
             ajoutInventaireObjet();
+            pomme.utiliser();
         });
 
         banane.getText().setOnMouseClicked(mouseEvent -> {
@@ -243,19 +253,21 @@ public class MainGameApp extends GameApplication {
             gridPane.getChildren().clear();
             gridPaneNombre.getChildren().clear();
             ajoutInventaireObjet();
+            banane.utiliser();
         });
+
         FXGL.setLevelFromMap("MapDeMerde2.tmx");
-        dungeonEntry = spawn("dungeonEntry");
+        getGameScene().setBackgroundColor(Color.BLACK);
+
+        //position du perso
         playerMapPrincipal = spawn("playerMapPrincipal");
+        Point2D positionPerso = new Point2D(2088.0,2365.0);
+        playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(positionPerso);
+
         viewport = getGameScene().getViewport();
+        System.out.println("X : " + playerMapPrincipal.getX() + "y :" + playerMapPrincipal.getY());  ;
         viewport.bindToEntity(playerMapPrincipal, playerMapPrincipal.getX(), playerMapPrincipal.getY());
         getPhysicsWorld().setGravity(0,0);
-
-
-        //spawn des objets
-        FXGL.spawn("pomme");
-        FXGL.spawn("pomme").setPosition(50,0);
-        FXGL.spawn("banane").setPosition(100,0);
 
         mobPassive = spawn("mobPassive");
 
@@ -281,6 +293,12 @@ public class MainGameApp extends GameApplication {
 
         getPhysicsWorld().setGravity(0,0);
 
+        //timeractions
+         timerActionFeu = getGameScene().getTimer().runAtInterval(() -> {
+            barreDeVie.setProgress(barreDeVie.getProgress() - 0.1);
+        }, Duration.seconds(1));
+         timerActionFeu.pause();
+
 
     }
 
@@ -295,13 +313,13 @@ public class MainGameApp extends GameApplication {
                 //changer de niveau
                 FXGL.setLevelFromMap("leDongeon.tmx");
                 playerMapDongeon = spawn("playerMapDongeon");
-                viewport.bindToEntity(playerMapDongeon,400,400);
+                viewport.bindToEntity(playerMapDongeon,400,100);
                 viewport.setZoom(1.5);
                 playerMapDongeon.setPosition(195,400);
                 ascenceur = spawn("ascenceur");
-                getGameScene().setBackgroundColor(Color.BLACK);
                 getPhysicsWorld().setGravity(0,1500);
                 setPlayerMapPrincipal(playerMapDongeon);
+
 
             }
         });
@@ -336,9 +354,8 @@ public class MainGameApp extends GameApplication {
                 //changer de carte
                 if (numberOfTarget == 0){
                     FXGL.setLevelFromMap("donjonFini.tmx");
-                    viewport.bindToEntity(playerMapPrincipal,320, 500);
+                    viewport.bindToEntity(playerMapDongeon,400,100);
                     playerMapPrincipal.setPosition(561.333,817.333);
-                    getGameScene().setBackgroundColor(Color.BLACK);
                     getPhysicsWorld().setGravity(0,1500);
                     setPlayerMapPrincipal(playerMapPrincipal);
                 }
@@ -350,9 +367,6 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.DANGER) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity danger) {
-                setVieDuPersonnage(getVieDuPersonnage() - 10);
-                System.out.println(getVieDuPersonnage());
-
             }
         });
 
@@ -471,9 +485,8 @@ public class MainGameApp extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity statue) {
                 FXGL.setLevelFromMap("StartingMap.tmx");
                 playerMapPrincipal = spawn("playerMapPrincipal");
-                viewport.bindToEntity(player,300, 500);
+                viewport.bindToEntity(playerMapDongeon,400,100);
                 player.setPosition(400,100);
-                getGameScene().setBackgroundColor(Color.WHITE);
                 getPhysicsWorld().setGravity(0,0);
                 setPlayerMapPrincipal(playerMapPrincipal);
 
@@ -567,10 +580,74 @@ public class MainGameApp extends GameApplication {
                         }
                     }
                 }
-
+                bananeEntity.removeFromWorld();
             }
         });
 
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.PORTEMAISONPLAYER) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity porteMaisonPlayer) {
+                if (entrer) {
+                    //dire que nous sommes rentrer
+                    entrer = false;
+
+                    FXGL.setLevelFromMap("interieurMaisonPlayer1.tmx");
+                    playerMapPrincipal = spawn("playerMapPrincipal");
+                    getPhysicsWorld().setGravity(0, 0);
+                    setPlayerMapPrincipal(playerMapPrincipal);
+                    viewport.bindToEntity(playerMapPrincipal,400,100);
+
+                    //position Player
+                    Point2D positionPlayer = new Point2D(650, 346);
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(positionPlayer);
+                        }
+                    };
+                    playerMapPrincipal.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
+
+                }else {
+                    //dire que nous somme sortie
+                    entrer = true;
+
+                    FXGL.setLevelFromMap("MapDeMerde2.tmx");
+                    playerMapPrincipal = spawn("playerMapPrincipal");
+                    getPhysicsWorld().setGravity(0, 0);
+                    setPlayerMapPrincipal(playerMapPrincipal);
+                    viewport.bindToEntity(playerMapPrincipal,400,100);
+
+                    //position Player
+                    Point2D positionPlayer = new Point2D(2088.0,2365.0);
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(positionPlayer);
+                        }
+                    };
+                    playerMapPrincipal.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
+
+
+                }
+
+            }
+
+        });
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.FEU) {
+
+
+            @Override
+            protected void onCollisionBegin(Entity a, Entity b) {
+                timerActionFeu.resume();
+
+            }
+
+            @Override
+            protected void onCollisionEnd(Entity a, Entity b) {
+                timerActionFeu.pause();
+            }
+        });
 
 
     }
@@ -611,7 +688,7 @@ public class MainGameApp extends GameApplication {
 
 
         //barre de vie
-        ProgressBar barreDeVie = new ProgressBar();
+        barreDeVie = new ProgressBar();
         barreDeVie.setProgress(1);
         barreDeVie.setStyle("-fx-accent: red;");
         barreDeVie.setPrefWidth(225);
@@ -634,11 +711,9 @@ public class MainGameApp extends GameApplication {
 private void setLevel(Level level){
     getGameWorld().getEntities().forEach(e -> e.removeFromWorld());
 }
-    public void setVieDuPersonnage(int vieDuPersonnage) {
-        this.vieDuPersonnage = vieDuPersonnage;
-    }
-    public int getVieDuPersonnage() {
-        return vieDuPersonnage;
+
+    public static ProgressBar getBarreDeVieVieDuPersonnage() {
+        return barreDeVie;
     }
 
     private void spawnEntityMondeDepart(){
@@ -682,8 +757,9 @@ private void setLevel(Level level){
     }
 
     public enum EntityType {
-        PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
+        PLAYER,DOOR,PLATFORM,OBJETDEHORS,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
         SWORD,MOBPASSIVE,POMME,BANANE, MUR, PLAYERMAPPRINCIPAL, MURTRAVERSE, DANGER, PLAYERMAPDONGEON, POSITIONHAUT, POSITIONBAS, ASCENSEURD, ASCENSEURM, ASCENSEUR,
+        MAISONOBJET,PORTEMAISONPLAYER,FEU
     }
 
     public void setPlayerMapPrincipal(Entity playerMapPrincipal) {
