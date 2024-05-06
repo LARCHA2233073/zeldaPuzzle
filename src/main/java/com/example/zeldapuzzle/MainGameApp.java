@@ -3,40 +3,33 @@ package com.example.zeldapuzzle;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
-import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
-import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
+import com.example.zeldapuzzle.Inventaire.Banane;
+import com.example.zeldapuzzle.Inventaire.CaseInventaire;
+import com.example.zeldapuzzle.Inventaire.Objet;
+import com.example.zeldapuzzle.Inventaire.Pomme;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -59,30 +52,29 @@ public class MainGameApp extends GameApplication {
 
     private  int numberOfTarget = 5;
 
-    private Entity pomme;
+    private Pomme pomme;
+
+    private Banane banane;
+
+    private CaseInventaire caseInventaire;
+
 
     private GridPane gridPane;
 
     private GridPane gridPaneNombre;
 
-    ImageView[][] imageViewTab = new ImageView[40][4];
+    Objet[][] tabObjets  = new Objet[40][4];
 
     private int placeInventaireX = 0; //de 0 a 9
 
     private int placeInventaireY = 0; //de 0 a 3
 
-    private int nombreDePomme = 0;
-
-    private Image imageInventaire;
 
     private boolean isPomme = false;
-
-    private Image imagePomme;
-
-  private Label labelNombreDePomme;
-
+    private boolean isBanane = false;
     private StackPane stackPane;
-
+    private int positionDeImageViewX;
+    private int positionDeImageViewY;
 
     public MainGameApp() throws FileNotFoundException {
         physics.setBodyType(BodyType.DYNAMIC);
@@ -108,17 +100,13 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("inventaire") {
             @Override
             protected void onActionBegin() {
-                //ajout dans le gridpane format(colonnes,lignes)
-                for (int i = 0; i <=3; i++){
-                    for (int j = 0; j <=9; j ++){
-                        gridPane.add(imageViewTab[j][i] ,j,i);
-                    }
-                }
+                ajoutInventaire();
             }
 
             @Override
             protected void onActionEnd() {
                 gridPane.getChildren().clear();
+                gridPaneNombre.getChildren().clear();
             }
 
         }, KeyCode.TAB);
@@ -218,14 +206,41 @@ public class MainGameApp extends GameApplication {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        //initialiser les objet
+        pomme = new Pomme();
+        caseInventaire = new CaseInventaire();
+        banane = new Banane();
+
+        //utiliser l'objet
+        pomme.getText().setOnMouseClicked(mouseEvent -> {
+            pomme.diminuerNombre();
+            gridPane.getChildren().clear();
+            gridPaneNombre.getChildren().clear();
+            ajoutInventaireObjet();
+        });
+
+        banane.getText().setOnMouseClicked(mouseEvent -> {
+            banane.diminuerNombre();
+            gridPane.getChildren().clear();
+            gridPaneNombre.getChildren().clear();
+            ajoutInventaireObjet();
+        });
+
         FXGL.setLevelFromMap("StartingMap.tmx");
         dungeonEntry = spawn("dungeonEntry");
+
+        //spawn des objets
+        FXGL.spawn("pomme");
+        FXGL.spawn("pomme").setPosition(50,0);
+        FXGL.spawn("banane").setPosition(100,0);
+
         player = spawn("player");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
         getPhysicsWorld().setGravity(0,0);
-        pomme = spawn("pomme");
+
 
     }
 
@@ -288,8 +303,9 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity statue) {
                 FXGL.setLevelFromMap("StartingMap.tmx");
+                spawnEntityMondeDepart();
                 player = spawn("player");
-                viewport.bindToEntity(player,320, 500);
+                viewport.bindToEntity(player,player.getX(), player.getY());
                 player.setPosition(400,100);
                 getGameScene().setBackgroundColor(Color.WHITE);
                 getPhysicsWorld().setGravity(0,0);
@@ -302,29 +318,27 @@ public class MainGameApp extends GameApplication {
 
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.POMME) {
             @Override
-            protected void onCollisionEnd(Entity player, Entity pomme) {
-                //faire un do while un truc comme ca
-
-                ImageView imageViewPomme = new ImageView(imagePomme);
-
-                if (placeInventaireY != 4 && nombreDePomme !=10) {
-
+            protected void onCollisionBegin(Entity player, Entity pommeEntity) {
+                //repenser a ameliorer le systeme pour avoir plusieurs pommes
+                if (placeInventaireY != 4 ) {
                     for (int i = 0; i <= 3; i++) {
                         for (int j = 0; j <= 9; j++) {
-//                            System.out.println("image view : " + imageViewTab[j][i].getImage().toString() + "image pomme : " + imagePomme.toString());
-                            if (imageViewTab[j][i].getImage() == imagePomme) {
-                                System.out.println("il y a une pomme");
+                            if (tabObjets[j][i].getImageView().getImage() == pomme.getImageView().getImage()) {
                                 isPomme = true;
-                                if (nombreDePomme != 10) {
-                                    nombreDePomme++;
+                                if (tabObjets[j][i].getNombre() != 10) {
+                                        tabObjets[j][i].augmenterNombre();
                                 }
                             }
                         }
                     }
 
                     if (!isPomme){
-                        while (imageViewTab[placeInventaireX][placeInventaireY].getImage() != imageInventaire) {
-//                            System.out.println("image view : " + imageViewTab[placeInventaireX][placeInventaireY].getImage() + "image inventaire : " + imageInventaire.toString());
+                        //mettre a 0 pour avoir  la case la plus proche
+                        placeInventaireY = 0;
+                        placeInventaireX = 0;
+
+                        while (tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() != caseInventaire.getImageView().getImage()) {
+                            System.out.println(tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() + "  " + caseInventaire.getImageView().getImage());
                             placeInventaireX++;
 
                             if(placeInventaireX == 10){
@@ -333,21 +347,62 @@ public class MainGameApp extends GameApplication {
                             }
 
                         }
-                        System.out.println("image view : " + imageViewTab[placeInventaireX][placeInventaireY].getImage() + "image inventaire : " + imageInventaire.toString());
-                        imageViewTab[placeInventaireX][placeInventaireY] = imageViewPomme;
+                        //ajout de la pomme
+                        tabObjets[placeInventaireX][placeInventaireY] = pomme;
+                        tabObjets[placeInventaireX][placeInventaireY].augmenterNombre();
+
                         if (placeInventaireX == 9 && placeInventaireY == 3 ){
                             placeInventaireY = 4;
                         }
                     }
-                    for (int i = 0; i <= 3; i++) {
-                        for (int j = 0; j <= 9; j++) {
-//                            System.out.println(imageViewTab[j][i].getImage().toString());
-                        }
-                    }
-                    System.out.println();
                 }
 
+                pommeEntity.removeFromWorld();
+            }
+        });
 
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER,EntityType.BANANE) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity bananeEntity) {
+                //repenser a ameliorer le systeme pour avoir plusieurs bananes
+                if (placeInventaireY != 4 ) {
+                    for (int i = 0; i <= 3; i++) {
+                        for (int j = 0; j <= 9; j++) {
+                            if (tabObjets[j][i].getImageView().getImage() == banane.getImageView().getImage()) {
+                                isBanane = true;
+                                if (tabObjets[j][i].getNombre() != 10) {
+                                    tabObjets[j][i].augmenterNombre();
+                                }
+                            }
+                        }
+                    }
+
+                    if (!isBanane){
+                        //mettre a 0 pour avoir  la case la plus proche
+                        placeInventaireY = 0;
+                        placeInventaireX = 0;
+
+                        while (tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() != caseInventaire.getImageView().getImage()) {
+                            System.out.println(tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() + "  " + caseInventaire.getImageView().getImage());
+                            placeInventaireX++;
+
+                            if(placeInventaireX == 10){
+                                placeInventaireX = 0;
+                                placeInventaireY++;
+                            }
+
+                        }
+                        //ajout de la banane
+                        tabObjets[placeInventaireX][placeInventaireY] = banane;
+                        tabObjets[placeInventaireX][placeInventaireY].augmenterNombre();
+
+                        if (placeInventaireX == 9 && placeInventaireY == 3 ){
+                            placeInventaireY = 4;
+                        }
+                    }
+                }
+
+                bananeEntity.removeFromWorld();
             }
         });
 
@@ -357,26 +412,10 @@ public class MainGameApp extends GameApplication {
 
     @Override
     protected void initUI(){
-        //source de l'image inventaire
-        try {
-             imageInventaire = new Image(new FileInputStream("src/main/resources/assets/textures/caseInventaire.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        //source de l'image Pomme
-        try {
-            imagePomme = new Image(new FileInputStream("src/main/resources/assets/textures/PommeBackground.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        //ajouter les imageviews dans un tableau format(colonnes,lignes)
+        //ajouter les objets case inventaire dans un tableau format(colonnes,lignes)
         for (int i = 0; i <=3; i++){
             for (int j = 0; j <=9; j ++){
-                imageViewTab[j][i] = new ImageView(imageInventaire);
+                tabObjets[j][i] = caseInventaire;
             }
         }
 
@@ -386,21 +425,25 @@ public class MainGameApp extends GameApplication {
         gridPane = new GridPane();
         stackPane = new StackPane();
         gridPaneNombre = new GridPane();
-        labelNombreDePomme = new Label("x" + nombreDePomme);
 
-        //ajout du gridPane dans le stackPane
-        stackPane.getChildren().add(gridPane);
-
-        //parametre du GridPane
+        //parametre du gridPane
         gridPane.setPadding(new Insets(95,10,10,50  ));
         gridPane.setHgap(0);
         gridPane.setVgap(0);
         gridPane.setAlignment(Pos.CENTER_RIGHT);
         gridPane.setGridLinesVisible(true);
 
+        //parametre du gridPaneNombre
+        gridPaneNombre.setPadding(new Insets(100,22,0,0));
+        gridPaneNombre.setHgap(13);
+        gridPaneNombre.setVgap(16);
+        gridPaneNombre.setAlignment(Pos.CENTER_RIGHT);
 
-        Button button = new Button("");
-        button.setStyle("-fx-background-color: MediumSeaGreen");
+
+        //ajout du gridPane dans le stackPane
+        stackPane.getChildren().add(gridPane);
+        stackPane.getChildren().add(gridPaneNombre);
+
 
         //barre de vie
         ProgressBar barreDeVie = new ProgressBar();
@@ -424,13 +467,49 @@ public class MainGameApp extends GameApplication {
 //
 //    }
 
-    private void setLevel(Level level){
-        getGameWorld().getEntities().forEach(e -> e.removeFromWorld());
+    private void spawnEntityMondeDepart(){
+        FXGL.spawn("pomme");
+        FXGL.spawn("pomme").setPosition(50,0);
+        FXGL.spawn("banane").setPosition(100,0);
+    }
+
+    private void ajoutInventaire(){
+        //ajout dans le gridpane des imageviews des cases et du text format(colonnes,lignes)
+        for (int i = 0; i <=3; i++){
+            for (int j = 0; j <=9; j ++){
+                gridPane.add(tabObjets[j][i].getImageView() ,j,i);
+                if (tabObjets[j][i].getImageView().getImage() != caseInventaire.getImageView().getImage()){
+                    gridPaneNombre.add(tabObjets[j][i].getText(),j,i);
+
+                }else {
+                    gridPaneNombre.add(caseInventaire.getText() ,j,i);
+                }
+            }
+        }
+    }
+
+    private void ajoutInventaireObjet(){
+        //ajout dans le gridpane des imageviews des cases et du text format(colonnes,lignes)
+        for (int i = 0; i <=3; i++){
+            for (int j = 0; j <=9; j ++){
+                if (tabObjets[j][i].getImageView().getImage() != caseInventaire.getImageView().getImage()){
+                    if (tabObjets[j][i].getNombre() ==0 ){
+                        tabObjets[j][i] = caseInventaire;
+                    }
+                    gridPane.add(tabObjets[j][i].getImageView() ,j,i);
+                    gridPaneNombre.add(tabObjets[j][i].getText(),j,i);
+
+                }else {
+                    gridPane.add(tabObjets[j][i].getImageView() ,j,i);
+                    gridPaneNombre.add(caseInventaire.getText() ,j,i);
+                }
+            }
+        }
     }
 
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
-        SWORD,MOBPASSIVE,POMME
+        SWORD,MOBPASSIVE,POMME,BANANE
     }
 
     public void setPlayer(Entity player) {

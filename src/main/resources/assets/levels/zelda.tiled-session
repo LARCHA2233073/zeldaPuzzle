@@ -32,8 +32,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 338.66666666666663,
-                "y": 690.6666666666665
+                "x": 306.66666666666663,
+                "y": 479.3333333333333
             }
         },
         "StartingMap.tmx#Tuille_village": {
@@ -123,8 +123,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 952,
-                "y": 892
+                "x": 1548,
+                "y": 479.3333333333333
             }
         },
         "donjonPasFini.tmx#tilsetbackground": {
