@@ -165,6 +165,8 @@ public class MainGameApp extends GameApplication {
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(playerMapPrincipal, playerMapPrincipal.getX(), playerMapPrincipal.getY());
         getPhysicsWorld().setGravity(0,0);
+
+
     }
 
     @Override
