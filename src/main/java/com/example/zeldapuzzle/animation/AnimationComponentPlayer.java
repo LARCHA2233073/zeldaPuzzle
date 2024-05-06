@@ -42,7 +42,7 @@ public class AnimationComponentPlayer extends Component {
     public void onUpdate(double tpf) {
 
         if (trueIfVertical) {
-         //`   entity.translateY(speedy * tpf);
+         //   entity.translateY(speedy * tpf);
 
             //up
             if (speedy < 0) {
@@ -100,6 +100,8 @@ public class AnimationComponentPlayer extends Component {
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(4, 0);
         physics.setBodyLinearVelocity(vec2);
+
+
     }
     public void moveLeft() {
         speedx = -75;
@@ -108,22 +110,33 @@ public class AnimationComponentPlayer extends Component {
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(-4, 0);
         physics.setBodyLinearVelocity(vec2);
+
+
     }
     public void moveUp() {
         speedy = -75;
+        speedx = 0;
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(0, 4);
         physics.setBodyLinearVelocity(vec2);
+
+
     }
     public void moveDown() {
         speedy = 75;
+        speedx = 0;
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
         Vec2 vec2 = new Vec2(0, -4);
         physics.setBodyLinearVelocity(vec2);
+
+
+    }
+    public void startAnimIdle() {
+        texture.loopAnimationChannel(animIdle);
     }
 
 

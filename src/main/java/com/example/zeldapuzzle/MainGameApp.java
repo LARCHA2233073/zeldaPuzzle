@@ -165,6 +165,10 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Move right") {
 
             @Override
+            protected void onActionBegin() {
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
+            }
+            @Override
             protected void onAction() {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveRight();
             }
@@ -175,9 +179,15 @@ public class MainGameApp extends GameApplication {
                 physics = playerMapPrincipal.getComponent(PhysicsComponent.class);
                 physics.getBody().setType(BodyType.STATIC);
                 physics.getBody().setType(BodyType.DYNAMIC);
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
             }
         }, KeyCode.D);
+
         input.addAction(new UserAction("Move left") {
+            @Override
+            protected void onActionBegin() {
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
+            }
             @Override
             protected void onAction() {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveLeft();
@@ -188,10 +198,15 @@ public class MainGameApp extends GameApplication {
                 physics = playerMapPrincipal.getComponent(PhysicsComponent.class);
                 physics.getBody().setType(BodyType.STATIC);
                 physics.getBody().setType(BodyType.DYNAMIC);
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
             }
         }, KeyCode.A);
 
         input.addAction(new UserAction("Move Up") {
+            @Override
+            protected void onActionBegin() {
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
+            }
             @Override
             protected void onAction() {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveUp();
@@ -203,10 +218,15 @@ public class MainGameApp extends GameApplication {
                 physics = playerMapPrincipal.getComponent(PhysicsComponent.class);
                 physics.getBody().setType(BodyType.STATIC);
                 physics.getBody().setType(BodyType.DYNAMIC);
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
             }
         }, KeyCode.W);
 
         input.addAction(new UserAction("Move Down") {
+            @Override
+            protected void onActionBegin() {
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
+            }
             @Override
             protected void onAction() {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveDown();
@@ -217,6 +237,7 @@ public class MainGameApp extends GameApplication {
                 physics = playerMapPrincipal.getComponent(PhysicsComponent.class);
                 physics.getBody().setType(BodyType.STATIC);
                 physics.getBody().setType(BodyType.DYNAMIC);
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
             }
         }, KeyCode.S);
 
@@ -264,12 +285,15 @@ public class MainGameApp extends GameApplication {
         Point2D positionPerso = new Point2D(2088.0,2365.0);
         playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(positionPerso);
 
+        //position mobPassive
+        mobPassive = spawn("mobPassive");
+        Point2D positionMob = new Point2D(2150.0,2365.0);
+        mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
+
         viewport = getGameScene().getViewport();
         System.out.println("X : " + playerMapPrincipal.getX() + "y :" + playerMapPrincipal.getY());  ;
         viewport.bindToEntity(playerMapPrincipal, playerMapPrincipal.getX(), playerMapPrincipal.getY());
         getPhysicsWorld().setGravity(0,0);
-
-        mobPassive = spawn("mobPassive");
 
         FileInputStream fileInputStream;
 
@@ -305,8 +329,22 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initPhysics(){
 
-        //Entrer du dongeon
+        //colission mob personnage
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.MOBPASSIVE) {
+            @Override
+            protected void onCollisionBegin(Entity playerMapPrincipal, Entity mobPassive) {
+                //changer de bodytype
+                mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.STATIC);
+                //mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.KINEMATIC);
+            }
+            @Override
+            protected void onCollisionEnd(Entity playerMapPrincipal, Entity mobPassive) {
 
+                mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.DYNAMIC);
+            }
+        });
+
+        //Entrer du dongeon
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity playerMapPrincipal, Entity door) {
@@ -785,7 +823,6 @@ private void setLevel(Level level){
                 case 3 :  animationComponentMobPassive.moveRight();
                     break;
             }
-
     }
 }
 
