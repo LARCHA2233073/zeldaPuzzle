@@ -106,4 +106,7 @@ public class AnimationComponentMobPassive extends Component {
         physics.setBodyType(BodyType.STATIC);
         texture.loopAnimationChannel(animIdle);
     }
+    public void changeBodyType(BodyType bodyType){
+        physics.setBodyType(bodyType);
+    }
 }

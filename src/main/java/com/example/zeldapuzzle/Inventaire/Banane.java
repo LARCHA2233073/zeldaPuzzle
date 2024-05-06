@@ -1,6 +1,8 @@
 package com.example.zeldapuzzle.Inventaire;
 
 import com.almasb.fxgl.entity.Entity;
+import com.example.zeldapuzzle.MainGameApp;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -12,8 +14,8 @@ import java.io.FileNotFoundException;
 public class Banane extends Entity implements Objet{
     int nombreDeBanane = 0;
     Text textNombreDeBanane;
-
     ImageView imageViewBanane;
+
     public Banane(){
         textNombreDeBanane= new Text("x" + nombreDeBanane);
         textNombreDeBanane.setFill(Color.WHITE);
@@ -31,7 +33,8 @@ public class Banane extends Entity implements Objet{
     }
     @Override
     public void utiliser() {
-
+        ProgressBar barDeVie = MainGameApp.getBarreDeVieVieDuPersonnage();
+        barDeVie.setProgress(barDeVie.getProgress() + 0.1);
     }
 
     @Override

@@ -22,18 +22,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import static com.almasb.fxgl.dsl.FXGL.getGameScene;
-import static com.almasb.fxgl.dsl.FXGL.getInput;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 
 public class GameEntityFactory implements EntityFactory {
     ArrayList<Double> listeDonne = new ArrayList<>();
-
-    Entity lance;
-
-    Vec2 vec2;
-
+    Entity arrowMove;
 
 
     public GameEntityFactory() throws FileNotFoundException {
@@ -75,7 +69,6 @@ public class GameEntityFactory implements EntityFactory {
     public Entity Tree(SpawnData data) {
 
         return entityBuilder(data)
-                .type(MainGameApp.EntityType.SMALLTREE)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
@@ -98,9 +91,6 @@ public class GameEntityFactory implements EntityFactory {
                 .viewWithBBox(imageView)
                 .with(new CollidableComponent(true))
                 .build();
-
-
-
     }
 
     @Spawns("banane")
@@ -148,12 +138,35 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
 
     }
+
+    @Spawns("maisonObjet")
+    public Entity maisonObjet(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.MAISONOBJET)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("porteMaisonPlayer")
+    public Entity porteMaisonPlayer(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.PORTEMAISONPLAYER)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
     @Spawns("positionHaut")
     public Entity positionHaut(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.POSITIONHAUT)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-                .with(new CollidableComponent(true))
+                .with(new CollidableComponent(false))
                 .build();
 
     }
@@ -163,21 +176,30 @@ public class GameEntityFactory implements EntityFactory {
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.POSITIONBAS)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-                .with(new CollidableComponent(true))
+                .with(new CollidableComponent(false))
                 .build();
 
     }
 
-    @Spawns("glitch")
-    public Entity glitch(SpawnData data) {
+
+    @Spawns("ascenseurD")
+    public Entity ascenseurD(SpawnData data) {
         return FXGL.entityBuilder(data)
-                .type(MainGameApp.EntityType.GLITCH)
+                .type(MainGameApp.EntityType.ASCENSEURD)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new CollidableComponent(true))
                 .build();
 
     }
+    @Spawns("ascenseurM")
+    public Entity ascenseurM(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.ASCENSEURM)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
 
+    }
 
     @Spawns("ascenceur")
     public Entity ascenceur(SpawnData data) {
@@ -295,27 +317,31 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
+    @Spawns("feu")
+    public Entity feu(SpawnData data) {
 
-    @Spawns("dungeonEntry")
-    public Entity dungeonEntry(SpawnData data) {
-        Image dungeonImage;
-        try {
-            dungeonImage = new Image(new FileInputStream("src/main/resources/assets/textures/Map.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ImageView imageView = new ImageView(dungeonImage);
-        Rectangle rectangle = new Rectangle(150,150,Color.BLUE);
-
-        return entityBuilder(data)
-                .at(850,-130)
-                .type(MainGameApp.EntityType.DOOR)
-                .viewWithBBox(rectangle)
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.FEU)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new CollidableComponent(true))
-                .with(new PhysicsComponent())
-                .buildAndAttach();
+                .build();
 
     }
+
+
+
+    @Spawns("entrerDonjon")
+    public Entity entrerDonjon(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.DOOR)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
     @Spawns("dungeon")
     public Entity dungeon(SpawnData data) {
         Image dungeon;
@@ -329,15 +355,16 @@ public class GameEntityFactory implements EntityFactory {
                 .view(imageView)
                 .buildAndAttach();
     }
+
     AnimationComponentMobPassive animationComponentMobPassive = new AnimationComponentMobPassive();
     @Spawns("mobPassive")
-    public Entity mobPassive(SpawnData data) throws FileNotFoundException {
+    public Entity mobPassive(SpawnData data) {
 
         HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-        //movement AI
-        return FXGL.entityBuilder()
+
+        return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.MOBPASSIVE)
                 .at(400, 100)
                 .scale(1.3, 1.3)
@@ -347,76 +374,61 @@ public class GameEntityFactory implements EntityFactory {
                 .with(physics)
                 .buildAndAttach();
     }
-    @Spawns("smallTree")
-    public Entity smallTree(SpawnData data) {
+    @Spawns("objetsDehors")
+    public Entity objetsDehors(SpawnData data) {
 
-        return entityBuilder(data)
-                .from(data)
-                .type(MainGameApp.EntityType.SMALLTREE)
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.OBJETDEHORS)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
-                .buildAndAttach();
+                .with(new CollidableComponent(true))
+                .build();
 
 
     }
-    @Spawns("lance")
-    public Entity lance(SpawnData data) {
-        Image lance;
-        PhysicsComponent physicsComponent = new PhysicsComponent();
-        physicsComponent.setBodyType(BodyType.DYNAMIC);
-        try {
-            lance = new Image(new FileInputStream("src/main/resources/assets/textures/LaBonneLance.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ImageView imageView = new ImageView(lance);
 
-        //pour la deuxieme lance
-        getGameScene().getRoot().setOnMouseClicked(event -> {
-            double longueurDuVecteur;
-            double pourcentageForceMaximal;
-            longueurDuVecteur = Math.hypot(Math.abs((1120.67 - getInput().getMouseYWorld())),Math.abs(Math.abs((511.667d - getInput().getMouseXWorld()))));
-            double forceMaximal = 100;
-            if (longueurDuVecteur > forceMaximal)
-                longueurDuVecteur = forceMaximal;
-            pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
-            this.vec2 = new Vec2((1120.67 - getInput().getMouseYWorld())*10*longueurDuVecteur,(511.667 - getInput().getMouseXWorld()) * -10 * longueurDuVecteur);
-            spawn("lanceMove");
-                });
+    @Spawns("arrow")
+    public Entity arrow(SpawnData data) {
+
+        Rectangle arrow = new Rectangle(40,10,Color.RED);
+        arrow.setOnMousePressed(event -> {
+            listeDonne.add(event.getSceneX());
+            listeDonne.add(event.getSceneY());
+        });
+
+        arrow.setOnMouseReleased(event -> {
+            listeDonne.add(event.getSceneX());
+            listeDonne.add(event.getSceneY());
+            arrowMove = spawn("arrowMove");
+
+        });
 
         return entityBuilder(data)
-                .type(MainGameApp.EntityType.LANCE)
-                .viewWithBBox(imageView)
-                .with(new CollidableComponent(true))
+                .type(MainGameApp.EntityType.ARROW)
+                .viewWithBBox(arrow)
                 .buildAndAttach();
     }
 
-    @Spawns("lanceMove")
-    public Entity lanceMove(SpawnData data) {
-
+    @Spawns("arrowMove")
+    public Entity arrowMove(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
-
+        Vec2 arrowVecteur = new Vec2((listeDonne.get(0) - listeDonne.get(2))*10,(listeDonne.get(1) - listeDonne.get(3)) * -10);
+        listeDonne.clear();
+        arrow(data).removeFromWorld();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                physics.applyBodyForce(new Vec2(0,60),new Vec2(0,60));
+                physics.applyBodyForce(arrowVecteur,arrowVecteur);
 
             }
         };
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setOnPhysicsInitialized(runnable);
-        Image lance;
-        try {
-            lance = new Image(new FileInputStream("src/main/resources/assets/textures/LaBonneLance.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ImageView imageView = new ImageView(lance);
-
+        Rectangle arrow = new Rectangle(40,10,Color.RED);
         return entityBuilder(data)
-                .at(511.667, 1120.67)
-                .viewWithBBox(imageView)
-                .type(MainGameApp.EntityType.LANCEMOVE)
+                .at(561.333,817.333)
+                .viewWithBBox(arrow)
+                .type(MainGameApp.EntityType.ARROWMOVE)
                 .collidable()
                 .with(physics)
                 .buildAndAttach();
