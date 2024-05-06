@@ -69,7 +69,6 @@ public class GameEntityFactory implements EntityFactory {
     public Entity Tree(SpawnData data) {
 
         return entityBuilder(data)
-                .type(MainGameApp.EntityType.SMALLTREE)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
@@ -92,9 +91,6 @@ public class GameEntityFactory implements EntityFactory {
                 .viewWithBBox(imageView)
                 .with(new CollidableComponent(true))
                 .build();
-
-
-
     }
 
     @Spawns("banane")
@@ -142,6 +138,29 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
 
     }
+
+    @Spawns("maisonObjet")
+    public Entity maisonObjet(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.MAISONOBJET)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("porteMaisonPlayer")
+    public Entity porteMaisonPlayer(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.PORTEMAISONPLAYER)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
     @Spawns("positionHaut")
     public Entity positionHaut(SpawnData data) {
         return FXGL.entityBuilder(data)
@@ -298,27 +317,31 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
+    @Spawns("feu")
+    public Entity feu(SpawnData data) {
 
-    @Spawns("dungeonEntry")
-    public Entity dungeonEntry(SpawnData data) {
-        Image dungeonImage;
-        try {
-            dungeonImage = new Image(new FileInputStream("src/main/resources/assets/textures/Map.png"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        ImageView imageView = new ImageView(dungeonImage);
-        Rectangle rectangle = new Rectangle(150,150,Color.BLUE);
-
-        return entityBuilder(data)
-                .at(850,-130)
-                .type(MainGameApp.EntityType.DOOR)
-                .viewWithBBox(rectangle)
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.FEU)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new CollidableComponent(true))
-                .with(new PhysicsComponent())
-                .buildAndAttach();
+                .build();
 
     }
+
+
+
+    @Spawns("entrerDonjon")
+    public Entity entrerDonjon(SpawnData data) {
+
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.DOOR)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
     @Spawns("dungeon")
     public Entity dungeon(SpawnData data) {
         Image dungeon;
@@ -332,6 +355,7 @@ public class GameEntityFactory implements EntityFactory {
                 .view(imageView)
                 .buildAndAttach();
     }
+
     AnimationComponentMobPassive animationComponentMobPassive = new AnimationComponentMobPassive();
     @Spawns("mobPassive")
     public Entity mobPassive(SpawnData data) throws FileNotFoundException {
@@ -350,18 +374,19 @@ public class GameEntityFactory implements EntityFactory {
                 .with(physics)
                 .buildAndAttach();
     }
-    @Spawns("smallTree")
-    public Entity smallTree(SpawnData data) {
+    @Spawns("objetsDehors")
+    public Entity objetsDehors(SpawnData data) {
 
-        return entityBuilder(data)
-                .from(data)
-                .type(MainGameApp.EntityType.SMALLTREE)
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.OBJETDEHORS)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
-                .buildAndAttach();
+                .with(new CollidableComponent(true))
+                .build();
 
 
     }
+
     @Spawns("arrow")
     public Entity arrow(SpawnData data) {
 

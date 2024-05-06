@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "donjonPasFini.tmx",
+    "activeFile": "MapDeMerde2.tmx",
     "expandedProjectPaths": [
-        "Texture",
-        "."
+        ".",
+        "Texture"
     ],
     "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
     "fileStates": {
@@ -14,26 +14,110 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "#Full": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
         "BeginingMap3.tmx": {
             "scale": 0.3047916666666667,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 958.0314422419684,
+                "x": 958.0314422419685,
                 "y": 962.952836637047
             }
         },
         "BeginingMap3.tmx#test": {
             "scaleInDock": 1
         },
+        "MapDeMerde.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2694,
+                "y": 2894
+            }
+        },
+        "MapDeMerde.tmx#beach tile": {
+            "dynamicWrapping": false
+        },
+        "MapDeMerde.tmx#terrain_tiles_v2": {
+            "dynamicWrapping": false
+        },
+        "MapDeMerde2.tmx": {
+            "expandedObjectLayers": [
+                5
+            ],
+            "scale": 1,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 2185,
+                "y": 2328
+            }
+        },
+        "MapDeMerde2.tmx#32x32 first tileset": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#32x32RPG": {
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#Forest Cliff": {
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#Forest Props": {
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#Forest Structures": {
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#NatureSpritesDemo": {
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#assets": {
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#assets_spritesheet_v2_free": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#beach tile": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#dirtpath_tiles": {
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#foret1": {
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#grotte": {
+            "scaleInDock": 0.75
+        },
+        "MapDeMerde2.tmx#rope_fence_tiles": {
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#terrain_tiles_v2": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "MapDeMerde2.tmx#tilset5": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "MapDeMerde2.tmx#water_and_island_tiles_v2": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
         "StartingMap.tmx": {
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 0.5,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 306.66666666666663,
-                "y": 479.3333333333333
+                "x": 216,
+                "y": 476
             }
         },
         "StartingMap.tmx#Tuille_village": {
@@ -51,6 +135,7 @@
             "scaleInDock": 1
         },
         "StartingMap.tmx#tilset1": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "StartingMap.tmx#tilset2": {
@@ -64,7 +149,8 @@
             "scaleInDock": 1
         },
         "StartingMap.tmx#tilset5": {
-            "scaleInDock": 1
+            "dynamicWrapping": false,
+            "scaleInDock": 0.75
         },
         "StartingMap.tmx#tuilleVillage": {
             "dynamicWrapping": false,
@@ -74,7 +160,7 @@
             "scale": 0.3047916666666667,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 958.0314422419684,
+                "x": 958.0314422419685,
                 "y": 962.952836637047
             }
         },
@@ -95,7 +181,7 @@
         },
         "Texture/TX Village Props.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 1,
+            "scaleInDock": 0.75,
             "scaleInEditor": 1
         },
         "donjonFini.tmx": {
@@ -135,43 +221,145 @@
             "dynamicWrapping": false,
             "scaleInDock": 1
         },
+        "interieurMaisonPlayer.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.6702777777777778,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 713.1371736427683,
+                "y": 472.9382511396601
+            }
+        },
+        "interieurMaisonPlayer.tmx#Full": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "interieurMaisonPlayer1.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 916,
+                "y": 562.6666666666667
+            }
+        },
+        "interieurMaisonPlayer1.tmx#Full": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx": {
+            "scale": 0.3950416666666666,
+            "selectedLayer": 13,
+            "viewCenter": {
+                "x": 1199.8734310726718,
+                "y": 401.2234996308406
+            }
+        },
+        "leDongeon.tmx#BG1": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#BG2": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#BG3": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#BG4a": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#BG4b": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#Dongeon": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#MainBuild": {
+            "scaleInDock": 1
+        },
+        "leDongeon.tmx#Village": {
+            "scaleInDock": 1
+        },
         "level1.tmx": {
             "scale": 0.836,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 726.0765550239234,
+                "x": 523.9234449760766,
                 "y": 349.88038277511964
             }
         },
         "level1.tmx#tiles_spritesheet": {
             "scaleInDock": 1
+        },
+        "sans titre.tmx": {
+            "scale": 0.4021666666666667,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 1200.994612515541,
+                "y": 400.3315375051802
+            }
+        },
+        "sans titre.tmx#BG1": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#BG2": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#BG3": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#BG4a": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#BG4b": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#Dongeon": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#MainBuild": {
+            "scaleInDock": 1
+        },
+        "sans titre.tmx#Village": {
+            "scaleInDock": 1
         }
     },
+    "last.exportedFilePath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels",
     "last.externalTilesetPath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels",
     "last.imagePath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels",
+    "last.objectTemplatePath": "C:/Users/mbour/OneDrive/Bureau/Zelda TOTK WINRAR/zeldaPuzzle/src/main/resources/assets/levels",
     "map.height": 30,
-    "map.lastUsedExportFilter": "",
+    "map.lastUsedExportFilter": "Tous les Fichiers (*)",
     "map.lastUsedFormat": "tmx",
-    "map.width": 100,
+    "map.width": 45,
     "openFiles": [
         "Test2.tmx",
-        "donjonPasFini.tmx",
         "donjonFini.tmx",
         "StartingMap.tmx",
         "level1.tmx",
         "BeginingMap3.tmx",
-        "Test.tmx"
+        "Test.tmx",
+        "leDongeon.tmx",
+        "MapDeMerde2.tmx",
+        "interieurMaisonPlayer1.tmx",
+        "interieurMaisonPlayer.tmx"
     ],
     "project": "zelda.tiled-project",
     "recentFiles": [
         "Test2.tmx",
-        "Test.tmx",
-        "BeginingMap3.tmx",
-        "level1.tmx",
-        "StartingMap.tmx",
         "donjonFini.tmx",
-        "donjonPasFini.tmx",
-        "Texture/TX Village Props.tsx"
+        "StartingMap.tmx",
+        "level1.tmx",
+        "BeginingMap3.tmx",
+        "Test.tmx",
+        "leDongeon.tmx",
+        "interieurMaisonPlayer.tmx",
+        "interieurMaisonPlayer1.tmx",
+        "MapDeMerde2.tmx",
+        "sans titre.tmx",
+        "MapDeMerde.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFilter": "Tous les Fichiers (*)",
