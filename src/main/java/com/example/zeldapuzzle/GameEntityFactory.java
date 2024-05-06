@@ -338,7 +338,7 @@ public class GameEntityFactory implements EntityFactory {
 
         HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
         PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.DYNAMIC);
+        physics.setBodyType(BodyType.KINEMATIC);
         //movement AI
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.MOBPASSIVE)
