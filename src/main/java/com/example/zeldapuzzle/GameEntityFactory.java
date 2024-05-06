@@ -358,13 +358,13 @@ public class GameEntityFactory implements EntityFactory {
 
     AnimationComponentMobPassive animationComponentMobPassive = new AnimationComponentMobPassive();
     @Spawns("mobPassive")
-    public Entity mobPassive(SpawnData data) throws FileNotFoundException {
+    public Entity mobPassive(SpawnData data) {
 
         HitBox box = new HitBox(BoundingShape.polygon(20,33,25,45,33,55,43,40,42,15,41,10,19.5,7));
         PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.KINEMATIC);
-        //movement AI
-        return FXGL.entityBuilder()
+        physics.setBodyType(BodyType.DYNAMIC);
+
+        return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.MOBPASSIVE)
                 .at(400, 100)
                 .scale(1.3, 1.3)
