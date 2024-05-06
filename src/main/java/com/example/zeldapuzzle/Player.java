@@ -55,7 +55,6 @@ public class Player extends Component {
         Vec2 vec2 =new Vec2(-4,0);
 //        physics.setVelocityX(-100);
         physics.setBodyLinearVelocity(vec2);
-
     }
 
     public void moveUp(){
