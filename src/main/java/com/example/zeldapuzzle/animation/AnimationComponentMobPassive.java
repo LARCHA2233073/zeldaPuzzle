@@ -110,7 +110,7 @@ public class AnimationComponentMobPassive extends Component {
 
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(4, 0);
+        Vec2 vec2 = new Vec2(1.5, 0);
         physics.setBodyLinearVelocity(vec2);
 
         texture.loopAnimationChannel(animWalkRight);
@@ -122,7 +122,7 @@ public class AnimationComponentMobPassive extends Component {
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(-4, 0);
+        Vec2 vec2 = new Vec2(-1.5, 0);
         physics.setBodyLinearVelocity(vec2);
 
         texture.loopAnimationChannel(animWalkLeft);
@@ -132,7 +132,7 @@ public class AnimationComponentMobPassive extends Component {
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(0, 4);
+        Vec2 vec2 = new Vec2(0, 1.5);
         physics.setBodyLinearVelocity(vec2);
 
         texture.loopAnimationChannel(animWalkUp);
@@ -142,7 +142,7 @@ public class AnimationComponentMobPassive extends Component {
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(0, -4);
+        Vec2 vec2 = new Vec2(0, -1.5);
         physics.setBodyLinearVelocity(vec2);
 
         texture.loopAnimationChannel(animWalkDown);

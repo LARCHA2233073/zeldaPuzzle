@@ -38,6 +38,9 @@ import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -216,21 +219,35 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initGame(){
 
+        //EntityFactory
         getGameWorld().addEntityFactory(gameEntityFactory);
 
-        //EntityFactory
-        try {
-            getGameWorld().addEntityFactory(gameEntityFactory);
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
         FXGL.setLevelFromMap("StartingMap.tmx");
         dungeonEntry = spawn("dungeonEntry");
         player = spawn("player");
+        mobPassive = spawn("mobPassive");
         viewport = getGameScene().getViewport();
         viewport.bindToEntity(player,player.getX(), player.getY());
         FileInputStream fileInputStream;
+
+        Runnable helloRunnable = new Runnable() {
+            public void run() {
+                gameEntityFactory.getAnimationComponentMobPassive().setSpeedy(0);
+                gameEntityFactory.getAnimationComponentMobPassive().setSpeedx(0);
+                gameEntityFactory.getAnimationComponentMobPassive().stopMovement();
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(helloRunnable, (long) 5 , (long) 2, TimeUnit.SECONDS);
+
+        Runnable helloRunnable1 = new Runnable() {
+            public void run() {
+                mobMovement(gameEntityFactory.getAnimationComponentMobPassive());
+            }
+        };
+        ScheduledExecutorService executor1 = Executors.newScheduledThreadPool(1);
+        executor1.scheduleAtFixedRate(helloRunnable1, 0, 4, TimeUnit.SECONDS);
+
         getPhysicsWorld().setGravity(0,0);
         pomme = spawn("pomme");
 
@@ -448,9 +465,6 @@ public class MainGameApp extends GameApplication {
         launch(args);
     }
 
-    public Entity getMobPassive() {
-        return mobPassive;
-    }
     public void mobMovement (AnimationComponentMobPassive animationComponentMobPassive) {
       //  animationComponentMobPassive.changeBodyType(BodyType.DYNAMIC);
 

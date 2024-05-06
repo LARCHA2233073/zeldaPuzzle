@@ -260,7 +260,7 @@ public class GameEntityFactory implements EntityFactory {
         return FXGL.entityBuilder()
                 .type(MainGameApp.EntityType.MOBPASSIVE)
                 .at(400, 100)
-                .scale(2, 2)
+                .scale(1.3, 1.3)
                 .bbox(box)
                 .with(animationComponentMobPassive)
                 .with(new CollidableComponent(true))
