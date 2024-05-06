@@ -224,12 +224,6 @@ public class MainGameApp extends GameApplication {
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,MOBPASSIVE
     }
-
-    private void shoot(int x, int y) {
-        Vec2 arrowVecteur = new Vec2(1200,600);
-        getGameWorld().addEntity(new Arrow(arrowVecteur,x,y));
-    }
-
     public void setPlayer(Entity player) {
         this.player = player;
     }
