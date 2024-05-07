@@ -42,6 +42,7 @@ public class Vitesse extends Entity implements Objet {
         TimerAction timerAction = MainGameApp.getGameScene().getTimer().runOnceAfter(() ->{
             AnimationComponentPlayer.setIntVec(4);
         }, Duration.seconds(2));
+        timerAction.resume();
     }
 
     @Override
