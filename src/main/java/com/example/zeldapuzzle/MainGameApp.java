@@ -384,19 +384,6 @@ public class MainGameApp extends GameApplication {
     @Override
     protected void initPhysics(){
 
-        //colission mob personnage
-
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.MUR) {
-            @Override
-            protected void onCollisionBegin(Entity playerMapDongeon, Entity mur) {
-
-            }
-            @Override
-            protected void onCollisionEnd(Entity playerMapDongeon, Entity mur) {
-
-            }
-        });
-
         //Entrer du dongeon
 
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.DOOR) {
@@ -500,6 +487,7 @@ public class MainGameApp extends GameApplication {
                 //changer de carte
                 if (numberOfTarget == 0){
                     isDonjon = false;
+                    bougePas = false;
                     FXGL.setLevelFromMap("mapFinal.tmx");
                     playerMapPrincipal = spawn("playerMapPrincipal");
                     viewport.bindToEntity(playerMapPrincipal,400,100);
@@ -528,7 +516,7 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEUR) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity ascenceur) {
-
+                bougePas = false;
                 if(positionAscenceur == "bas") {
                     ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(new Vec2(0, 3));
                 }
@@ -537,6 +525,10 @@ public class MainGameApp extends GameApplication {
                     System.out.println("non");
                 }
                 positionAscenceur = "enMouvement";
+            }
+            @Override
+            protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
+                bougePas = true;
             }
         });
 
