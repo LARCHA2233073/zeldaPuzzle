@@ -572,7 +572,7 @@
   <object id="103" type="mur" x="897" y="237">
    <polygon points="0,0 265,1 260,-42"/>
   </object>
-  <object id="106" type="mur" x="800.167" y="627.833" width="48.3333" height="13">
+  <object id="106" type="mur" x="800.167" y="629.333" width="48.3333" height="13">
    <polygon points="0,0 48.3333,0 48.3333,13 0,13"/>
   </object>
  </objectgroup>
@@ -591,7 +591,7 @@
  </objectgroup>
  <objectgroup id="25" name="Position">
   <object id="116" name="ascenseurDescendant" type="positionHaut" x="800.667" y="327" width="48" height="14"/>
-  <object id="117" name="ascenseurMontant" type="positionBas" x="800.167" y="625.167" width="48.6667" height="14"/>
+  <object id="117" name="ascenseurMontant" type="positionBas" x="800.667" y="626.167" width="48.6667" height="14"/>
   <object id="177" type="descendre" x="709.5" y="594.5" width="73.5" height="15.5"/>
   <object id="178" type="descendre" x="861" y="576" width="52.5" height="19.5"/>
  </objectgroup>
