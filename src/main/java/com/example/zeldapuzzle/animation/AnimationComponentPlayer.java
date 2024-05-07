@@ -21,7 +21,6 @@ public class AnimationComponentPlayer extends Component {
     private int speedy = 0;
     private Vec2 vec;
     boolean isDead = false;
-    private  Vec2 vec;
     private static float intVec;
 
 

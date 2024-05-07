@@ -254,7 +254,7 @@ public class MainGameApp extends GameApplication {
                     Vec2 force = new Vec2(0, 4);
                     Vec2 point = new Vec2(playerMapPrincipal.getX(), playerMapPrincipal.getY());
                     playerMapPrincipal.getComponent(PhysicsComponent.class).applyBodyLinearImpulse(force, point, false);
-
+                }
                 }
             }
             @Override
@@ -263,7 +263,6 @@ public class MainGameApp extends GameApplication {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
             }
         }, KeyCode.SPACE);
-
     }
 
 
