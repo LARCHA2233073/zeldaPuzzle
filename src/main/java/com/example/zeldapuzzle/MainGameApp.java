@@ -56,11 +56,14 @@ public class MainGameApp extends GameApplication {
 
     private Entity mobPassive;
     private boolean isDonjon = false;
+    private boolean bougePas;
     private Entity playerMapPrincipal;
 
     private Entity playerMapDongeon;
 
     private Entity ascenceur;
+
+
 
     private String positionAscenceur = "bas";
     private Entity platform;
@@ -171,7 +174,9 @@ public class MainGameApp extends GameApplication {
             }
             @Override
             protected void onAction() {
-                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveRight();
+                if (!bougePas) {
+                    playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveRight();
+                }
             }
 
             @Override
@@ -191,7 +196,9 @@ public class MainGameApp extends GameApplication {
             }
             @Override
             protected void onAction() {
-                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveLeft();
+                if (!bougePas) {
+                    playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveLeft();
+                }
             }
             @Override
             protected void onActionEnd() {
@@ -341,7 +348,6 @@ public class MainGameApp extends GameApplication {
             }
             @Override
             protected void onCollisionEnd(Entity playerMapPrincipal, Entity mobPassive) {
-
                 mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.DYNAMIC);
             }
         });
@@ -380,6 +386,18 @@ public class MainGameApp extends GameApplication {
                 arrow.setX(stationTire.getX());
                 arrow.setY(stationTire.getY());
 
+            }
+        });
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.MUR) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity stationTire) {
+                bougePas = false;
+            }
+
+            @Override
+            protected void onCollisionEnd(Entity player, Entity stationTire) {
+                bougePas = true;
             }
         });
 
@@ -568,7 +586,7 @@ public class MainGameApp extends GameApplication {
                     for (int i = 0; i <= 3; i++) {
                         for (int j = 0; j <= 9; j++) {
                             if (tabObjets[j][i].getImageView().getImage() == pomme.getImageView().getImage()) {
-                                isPomme = true;
+
                                 if (tabObjets[j][i].getNombre() != 10) {
                                         tabObjets[j][i].augmenterNombre();
                                 }
@@ -576,7 +594,7 @@ public class MainGameApp extends GameApplication {
                         }
                     }
 
-                    if (!isPomme){
+                    if (pomme.getNombre() == 0){
                         //mettre a 0 pour avoir  la case la plus proche
                         placeInventaireY = 0;
                         placeInventaireX = 0;
@@ -613,7 +631,7 @@ public class MainGameApp extends GameApplication {
                     for (int i = 0; i <= 3; i++) {
                         for (int j = 0; j <= 9; j++) {
                             if (tabObjets[j][i].getImageView().getImage() == banane.getImageView().getImage()) {
-                                isBanane = true;
+
                                 if (tabObjets[j][i].getNombre() != 10) {
                                     tabObjets[j][i].augmenterNombre();
                                 }
@@ -621,7 +639,7 @@ public class MainGameApp extends GameApplication {
                         }
                     }
 
-                    if (!isBanane){
+                    if (banane.getNombre() == 0){
                         //mettre a 0 pour avoir  la case la plus proche
                         placeInventaireY = 0;
                         placeInventaireX = 0;
@@ -769,10 +787,10 @@ public class MainGameApp extends GameApplication {
     }
 
 
-//    @Override
-//    protected void onUpdate(){
-//
-//    }
+    @Override
+    protected void onUpdate(double tpf){
+
+    }
 private void setLevel(Level level){
     getGameWorld().getEntities().forEach(e -> e.removeFromWorld());
 }
