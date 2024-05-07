@@ -30,7 +30,7 @@
  <tileset firstgid="17466" name="LaBonneLance" tilewidth="16" tileheight="16" tilecount="4" columns="1">
   <image source="../../../../../../../Pictures/LaBonneLance.png" width="16" height="64"/>
  </tileset>
- <group id="2" name="BackGround" visible="0">
+ <group id="2" name="BackGround">
   <layer id="1" name="BG1" width="150" height="50">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -302,7 +302,7 @@
 </data>
   </layer>
  </group>
- <group id="4" name="MainBuild" visible="0">
+ <group id="4" name="MainBuild">
   <layer id="10" name="MainBuild3" width="150" height="50">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -572,11 +572,11 @@
   <object id="103" type="mur" x="897" y="237">
    <polygon points="0,0 265,1 260,-42"/>
   </object>
-  <object id="106" type="mur" x="800.667" y="624.333" width="48.3333" height="13">
+  <object id="106" type="mur" x="800.167" y="627.833" width="48.3333" height="13">
    <polygon points="0,0 48.3333,0 48.3333,13 0,13"/>
   </object>
  </objectgroup>
- <objectgroup id="27" name="traverse" visible="0">
+ <objectgroup id="27" name="traverse">
   <object id="136" type="murTraverse" x="1360.67" y="608.667" width="47" height="14"/>
   <object id="137" type="murTraverse" x="1377.33" y="593" width="14" height="15.3333"/>
   <object id="140" type="murTraverse" x="1585" y="577.333" width="14" height="14"/>
@@ -589,15 +589,15 @@
   <object id="155" type="murTraverse" x="1167" y="575.667" width="17.6667" height="33.6667"/>
   <object id="156" type="murTraverse" x="1184.67" y="591.333" width="14.6667" height="49.6667"/>
  </objectgroup>
- <objectgroup id="25" name="Position" visible="0">
+ <objectgroup id="25" name="Position">
   <object id="116" name="ascenseurDescendant" type="positionHaut" x="800.667" y="327" width="48" height="14"/>
-  <object id="117" name="ascenseurMontant" type="positionBas" x="800.667" y="623.667" width="48.6667" height="14"/>
+  <object id="117" name="ascenseurMontant" type="positionBas" x="800.167" y="625.167" width="48.6667" height="14"/>
   <object id="177" type="descendre" x="709.5" y="594.5" width="73.5" height="15.5"/>
   <object id="178" type="descendre" x="861" y="576" width="52.5" height="19.5"/>
  </objectgroup>
- <objectgroup id="23" name="stationTire" visible="0">
+ <objectgroup id="23" name="stationTire">
   <object id="125" name="stationTire" type="stationTire" x="1118.33" y="255.333" width="50" height="82"/>
   <object id="126" name="stationTire" type="stationTire" x="1120.67" y="511.667" width="44.6667" height="69"/>
  </objectgroup>
- <objectgroup id="24" name="ascenceur" visible="0"/>
+ <objectgroup id="24" name="ascenceur"/>
 </map>
