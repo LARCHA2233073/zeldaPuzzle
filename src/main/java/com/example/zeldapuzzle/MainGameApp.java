@@ -31,6 +31,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -249,6 +250,7 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onAction() {
                 if (isDonjon) {
+                if (isDonjon && !bougePas) {
                     Vec2 force = new Vec2(0, 4);
                     Vec2 point = new Vec2(playerMapPrincipal.getX(), playerMapPrincipal.getY());
                     playerMapPrincipal.getComponent(PhysicsComponent.class).applyBodyLinearImpulse(force, point, false);
@@ -353,10 +355,27 @@ public class MainGameApp extends GameApplication {
         executor1.scheduleAtFixedRate(helloRunnable1, 0, 4, TimeUnit.SECONDS);
 
         getPhysicsWorld().setGravity(0,0);
-
         //timeractions
          timerActionFeu = getGameScene().getTimer().runAtInterval(() -> {
             barreDeVie.setProgress(barreDeVie.getProgress() - 0.1);
+            vieDuPersonnage -= 10;
+            if (vieDuPersonnage == 0) {
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startDeath();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(2088.0,2365.0));
+                        playerMapPrincipal.getComponent(AnimationComponentPlayer.class).setDead(false);
+                        barreDeVie = new ProgressBar();
+                        barreDeVie.setStyle("-fx-accent: red;");
+                        barreDeVie.setPrefWidth(225);
+                        barreDeVie.setPrefHeight(21);
+                        barreDeVie.setProgress(1);
+                        vieDuPersonnage = 1;
+                    }
+                };
+                executor.schedule(runnable,1, TimeUnit.SECONDS);
+            }
         }, Duration.seconds(1));
          timerActionFeu.pause();
 
@@ -398,11 +417,8 @@ public class MainGameApp extends GameApplication {
                 viewport.setZoom(1.5);
                 playerMapDongeon.setPosition(195,400);
                 ascenceur = spawn("ascenceur");
-                getGameScene().setBackgroundColor(Color.BLACK);
                 getPhysicsWorld().setGravity(0,1500);
                 setPlayerMapPrincipal(playerMapDongeon);
-
-
 
             }
         });
@@ -536,7 +552,16 @@ public class MainGameApp extends GameApplication {
 
                 }
             }
+
+            @Override
+            protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
+                bougePas = true;
+
+            }
+
         });
+
+
 
         // Arêter l'ascenceur
 
@@ -674,20 +699,16 @@ public class MainGameApp extends GameApplication {
         });
 
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.FEU) {
-
-
             @Override
             protected void onCollisionBegin(Entity a, Entity b) {
                 timerActionFeu.resume();
 
             }
-
             @Override
             protected void onCollisionEnd(Entity a, Entity b) {
                 timerActionFeu.pause();
             }
         });
-
 
     }
 

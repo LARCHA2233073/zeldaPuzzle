@@ -19,6 +19,8 @@ public class AnimationComponentPlayer extends Component {
     boolean trueIfVertical;
     private int speedx = 0;
     private int speedy = 0;
+    private Vec2 vec;
+    boolean isDead = false;
     private  Vec2 vec;
     private static float intVec;
 
@@ -33,7 +35,7 @@ public class AnimationComponentPlayer extends Component {
         animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
-        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(1), 0, 6);
+        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(1), 0, 5);
         texture = new AnimatedTexture(animIdle);
     }
 
@@ -46,6 +48,7 @@ public class AnimationComponentPlayer extends Component {
     @Override
     public void onUpdate(double tpf) {
 
+        if (!isDead) {
         if (trueIfVertical) {
          //   entity.translateY(speedy * tpf);
 
@@ -67,6 +70,7 @@ public class AnimationComponentPlayer extends Component {
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
+
             }
 
         }
@@ -93,7 +97,7 @@ public class AnimationComponentPlayer extends Component {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);
             }
-
+        }
         }
     }
 
@@ -148,6 +152,10 @@ public class AnimationComponentPlayer extends Component {
     public static void setIntVec(float intVec) {
         AnimationComponentPlayer.intVec = intVec;
     }
+    public void startDeath() {
+        isDead = true;
+        texture.playAnimationChannel(animDeath);
+    }
 
     public static void augmenterIntVec() {
         intVec = 20;
@@ -158,4 +166,8 @@ public class AnimationComponentPlayer extends Component {
     public PhysicsComponent getPhysics() {
         return physics;
     }
+    public void setDead(boolean isDead) {
+        this.isDead = isDead;
+    }
+
 }
