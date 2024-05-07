@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="29" nextobjectid="177">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="29" nextobjectid="180">
  <tileset firstgid="1" name="BG1" tilewidth="16" tileheight="16" tilecount="1800" columns="60">
   <image source="background1.png" width="960" height="480"/>
  </tileset>
@@ -545,8 +545,8 @@
   <object id="92" type="mur" x="536" y="583">
    <polygon points="0,0 24,34 -53,40"/>
   </object>
-  <object id="93" type="mur" x="557" y="611">
-   <polygon points="0,0 239,2 239,33 1,30"/>
+  <object id="93" type="mur" x="557" y="608.5">
+   <polygon points="0,0 239,2.15152 239,35.5 1,32.2727"/>
   </object>
   <object id="97" type="mur" x="852" y="624">
    <polygon points="0,0 -2,-15 71,-14 73,2"/>
@@ -591,6 +591,8 @@
   <object id="116" name="ascenseurDescendant" type="positionHaut" x="800.667" y="327" width="48" height="14"/>
   <object id="117" name="ascenseurMontant" type="positionBas" x="800.667" y="623.667" width="48.6667" height="14"/>
   <object id="174" name="glitch" type="glitch" x="1159.5" y="351.5" width="43" height="79.5"/>
+  <object id="177" type="descendre" x="709.5" y="594.5" width="73.5" height="15.5"/>
+  <object id="178" type="descendre" x="861" y="576" width="52.5" height="19.5"/>
  </objectgroup>
  <objectgroup id="23" name="stationTire">
   <object id="125" name="stationTire" type="stationTire" x="1118.33" y="255.333" width="50" height="82"/>

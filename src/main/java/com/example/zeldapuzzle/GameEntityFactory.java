@@ -168,6 +168,16 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
+    @Spawns("descendre")
+    public Entity descendre(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.DESCENDRE)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
     @Spawns("glitch")
     public Entity glitch(SpawnData data) {
         return FXGL.entityBuilder(data)
@@ -372,15 +382,14 @@ public class GameEntityFactory implements EntityFactory {
         ImageView imageView = new ImageView(lance);
 
         //pour la deuxieme lance
-        getGameScene().getRoot().setOnMouseClicked(event -> {
-            double longueurDuVecteur;
-            double pourcentageForceMaximal;
-            longueurDuVecteur = Math.hypot(Math.abs((1120.67 - getInput().getMouseYWorld())),Math.abs(Math.abs((511.667d - getInput().getMouseXWorld()))));
-            double forceMaximal = 100;
-            if (longueurDuVecteur > forceMaximal)
-                longueurDuVecteur = forceMaximal;
-            pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
-            this.vec2 = new Vec2((1120.67 - getInput().getMouseYWorld())*10*longueurDuVecteur,(511.667 - getInput().getMouseXWorld()) * -10 * longueurDuVecteur);
+            getGameScene().getRoot().setOnMouseClicked(event -> {
+            //double longueurDuVecteur;
+            //double pourcentageForceMaximal;
+            //longueurDuVecteur = Math.hypot(Math.abs((1120.67 - getInput().getMouseYWorld())),Math.abs(Math.abs((511.667d - getInput().getMouseXWorld()))));
+            //double forceMaximal = 100;
+            //if (longueurDuVecteur > forceMaximal)
+                //longueurDuVecteur = forceMaximal;
+            //pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
             spawn("lanceMove");
                 });
 
@@ -394,13 +403,22 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("lanceMove")
     public Entity lanceMove(SpawnData data) {
 
+        double longueurDuVecteur;
+        double pourcentageForceMaximal;
+        longueurDuVecteur = Math.hypot(Math.abs((1120.67 - getInput().getMouseXWorld())),Math.abs(Math.abs((511.667d - getInput().getMouseYWorld()))));
+        double forceMaximal = 200;
+        if (longueurDuVecteur > forceMaximal)
+            longueurDuVecteur = forceMaximal;
+        pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
+
         PhysicsComponent physics = new PhysicsComponent();
+        System.out.println((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal);
+        System.out.println((511.667d -getInput().getMouseYWorld()  )*pourcentageForceMaximal);
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                physics.applyBodyForce(new Vec2(0,60),new Vec2(0,60));
-
+                physics.applyBodyForce(new Vec2((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal*5,(511.667d -getInput().getMouseYWorld() )*pourcentageForceMaximal*5),new Vec2((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal*5,(511.667d -getInput().getMouseYWorld() )*pourcentageForceMaximal*5));
             }
         };
         physics.setBodyType(BodyType.DYNAMIC);
@@ -414,9 +432,10 @@ public class GameEntityFactory implements EntityFactory {
         ImageView imageView = new ImageView(lance);
 
         return entityBuilder(data)
-                .at(511.667, 1120.67)
+                .at(1120.67, 511.667)
                 .viewWithBBox(imageView)
                 .type(MainGameApp.EntityType.LANCEMOVE)
+                .rotate(Math.atan((getInput().getMouseXWorld() - 1120.67) / (511.667d -getInput().getMouseYWorld())) * 360 / 2 / Math.PI)
                 .collidable()
                 .with(physics)
                 .buildAndAttach();

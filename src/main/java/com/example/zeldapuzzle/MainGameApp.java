@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -313,19 +314,14 @@ public class MainGameApp extends GameApplication {
                 double forceMaximal = 100;
 
                 //Commencement
-                playerMapDongeon.getComponent(PhysicsComponent.class).setBodyType(BodyType.STATIC);
-
-
+                player.getComponent(PhysicsComponent.class).setBodyType(BodyType.STATIC);
                 //Pendant
 
                 //Pour que la lance suive la souris
                 Runnable helloRunnable = new Runnable() {
                     public void run() {
 
-                        double hauteurY = lance.getY() - getInput().getMouseYWorld();
-                        double longueurX = lance.getX() - getInput().getMouseXWorld();
-
-                        double angle = -Math.atan(longueurX / hauteurY) * 360 / 2 / Math.PI;
+                        double angle = Math.atan((getInput().getMouseXWorld() - lance.getX()) / (lance.getY() -getInput().getMouseYWorld())) * 360 / 2 / Math.PI;
                         if (lance.getY() > getInput().getMouseYWorld())
                             lance.setRotation(angle);
                         else if (lance.getY() < getInput().getMouseYWorld()) {
@@ -339,22 +335,15 @@ public class MainGameApp extends GameApplication {
                         //Barre de visée
                         double longueurDuVecteur;
                         double pourcentageForceMaximal;
-                        longueurDuVecteur = Math.hypot(Math.abs(hauteurY),Math.abs(Math.abs(longueurX)));
+                        longueurDuVecteur = Math.hypot(Math.abs((getInput().getMouseXWorld() - lance.getX())),Math.abs(Math.abs((lance.getY() -getInput().getMouseYWorld()))));
                         if (longueurDuVecteur > forceMaximal)
                             longueurDuVecteur = forceMaximal;
                         pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
                     }
-
                 };
                 ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
                 executor.scheduleAtFixedRate(helloRunnable, (long) 5 , (long) 2, TimeUnit.MILLISECONDS);
 
-                //Lancer la lance
-                getGameScene().getRoot().setOnMouseClicked(event -> {
-                    lanceEnMouvement = spawn("lanceMove");
-                    executor.shutdownNow();
-
-                });
 
 
             }
@@ -412,6 +401,19 @@ public class MainGameApp extends GameApplication {
                     System.out.println("non");
                 }
                 positionAscenceur = "enMouvement";
+            }
+        });
+
+        // Débarquer de l'ascenceur
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.DESCENDRE) {
+            @Override
+            protected void onCollisionBegin(Entity playerDongeon, Entity descendre) {
+                if (positionAscenceur.equals("haut") || Objects.equals(positionAscenceur, "enMouvement")) {
+                    ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
+                    ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
+                    ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(new Vec2(0, -3));
+
+                }
             }
         });
 
@@ -671,7 +673,7 @@ private void setLevel(Level level){
 
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,SMALLTREE,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,
-        SWORD,MOBPASSIVE,POMME,BANANE, MUR, PLAYERMAPPRINCIPAL, MURTRAVERSE, DANGER, PLAYERMAPDONGEON, POSITIONHAUT, POSITIONBAS, ASCENSEUR, GLITCH, LANCEMOVE, LANCE,
+        SWORD,MOBPASSIVE,POMME,BANANE, MUR, PLAYERMAPPRINCIPAL, MURTRAVERSE, DANGER, PLAYERMAPDONGEON, POSITIONHAUT, POSITIONBAS, ASCENSEUR, GLITCH, LANCEMOVE, LANCE, DESCENDRE,
     }
 
     public void setPlayerMapPrincipal(Entity playerMapPrincipal) {
