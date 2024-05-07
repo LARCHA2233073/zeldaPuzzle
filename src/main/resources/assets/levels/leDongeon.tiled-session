@@ -9,15 +9,14 @@
     "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
     "fileStates": {
         "": {
-            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "BeginingMap3.tmx": {
             "scale": 0.6194791666666667,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1585.2026231713469,
-                "y": 990.3480746594922
+                "x": 954.0272406255255,
+                "y": 657.0035311921977
             }
         },
         "BeginingMap3.tmx#test": {
@@ -25,15 +24,15 @@
         },
         "sans titre.tmx": {
             "expandedGroupLayers": [
-                12,
+                4,
                 2,
-                4
+                12
             ],
             "scale": 2,
-            "selectedLayer": 7,
+            "selectedLayer": 12,
             "viewCenter": {
-                "x": 1253.5,
-                "y": 327.5
+                "x": 947.5,
+                "y": 463.5
             }
         },
         "sans titre.tmx#BG1": {
@@ -58,6 +57,9 @@
         "sans titre.tmx#Dongeon": {
             "scaleInDock": 3
         },
+        "sans titre.tmx#LaBonneLance": {
+            "scaleInDock": 1
+        },
         "sans titre.tmx#MainBuild": {
             "scaleInDock": 1
         },
@@ -65,8 +67,7 @@
             "scaleInDock": 1
         },
         "sans titre.tmx#lance": {
-            "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
@@ -83,8 +84,8 @@
     ],
     "project": "leDongeon.tiled-project",
     "recentFiles": [
-        "BeginingMap3.tmx",
-        "sans titre.tmx"
+        "sans titre.tmx",
+        "BeginingMap3.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.tileSize": {
