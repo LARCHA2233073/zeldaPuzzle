@@ -20,7 +20,7 @@ public class AnimationComponentPlayer extends Component {
     private int speedx = 0;
     private int speedy = 0;
     private Vec2 vec;
-
+    boolean isDead = false;
     private AnimatedTexture texture;
     private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight, animDeath;
 
@@ -30,7 +30,7 @@ public class AnimationComponentPlayer extends Component {
         animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
-        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(1), 0, 6);
+        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(1), 0, 5);
         texture = new AnimatedTexture(animIdle);
     }
 
@@ -43,6 +43,7 @@ public class AnimationComponentPlayer extends Component {
     @Override
     public void onUpdate(double tpf) {
 
+        if (!isDead) {
         if (trueIfVertical) {
          //   entity.translateY(speedy * tpf);
 
@@ -64,6 +65,7 @@ public class AnimationComponentPlayer extends Component {
             if (FXGLMath.abs(speedy) < 1) {
                 speedy = 0;
                 texture.loopAnimationChannel(animIdle);
+
             }
 
         }
@@ -90,7 +92,7 @@ public class AnimationComponentPlayer extends Component {
                 speedx = 0;
                 texture.loopAnimationChannel(animIdle);
             }
-
+        }
         }
     }
 
@@ -144,8 +146,15 @@ public class AnimationComponentPlayer extends Component {
     public Vec2 getVec() {
         return vec;
     }
-
+    public void startDeath() {
+        isDead = true;
+        texture.playAnimationChannel(animDeath);
+    }
     public PhysicsComponent getPhysics() {
         return physics;
     }
+    public void setDead(boolean isDead) {
+        this.isDead = isDead;
+    }
+
 }

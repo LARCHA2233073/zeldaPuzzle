@@ -6,6 +6,7 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.entity.level.tiled.TiledMap;
@@ -63,12 +64,9 @@ public class MainGameApp extends GameApplication {
 
     private Entity ascenceur;
 
-
-
     private String positionAscenceur = "bas";
     private Entity platform;
     private Entity dungeon;
-    private boolean isAuSol;
     private Entity background;
 
     private Entity arrow;
@@ -253,7 +251,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Jump") {
             @Override
             protected void onAction() {
-                if (isDonjon && isAuSol) {
+                if (isDonjon && !bougePas) {
                     Vec2 force = new Vec2(0, 4);
                     Vec2 point = new Vec2(playerMapPrincipal.getX(), playerMapPrincipal.getY());
                     playerMapPrincipal.getComponent(PhysicsComponent.class).applyBodyLinearImpulse(force, point, false);
@@ -342,32 +340,36 @@ public class MainGameApp extends GameApplication {
         executor1.scheduleAtFixedRate(helloRunnable1, 0, 4, TimeUnit.SECONDS);
 
         getPhysicsWorld().setGravity(0,0);
-
         //timeractions
          timerActionFeu = getGameScene().getTimer().runAtInterval(() -> {
             barreDeVie.setProgress(barreDeVie.getProgress() - 0.1);
+            vieDuPersonnage -= 10;
+            if (vieDuPersonnage == 0) {
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startDeath();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(2088.0,2365.0));
+                        playerMapPrincipal.getComponent(AnimationComponentPlayer.class).setDead(false);
+                        barreDeVie = new ProgressBar();
+                        barreDeVie.setStyle("-fx-accent: red;");
+                        barreDeVie.setPrefWidth(225);
+                        barreDeVie.setPrefHeight(21);
+                        barreDeVie.setProgress(1);
+                        vieDuPersonnage = 1;
+                    }
+                };
+                executor.schedule(runnable,1, TimeUnit.SECONDS);
+            }
         }, Duration.seconds(1));
          timerActionFeu.pause();
+
 
 
     }
 
     @Override
     protected void initPhysics(){
-
-        //colission mob personnage
-
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.MUR) {
-            @Override
-            protected void onCollisionBegin(Entity playerMapDongeon, Entity mur) {
-                //changer de bodytype
-                isAuSol = true;
-            }
-            @Override
-            protected void onCollisionEnd(Entity playerMapDongeon, Entity mur) {
-                isAuSol = false;
-            }
-        });
 
         //Entrer du dongeon
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.DOOR) {
@@ -389,8 +391,6 @@ public class MainGameApp extends GameApplication {
                 ascenceur = spawn("ascenceur");
                 getPhysicsWorld().setGravity(0,1500);
                 setPlayerMapPrincipal(playerMapDongeon);
-
-
 
             }
         });
@@ -511,11 +511,12 @@ public class MainGameApp extends GameApplication {
 
          */
 
-        /*
+
         // Toucher l'ascenceur
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEUR) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity ascenceur) {
+                bougePas = false;
                 int x = 0;
                 if(positionAscenceur == "bas")
                    x = 10;
@@ -538,9 +539,16 @@ public class MainGameApp extends GameApplication {
                 ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
                 positionAscenceur = "enMouvement";
             }
+
+            @Override
+            protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
+                bougePas = true;
+
+            }
+
         });
 
-         */
+
 
         // Arêter l'ascenceur
 
@@ -754,20 +762,16 @@ public class MainGameApp extends GameApplication {
         });
 
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.FEU) {
-
-
             @Override
             protected void onCollisionBegin(Entity a, Entity b) {
                 timerActionFeu.resume();
 
             }
-
             @Override
             protected void onCollisionEnd(Entity a, Entity b) {
                 timerActionFeu.pause();
             }
         });
-
 
     }
 
