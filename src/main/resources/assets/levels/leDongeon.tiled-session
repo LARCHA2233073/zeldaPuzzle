@@ -31,8 +31,8 @@
             "scale": 2,
             "selectedLayer": 12,
             "viewCenter": {
-                "x": 947.5,
-                "y": 463.5
+                "x": 1261,
+                "y": 462
             }
         },
         "sans titre.tmx#BG1": {
@@ -71,7 +71,7 @@
         }
     },
     "last.exportedFilePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
-    "last.imagePath": "C:/Users/Utilisateur/Pictures",
+    "last.imagePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
     "map.height": 1000,
     "map.lastUsedExportFilter": "Fichiers de carte Tiled (*.tmx *.xml)",
     "map.lastUsedFormat": "tmx",
