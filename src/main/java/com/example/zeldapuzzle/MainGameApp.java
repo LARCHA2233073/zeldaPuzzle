@@ -55,6 +55,7 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 public class MainGameApp extends GameApplication {
 
     private Entity mobPassive;
+    private boolean isDonjon = false;
     private Entity playerMapPrincipal;
 
     private Entity playerMapDongeon;
@@ -75,7 +76,7 @@ public class MainGameApp extends GameApplication {
     private GameEntityFactory gameEntityFactory = new GameEntityFactory();
     private AnimationComponentPlayer animation = new AnimationComponentPlayer();
 
-    private  int numberOfTarget = 5;
+    private  int numberOfTarget = 3;
 
     private Pomme pomme;
 
@@ -209,7 +210,8 @@ public class MainGameApp extends GameApplication {
             }
             @Override
             protected void onAction() {
-                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveUp();
+                if (!isDonjon)
+                    playerMapPrincipal.getComponent(AnimationComponentPlayer.class).moveUp();
             }
 
             @Override
@@ -277,7 +279,7 @@ public class MainGameApp extends GameApplication {
             banane.utiliser();
         });
 
-        FXGL.setLevelFromMap("MapDeMerde2.tmx");
+        FXGL.setLevelFromMap("mapFinal.tmx");
         getGameScene().setBackgroundColor(Color.BLACK);
 
         //position du perso
@@ -350,13 +352,21 @@ public class MainGameApp extends GameApplication {
             protected void onCollisionBegin(Entity playerMapPrincipal, Entity door) {
                 //changer de niveau
                 FXGL.setLevelFromMap("leDongeon.tmx");
+                Entity cible1 = spawn("cible");
+                Entity cible2 = spawn("cible");
+                Entity cible3 = spawn("cible");
+                isDonjon = true;
+                cible1.setPosition(1600, 520);
+                cible2.setPosition(1400, 450);
+                cible3.setPosition(1680, 400);
                 playerMapDongeon = spawn("playerMapDongeon");
-                viewport.bindToEntity(playerMapDongeon,400,100);
+                viewport.bindToEntity(playerMapDongeon,320,500);
                 viewport.setZoom(1.5);
                 playerMapDongeon.setPosition(195,400);
                 ascenceur = spawn("ascenceur");
                 getPhysicsWorld().setGravity(0,1500);
                 setPlayerMapPrincipal(playerMapDongeon);
+
 
 
             }
@@ -383,19 +393,23 @@ public class MainGameApp extends GameApplication {
                 cible.removeFromWorld();
 
                 //message pour le joueur
-                String message = "nombre de cible restante " + numberOfTarget + "/5";
+                String message = "nombre de cible restante " + numberOfTarget + "/3";
                 FXGL.getNotificationService().pushNotification(message);
 
                 //enlever la fleche
                 arrowMove.removeFromWorld();
 
                 //changer de carte
+
                 if (numberOfTarget == 0){
-                    FXGL.setLevelFromMap("donjonFini.tmx");
-                    viewport.bindToEntity(playerMapDongeon,400,100);
-                    playerMapPrincipal.setPosition(561.333,817.333);
-                    getPhysicsWorld().setGravity(0,1500);
+                    isDonjon = false;
+                    FXGL.setLevelFromMap("mapFinal.tmx");
+                    playerMapPrincipal = spawn("playerMapPrincipal");
+                    viewport.bindToEntity(playerMapPrincipal,400,100);
+                    playerMapPrincipal.setPosition(3000,2500);
+                    getPhysicsWorld().setGravity(0,0);
                     setPlayerMapPrincipal(playerMapPrincipal);
+
                 }
 
             }
@@ -409,6 +423,7 @@ public class MainGameApp extends GameApplication {
         });
 
         // Faire descendre l'ascenceur
+        /*
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEURD) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity ascenseurD) {
@@ -427,8 +442,11 @@ public class MainGameApp extends GameApplication {
             }
         });
 
+         */
+
 
         // Faire monter l'ascenceur
+        /*
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEURM) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity ascenceurM) {
@@ -446,7 +464,9 @@ public class MainGameApp extends GameApplication {
             }
         });
 
+         */
 
+        /*
         // Toucher l'ascenceur
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEUR) {
             @Override
@@ -475,8 +495,11 @@ public class MainGameApp extends GameApplication {
             }
         });
 
+         */
+
         // Arêter l'ascenceur
 
+        /*
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.ASCENSEUR,EntityType.POSITIONBAS) {
             @Override
             protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
@@ -494,6 +517,8 @@ public class MainGameApp extends GameApplication {
             }
         });
 
+         */
+/*
         // Arêter l'ascenceur
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.ASCENSEUR,EntityType.POSITIONHAUT) {
             @Override
@@ -511,6 +536,8 @@ public class MainGameApp extends GameApplication {
                 positionAscenceur = "haut";
             }
         });
+
+ */
 
 
 
@@ -649,7 +676,7 @@ public class MainGameApp extends GameApplication {
                     //dire que nous somme sortie
                     entrer = true;
 
-                    FXGL.setLevelFromMap("MapDeMerde2.tmx");
+                    FXGL.setLevelFromMap("mapFinal.tmx");
                     playerMapPrincipal = spawn("playerMapPrincipal");
                     getPhysicsWorld().setGravity(0, 0);
                     setPlayerMapPrincipal(playerMapPrincipal);
@@ -714,8 +741,8 @@ public class MainGameApp extends GameApplication {
         gridPane.setGridLinesVisible(true);
 
         //parametre du gridPaneNombre
-        gridPaneNombre.setPadding(new Insets(100,22,0,0));
-        gridPaneNombre.setHgap(13);
+        gridPaneNombre.setPadding(new Insets(100,10,0,0));
+        gridPaneNombre.setHgap(10);
         gridPaneNombre.setVgap(16);
         gridPaneNombre.setAlignment(Pos.CENTER_RIGHT);
 

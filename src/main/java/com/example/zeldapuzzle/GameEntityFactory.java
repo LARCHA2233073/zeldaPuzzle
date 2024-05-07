@@ -112,7 +112,6 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
-
     @Spawns("background")
     public Entity background(SpawnData data) {
         Image imageMap;
@@ -133,6 +132,17 @@ public class GameEntityFactory implements EntityFactory {
         return FXGL.entityBuilder(data)
                 .type(MainGameApp.EntityType.MUR)
                 .bbox(new HitBox(BoundingShape.polygonFromDoubles(data.<Polygon>get("polygon").getPoints())))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+
+    }
+
+    @Spawns("plateform")
+    public Entity plateform(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(MainGameApp.EntityType.MUR)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
@@ -413,6 +423,7 @@ public class GameEntityFactory implements EntityFactory {
     public Entity arrowMove(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         Vec2 arrowVecteur = new Vec2((listeDonne.get(0) - listeDonne.get(2))*10,(listeDonne.get(1) - listeDonne.get(3)) * -10);
+        //System.out.println((listeDonne.get(0) - listeDonne.get(2)) * 10);
         listeDonne.clear();
         arrow(data).removeFromWorld();
         Runnable runnable = new Runnable() {
@@ -426,7 +437,7 @@ public class GameEntityFactory implements EntityFactory {
         physics.setOnPhysicsInitialized(runnable);
         Rectangle arrow = new Rectangle(40,10,Color.RED);
         return entityBuilder(data)
-                .at(561.333,817.333)
+                .at(1200, 520)
                 .viewWithBBox(arrow)
                 .type(MainGameApp.EntityType.ARROWMOVE)
                 .collidable()
