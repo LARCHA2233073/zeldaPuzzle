@@ -2,6 +2,7 @@ package com.example.zeldapuzzle;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.GameScene;
 import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
@@ -16,10 +17,7 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.time.TimerAction;
-import com.example.zeldapuzzle.Inventaire.Banane;
-import com.example.zeldapuzzle.Inventaire.CaseInventaire;
-import com.example.zeldapuzzle.Inventaire.Objet;
-import com.example.zeldapuzzle.Inventaire.Pomme;
+import com.example.zeldapuzzle.Inventaire.*;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.geometry.Insets;
@@ -84,6 +82,8 @@ public class MainGameApp extends GameApplication {
     private Pomme pomme;
 
     private Banane banane;
+
+    private Vitesse vitesse;
     private int vieDuPersonnage = 100;
 
     private CaseInventaire caseInventaire;
@@ -102,8 +102,7 @@ public class MainGameApp extends GameApplication {
     private int placeInventaireY = 0; //de 0 a 3
 
 
-    private boolean isPomme = false;
-    private boolean isBanane = false;
+
     private StackPane stackPane;
     private int positionDeImageViewX;
     private int positionDeImageViewY;
@@ -285,6 +284,7 @@ public class MainGameApp extends GameApplication {
         pomme = new Pomme();
         caseInventaire = new CaseInventaire();
         banane = new Banane();
+        vitesse = new Vitesse();
 
         //utiliser l'objet
         pomme.getText().setOnMouseClicked(mouseEvent -> {
@@ -301,6 +301,21 @@ public class MainGameApp extends GameApplication {
             gridPaneNombre.getChildren().clear();
             ajoutInventaireObjet();
             banane.utiliser();
+        });
+
+        vitesse.getText().setOnMouseClicked(mouseEvent -> {
+            vitesse.diminuerNombre();
+            gridPane.getChildren().clear();
+            gridPaneNombre.getChildren().clear();
+            ajoutInventaireObjet();
+            vitesse.utiliser();
+//            AnimationComponentPlayer animationComponentPlayer;
+//            try {
+//                animationComponentPlayer = new AnimationComponentPlayer();
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//            System.out.println(animationComponentPlayer.getIntVec());
         });
 
         FXGL.setLevelFromMap("mapFinal.tmx");
@@ -428,14 +443,13 @@ public class MainGameApp extends GameApplication {
                 cible.removeFromWorld();
 
                 //message pour le joueur
-                String message = "nombre de cible restante " + numberOfTarget + "/3";
+                String message = "nombre de cibles restantes " + numberOfTarget + "/3";
                 FXGL.getNotificationService().pushNotification(message);
 
                 //enlever la fleche
                 arrowMove.removeFromWorld();
 
                 //changer de carte
-
                 if (numberOfTarget == 0){
                     isDonjon = false;
                     FXGL.setLevelFromMap("mapFinal.tmx");
@@ -608,89 +622,21 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.POMME) {
             @Override
             protected void onCollisionBegin(Entity player, Entity pommeEntity) {
-                //repenser a ameliorer le systeme pour avoir plusieurs pommes
-                if (placeInventaireY != 4 ) {
-                    for (int i = 0; i <= 3; i++) {
-                        for (int j = 0; j <= 9; j++) {
-                            if (tabObjets[j][i].getImageView().getImage() == pomme.getImageView().getImage()) {
-
-                                if (tabObjets[j][i].getNombre() != 10) {
-                                        tabObjets[j][i].augmenterNombre();
-                                }
-                            }
-                        }
-                    }
-
-                    if (pomme.getNombre() == 0){
-                        //mettre a 0 pour avoir  la case la plus proche
-                        placeInventaireY = 0;
-                        placeInventaireX = 0;
-
-                        while (tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() != caseInventaire.getImageView().getImage()) {
-                            System.out.println(tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() + "  " + caseInventaire.getImageView().getImage());
-                            placeInventaireX++;
-
-                            if(placeInventaireX == 10){
-                                placeInventaireX = 0;
-                                placeInventaireY++;
-                            }
-
-                        }
-                        //ajout de la pomme
-                        tabObjets[placeInventaireX][placeInventaireY] = pomme;
-                        tabObjets[placeInventaireX][placeInventaireY].augmenterNombre();
-
-                        if (placeInventaireX == 9 && placeInventaireY == 3 ){
-                            placeInventaireY = 4;
-                        }
-                    }
-                }
-
-                pommeEntity.removeFromWorld();
+                collisionObjet(pomme,pommeEntity);
             }
         });
 
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.BANANE) {
             @Override
             protected void onCollisionBegin(Entity player, Entity bananeEntity) {
-                //repenser a ameliorer le systeme pour avoir plusieurs bananes
-                if (placeInventaireY != 4 ) {
-                    for (int i = 0; i <= 3; i++) {
-                        for (int j = 0; j <= 9; j++) {
-                            if (tabObjets[j][i].getImageView().getImage() == banane.getImageView().getImage()) {
+                collisionObjet(banane,bananeEntity);
+            }
+        });
 
-                                if (tabObjets[j][i].getNombre() != 10) {
-                                    tabObjets[j][i].augmenterNombre();
-                                }
-                            }
-                        }
-                    }
-
-                    if (banane.getNombre() == 0){
-                        //mettre a 0 pour avoir  la case la plus proche
-                        placeInventaireY = 0;
-                        placeInventaireX = 0;
-
-                        while (tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() != caseInventaire.getImageView().getImage()) {
-                            System.out.println(tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() + "  " + caseInventaire.getImageView().getImage());
-                            placeInventaireX++;
-
-                            if(placeInventaireX == 10){
-                                placeInventaireX = 0;
-                                placeInventaireY++;
-                            }
-
-                        }
-                        //ajout de la banane
-                        tabObjets[placeInventaireX][placeInventaireY] = banane;
-                        tabObjets[placeInventaireX][placeInventaireY].augmenterNombre();
-
-                        if (placeInventaireX == 9 && placeInventaireY == 3 ){
-                            placeInventaireY = 4;
-                        }
-                    }
-                }
-                bananeEntity.removeFromWorld();
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.VITESSE) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity vitesseEntity) {
+                collisionObjet(vitesse,vitesseEntity);
             }
         });
 
@@ -835,11 +781,7 @@ private void setLevel(Level level){
         return barreDeVie;
     }
 
-    private void spawnEntityMondeDepart(){
-        FXGL.spawn("pomme");
-        FXGL.spawn("pomme").setPosition(50,0);
-        FXGL.spawn("banane").setPosition(100,0);
-    }
+
 
     private void ajoutInventaire(){
         //ajout dans le gridpane des imageviews des cases et du text format(colonnes,lignes)
@@ -878,7 +820,7 @@ private void setLevel(Level level){
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,OBJETDEHORS,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
         SWORD,MOBPASSIVE,POMME,BANANE, MUR, PLAYERMAPPRINCIPAL, MURTRAVERSE, DANGER, PLAYERMAPDONGEON, POSITIONHAUT, POSITIONBAS, ASCENSEURD, ASCENSEURM, ASCENSEUR,
-        MAISONOBJET,PORTEMAISONPLAYER,FEU
+        MAISONOBJET,PORTEMAISONPLAYER,FEU,VITESSE
     }
 
     public void setPlayerMapPrincipal(Entity playerMapPrincipal) {
@@ -905,6 +847,54 @@ private void setLevel(Level level){
                     break;
             }
     }
+
+    public void collisionObjet (Objet objet,Entity entity) {
+        //repenser a ameliorer le systeme pour avoir plusieurs objets de memes famille
+        if (placeInventaireY != 4 ) {
+            for (int i = 0; i <= 3; i++) {
+                for (int j = 0; j <= 9; j++) {
+                    if (tabObjets[j][i].getImageView().getImage() == objet.getImageView().getImage()) {
+
+                        if (tabObjets[j][i].getNombre() != 10) {
+                            tabObjets[j][i].augmenterNombre();
+                        }
+                    }
+                }
+            }
+
+            if (objet.getNombre() == 0){
+                //mettre a 0 pour avoir  la case la plus proche
+                placeInventaireY = 0;
+                placeInventaireX = 0;
+
+                while (tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() != caseInventaire.getImageView().getImage()) {
+                    System.out.println(tabObjets[placeInventaireX][placeInventaireY].getImageView().getImage() + "  " + caseInventaire.getImageView().getImage());
+                    placeInventaireX++;
+
+                    if(placeInventaireX == 10){
+                        placeInventaireX = 0;
+                        placeInventaireY++;
+                    }
+
+                }
+                //ajout de l'objet
+                tabObjets[placeInventaireX][placeInventaireY] = objet;
+                tabObjets[placeInventaireX][placeInventaireY].augmenterNombre();
+
+                if (placeInventaireX == 9 && placeInventaireY == 3 ){
+                    placeInventaireY = 4;
+                }
+            }
+        }
+        entity.removeFromWorld();
+
+    }
+
+    public static GameScene getGameScene(){
+        return FXGL.getGameScene();
+    }
+
+
 }
 
 

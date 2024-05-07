@@ -112,6 +112,25 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
+    @Spawns("vitesse")
+    public Entity vitesse(SpawnData data) {
+        Image imageBanane;
+        try {
+            imageBanane = new Image(new FileInputStream("src/main/resources/assets/textures/vitesseTransparente.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView imageView = new ImageView(imageBanane);
+        return entityBuilder(data)
+                .type(MainGameApp.EntityType.VITESSE)
+                .viewWithBBox(imageView)
+                .with(new CollidableComponent(true))
+                .build();
+
+
+
+    }
+
     @Spawns("background")
     public Entity background(SpawnData data) {
         Image imageMap;

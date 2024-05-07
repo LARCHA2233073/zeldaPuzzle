@@ -19,12 +19,15 @@ public class AnimationComponentPlayer extends Component {
     boolean trueIfVertical;
     private int speedx = 0;
     private int speedy = 0;
-    private Vec2 vec;
+    private  Vec2 vec;
+    private static float intVec;
+
 
     private AnimatedTexture texture;
     private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight, animDeath;
 
     public AnimationComponentPlayer() throws FileNotFoundException {
+        intVec = 4;
         animIdle = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk.png")), 9, 64, 64, Duration.seconds(1), 0, 0);
         animWalkLeft = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk2.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
@@ -100,17 +103,18 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        vec = new Vec2(4, 0);
+        vec = new Vec2(intVec, 0);
         physics.setBodyLinearVelocity(vec);
 
 
     }
+
     public void moveLeft() {
         speedx = -75;
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        vec = new Vec2(-4, 0);
+        vec = new Vec2(-intVec, 0);
         physics.setBodyLinearVelocity(vec);
 
 
@@ -121,7 +125,7 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        vec = new Vec2(0, 4);
+        vec = new Vec2(0, intVec);
         physics.setBodyLinearVelocity(vec);
 
 
@@ -132,7 +136,7 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        vec = new Vec2(0, -4);
+        vec = new Vec2(0, -intVec);
         physics.setBodyLinearVelocity(vec);
 
 
@@ -141,9 +145,15 @@ public class AnimationComponentPlayer extends Component {
         texture.loopAnimationChannel(animIdle);
     }
 
-    public Vec2 getVec() {
-        return vec;
+    public static void setIntVec(float intVec) {
+        AnimationComponentPlayer.intVec = intVec;
     }
+
+    public static void augmenterIntVec() {
+        intVec = 20;
+    }
+
+
 
     public PhysicsComponent getPhysics() {
         return physics;
