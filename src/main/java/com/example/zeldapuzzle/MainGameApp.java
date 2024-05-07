@@ -7,13 +7,11 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
-import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.time.TimerAction;
@@ -23,13 +21,8 @@ import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -38,11 +31,11 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -65,12 +58,14 @@ public class MainGameApp extends GameApplication {
 
     private String positionAscenceur = "bas";
     private Entity platform;
+    private Entity dungeonEntry;
     private Entity dungeon;
-    private boolean isAuSol;
     private Entity background;
 
-    private Entity arrow;
-    private Viewport viewport;
+    private Entity lance;
+
+    private Entity lanceEnMouvement;
+    public Viewport viewport;
 
     private PhysicsComponent physics =  new PhysicsComponent();;
 
@@ -94,6 +89,7 @@ public class MainGameApp extends GameApplication {
     private GridPane gridPane;
 
     private GridPane gridPaneNombre;
+
 
     Objet[][] tabObjets  = new Objet[40][4];
 
@@ -252,7 +248,7 @@ public class MainGameApp extends GameApplication {
         input.addAction(new UserAction("Jump") {
             @Override
             protected void onAction() {
-                if (isDonjon && isAuSol) {
+                if (isDonjon) {
                     Vec2 force = new Vec2(0, 4);
                     Vec2 point = new Vec2(playerMapPrincipal.getX(), playerMapPrincipal.getY());
                     playerMapPrincipal.getComponent(PhysicsComponent.class).applyBodyLinearImpulse(force, point, false);
@@ -375,16 +371,16 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.MUR) {
             @Override
             protected void onCollisionBegin(Entity playerMapDongeon, Entity mur) {
-                //changer de bodytype
-                isAuSol = true;
+
             }
             @Override
             protected void onCollisionEnd(Entity playerMapDongeon, Entity mur) {
-                isAuSol = false;
+
             }
         });
 
         //Entrer du dongeon
+
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity playerMapPrincipal, Entity door) {
@@ -402,6 +398,7 @@ public class MainGameApp extends GameApplication {
                 viewport.setZoom(1.5);
                 playerMapDongeon.setPosition(195,400);
                 ascenceur = spawn("ascenceur");
+                getGameScene().setBackgroundColor(Color.BLACK);
                 getPhysicsWorld().setGravity(0,1500);
                 setPlayerMapPrincipal(playerMapDongeon);
 
@@ -414,9 +411,45 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.STATIONTIRE) {
             @Override
             protected void onCollisionBegin(Entity player, Entity stationTire) {
-                arrow = spawn("arrow");
-                arrow.setX(stationTire.getX());
-                arrow.setY(stationTire.getY());
+
+                //Initialisation de la boucle de jeu
+                lance = spawn("lance");
+                lance.setX(stationTire.getX());
+                lance.setY(stationTire.getY());
+                double forceMaximal = 100;
+
+                //Commencement
+                player.getComponent(PhysicsComponent.class).setBodyType(BodyType.STATIC);
+                //Pendant
+
+                //Pour que la lance suive la souris
+                Runnable helloRunnable = new Runnable() {
+                    public void run() {
+
+                        double angle = Math.atan((getInput().getMouseXWorld() - lance.getX()) / (lance.getY() -getInput().getMouseYWorld())) * 360 / 2 / Math.PI;
+                        if (lance.getY() > getInput().getMouseYWorld())
+                            lance.setRotation(angle);
+                        else if (lance.getY() < getInput().getMouseYWorld()) {
+                            if (angle <= 0)
+                                lance.setRotation(angle + 180);
+                            if (angle >= 0)
+                                lance.setRotation(angle - 180);
+                        }
+
+
+                        //Barre de visée
+                        double longueurDuVecteur;
+                        double pourcentageForceMaximal;
+                        longueurDuVecteur = Math.hypot(Math.abs((getInput().getMouseXWorld() - lance.getX())),Math.abs(Math.abs((lance.getY() -getInput().getMouseYWorld()))));
+                        if (longueurDuVecteur > forceMaximal)
+                            longueurDuVecteur = forceMaximal;
+                        pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
+                    }
+                };
+                ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                executor.scheduleAtFixedRate(helloRunnable, (long) 5 , (long) 2, TimeUnit.MILLISECONDS);
+
+
 
             }
         });
@@ -435,7 +468,7 @@ public class MainGameApp extends GameApplication {
 
 
         //Boucle de jeu du dongeon
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.ARROWMOVE) {
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.CIBLE,EntityType.LANCEMOVE) {
             @Override
             protected void onCollisionBegin(Entity cible, Entity arrowMove) {
                 //enlever la cible
@@ -474,133 +507,73 @@ public class MainGameApp extends GameApplication {
             }
         });
 
-        //Contact avec les pièges
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.DANGER) {
-            @Override
-            protected void onCollisionBegin(Entity playerDongeon, Entity danger) {
-            }
-        });
-
-        // Faire descendre l'ascenceur
-        /*
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEURD) {
-            @Override
-            protected void onCollisionBegin(Entity playerDongeon, Entity ascenseurD) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        Vec2 vec2 = new Vec2(0,-10);
-                        System.out.println("oui");
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
-                    }
-                };
-                ascenceur.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
-
-            }
-        });
-
-         */
 
 
-        // Faire monter l'ascenceur
-        /*
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEURM) {
-            @Override
-            protected void onCollisionBegin(Entity playerDongeon, Entity ascenceurM) {
-
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        Vec2 vec2 = new Vec2(0,10);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
-                    }
-                };
-                ascenceur.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
-            }
-        });
-
-         */
-
-        /*
         // Toucher l'ascenceur
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.ASCENSEUR) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity ascenceur) {
-                int x = 0;
-                if(positionAscenceur == "bas")
-                   x = 10;
-                else if(positionAscenceur == "haut")
-                    x = -10;
 
-                int finalX = x;
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        Vec2 vec2 = new Vec2(0, finalX);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
-                    }
-                };
-                ascenceur.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
-                Vec2 vec2 = new Vec2(0, finalX);
-                System.out.println("oui");
-                ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
+                if(positionAscenceur == "bas") {
+                    ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(new Vec2(0, 3));
+                }
+                if(positionAscenceur == "haut") {
+                    ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(new Vec2(0, -3));
+                    System.out.println("non");
+                }
                 positionAscenceur = "enMouvement";
             }
         });
 
-         */
+        // Débarquer de l'ascenceur
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.DESCENDRE) {
+            @Override
+            protected void onCollisionBegin(Entity playerDongeon, Entity descendre) {
+                if (positionAscenceur.equals("haut") || Objects.equals(positionAscenceur, "enMouvement")) {
+                    ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
+                    ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
+                    ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(new Vec2(0, -3));
+
+                }
+            }
+        });
 
         // Arêter l'ascenceur
 
-        /*
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.ASCENSEUR,EntityType.POSITIONBAS) {
             @Override
-            protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        Vec2 vec2 = new Vec2(0, 0);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
-                    }
-                };
-                ascenceur.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
+            protected void onCollisionBegin(Entity ascenceur, Entity positionBas) {
+                ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
+                ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
                 positionAscenceur = "bas";
             }
         });
 
-         */
-/*
         // Arêter l'ascenceur
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.ASCENSEUR,EntityType.POSITIONHAUT) {
+
             @Override
-            protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        Vec2 vec2 = new Vec2(0, 0);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
-                        ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(vec2);
-                    }
-                };
-                ascenceur.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
+            protected void onCollisionBegin(Entity ascenceur, Entity positionBas) {
+                ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
+                ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
                 positionAscenceur = "haut";
+
+
+
             }
         });
 
- */
+        //Position de glich
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.GLITCH) {
 
+            @Override
+            protected void onCollisionEnd(Entity playerMapDongeon, Entity glitch) {
+                if (positionAscenceur == "haut" )
+                    ascenceur.getComponent(PhysicsComponent.class).setBodyLinearVelocity(new Vec2(0,-3));
+                System.out.println("oui");
 
-
-
+            }
+        });
 
 
         //Retour a la map
@@ -611,6 +584,7 @@ public class MainGameApp extends GameApplication {
                 playerMapPrincipal = spawn("playerMapPrincipal");
                 viewport.bindToEntity(playerMapDongeon,400,100);
                 player.setPosition(400,100);
+                getGameScene().setBackgroundColor(Color.WHITE);
                 getPhysicsWorld().setGravity(0,0);
                 setPlayerMapPrincipal(playerMapPrincipal);
 
@@ -819,8 +793,8 @@ private void setLevel(Level level){
 
     public enum EntityType {
         PLAYER,DOOR,PLATFORM,OBJETDEHORS,CIBLE,BOITE,STATUE,TRIANGLE,STATIONTIRE,ARROW,ARROWMOVE,
-        SWORD,MOBPASSIVE,POMME,BANANE, MUR, PLAYERMAPPRINCIPAL, MURTRAVERSE, DANGER, PLAYERMAPDONGEON, POSITIONHAUT, POSITIONBAS, ASCENSEURD, ASCENSEURM, ASCENSEUR,
-        MAISONOBJET,PORTEMAISONPLAYER,FEU,VITESSE
+        SWORD,MOBPASSIVE,POMME,BANANE, MUR, PLAYERMAPPRINCIPAL, MURTRAVERSE, DANGER, PLAYERMAPDONGEON, POSITIONHAUT, POSITIONBAS, ASCENSEUR,
+        MAISONOBJET,PORTEMAISONPLAYER,FEU,VITESSE,GLITCH, LANCEMOVE, LANCE, DESCENDRE,
     }
 
     public void setPlayerMapPrincipal(Entity playerMapPrincipal) {
@@ -895,6 +869,9 @@ private void setLevel(Level level){
     }
 
 
-}
+    }
+
+
+
 
 

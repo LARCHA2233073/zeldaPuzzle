@@ -404,6 +404,7 @@
     ],
     "project": "zelda.tiled-project",
     "recentFiles": [
+        "leDongeon.tmx",
         "mapFinal.tmx",
         "Test2.tmx",
         "donjonFini.tmx",
@@ -411,7 +412,6 @@
         "level1.tmx",
         "BeginingMap3.tmx",
         "Test.tmx",
-        "leDongeon.tmx",
         "interieurMaisonPlayer.tmx",
         "interieurMaisonPlayer1.tmx",
         "MapDeMerde2.tmx",

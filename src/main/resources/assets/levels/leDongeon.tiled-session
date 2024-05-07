@@ -15,8 +15,8 @@
             "scale": 0.6194791666666667,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 955.641499915924,
-                "y": 658.6177904825962
+                "x": 954.0272406255255,
+                "y": 657.0035311921977
             }
         },
         "BeginingMap3.tmx#test": {
@@ -24,18 +24,15 @@
         },
         "sans titre.tmx": {
             "expandedGroupLayers": [
+                4,
                 2,
-                12,
-                4
-            ],
-            "expandedObjectLayers": [
                 12
             ],
             "scale": 2,
-            "selectedLayer": 10,
+            "selectedLayer": 12,
             "viewCenter": {
-                "x": 1192.5,
-                "y": 557.25
+                "x": 947.5,
+                "y": 463.5
             }
         },
         "sans titre.tmx#BG1": {
@@ -60,15 +57,21 @@
         "sans titre.tmx#Dongeon": {
             "scaleInDock": 3
         },
+        "sans titre.tmx#LaBonneLance": {
+            "scaleInDock": 1
+        },
         "sans titre.tmx#MainBuild": {
             "scaleInDock": 1
         },
         "sans titre.tmx#Village": {
             "scaleInDock": 1
+        },
+        "sans titre.tmx#lance": {
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
-    "last.imagePath": "C:/Users/Utilisateur/IdeaProjects/zeldaPuzzle/src/main/resources/assets/levels",
+    "last.imagePath": "C:/Users/Utilisateur/Pictures",
     "map.height": 1000,
     "map.lastUsedExportFilter": "Fichiers de carte Tiled (*.tmx *.xml)",
     "map.lastUsedFormat": "tmx",
@@ -81,8 +84,8 @@
     ],
     "project": "leDongeon.tiled-project",
     "recentFiles": [
-        "BeginingMap3.tmx",
-        "sans titre.tmx"
+        "sans titre.tmx",
+        "BeginingMap3.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.tileSize": {
