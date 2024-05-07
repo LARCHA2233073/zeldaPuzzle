@@ -19,9 +19,10 @@ public class AnimationComponentPlayer extends Component {
     boolean trueIfVertical;
     private int speedx = 0;
     private int speedy = 0;
+    private Vec2 vec;
 
     private AnimatedTexture texture;
-    private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight;
+    private AnimationChannel animWalkUp, animIdle, animWalkLeft, animWalkDown, animWalkRight, animDeath;
 
     public AnimationComponentPlayer() throws FileNotFoundException {
         animIdle = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterWalk.png")), 9, 64, 64, Duration.seconds(1), 0, 0);
@@ -29,6 +30,7 @@ public class AnimationComponentPlayer extends Component {
         animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
+        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(1), 0, 6);
         texture = new AnimatedTexture(animIdle);
     }
 
@@ -98,8 +100,8 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(4, 0);
-        physics.setBodyLinearVelocity(vec2);
+        vec = new Vec2(4, 0);
+        physics.setBodyLinearVelocity(vec);
 
 
     }
@@ -108,8 +110,8 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = false;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(-4, 0);
-        physics.setBodyLinearVelocity(vec2);
+        vec = new Vec2(-4, 0);
+        physics.setBodyLinearVelocity(vec);
 
 
     }
@@ -119,8 +121,8 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(0, 4);
-        physics.setBodyLinearVelocity(vec2);
+        vec = new Vec2(0, 4);
+        physics.setBodyLinearVelocity(vec);
 
 
     }
@@ -130,8 +132,8 @@ public class AnimationComponentPlayer extends Component {
         trueIfVertical = true;
 
         physics = getEntity().getComponent(PhysicsComponent.class);
-        Vec2 vec2 = new Vec2(0, -4);
-        physics.setBodyLinearVelocity(vec2);
+        vec = new Vec2(0, -4);
+        physics.setBodyLinearVelocity(vec);
 
 
     }
@@ -139,6 +141,9 @@ public class AnimationComponentPlayer extends Component {
         texture.loopAnimationChannel(animIdle);
     }
 
+    public Vec2 getVec() {
+        return vec;
+    }
 
     public PhysicsComponent getPhysics() {
         return physics;

@@ -65,7 +65,7 @@ public class MainGameApp extends GameApplication {
     private String positionAscenceur = "bas";
     private Entity platform;
     private Entity dungeon;
-
+    private boolean isAuSol;
     private Entity background;
 
     private Entity arrow;
@@ -243,6 +243,23 @@ public class MainGameApp extends GameApplication {
             }
         }, KeyCode.S);
 
+        input.addAction(new UserAction("Jump") {
+            @Override
+            protected void onAction() {
+                if (isDonjon && isAuSol) {
+                    Vec2 force = new Vec2(0, 4);
+                    Vec2 point = new Vec2(playerMapPrincipal.getX(), playerMapPrincipal.getY());
+                    playerMapPrincipal.getComponent(PhysicsComponent.class).applyBodyLinearImpulse(force, point, false);
+
+                }
+            }
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+                playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startAnimIdle();
+            }
+        }, KeyCode.SPACE);
+
     }
 
 
@@ -289,7 +306,7 @@ public class MainGameApp extends GameApplication {
 
         //position mobPassive
         mobPassive = spawn("mobPassive");
-        Point2D positionMob = new Point2D(2150.0,2365.0);
+        Point2D positionMob = new Point2D(2300.0,2365.0);
         mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
 
         viewport = getGameScene().getViewport();
@@ -332,17 +349,16 @@ public class MainGameApp extends GameApplication {
     protected void initPhysics(){
 
         //colission mob personnage
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPPRINCIPAL,EntityType.MOBPASSIVE) {
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.MUR) {
             @Override
-            protected void onCollisionBegin(Entity playerMapPrincipal, Entity mobPassive) {
+            protected void onCollisionBegin(Entity playerMapDongeon, Entity mur) {
                 //changer de bodytype
-                mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.STATIC);
-                //mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.KINEMATIC);
+                isAuSol = true;
             }
             @Override
-            protected void onCollisionEnd(Entity playerMapPrincipal, Entity mobPassive) {
-
-                mobPassive.getComponent(PhysicsComponent.class).setBodyType(BodyType.DYNAMIC);
+            protected void onCollisionEnd(Entity playerMapDongeon, Entity mur) {
+                isAuSol = false;
             }
         });
 
@@ -410,6 +426,16 @@ public class MainGameApp extends GameApplication {
                     getPhysicsWorld().setGravity(0,0);
                     setPlayerMapPrincipal(playerMapPrincipal);
 
+
+                    mobPassive = spawn("mobPassive");
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            Point2D positionMob = new Point2D(2300.0,2365.0);
+                            mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
+                        }
+                    };
+                    mobPassive.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
                 }
 
             }
@@ -672,7 +698,8 @@ public class MainGameApp extends GameApplication {
                     };
                     playerMapPrincipal.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
 
-                }else {
+                }
+                else {
                     //dire que nous somme sortie
                     entrer = true;
 
@@ -692,7 +719,15 @@ public class MainGameApp extends GameApplication {
                     };
                     playerMapPrincipal.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable);
 
-
+                    mobPassive = spawn("mobPassive");
+                    Runnable runnable1 = new Runnable() {
+                        @Override
+                        public void run() {
+                            Point2D positionMob = new Point2D(2300.0,2365.0);
+                            mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
+                        }
+                    };
+                    mobPassive.getComponent(PhysicsComponent.class).setOnPhysicsInitialized(runnable1);
                 }
 
             }
