@@ -178,17 +178,6 @@ public class GameEntityFactory implements EntityFactory {
 
     }
 
-    @Spawns("glitch")
-    public Entity glitch(SpawnData data) {
-        return FXGL.entityBuilder(data)
-                .type(MainGameApp.EntityType.GLITCH)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-                .with(new CollidableComponent(true))
-                .build();
-
-    }
-
-
     @Spawns("ascenceur")
     public Entity ascenceur(SpawnData data) {
 
@@ -382,16 +371,7 @@ public class GameEntityFactory implements EntityFactory {
         ImageView imageView = new ImageView(lance);
 
         //pour la deuxieme lance
-            getGameScene().getRoot().setOnMouseClicked(event -> {
-            //double longueurDuVecteur;
-            //double pourcentageForceMaximal;
-            //longueurDuVecteur = Math.hypot(Math.abs((1120.67 - getInput().getMouseYWorld())),Math.abs(Math.abs((511.667d - getInput().getMouseXWorld()))));
-            //double forceMaximal = 100;
-            //if (longueurDuVecteur > forceMaximal)
-                //longueurDuVecteur = forceMaximal;
-            //pourcentageForceMaximal = longueurDuVecteur/forceMaximal;
-            spawn("lanceMove");
-                });
+            getGameScene().getRoot().setOnMouseClicked(event -> {spawn("lanceMove");});
 
         return entityBuilder(data)
                 .type(MainGameApp.EntityType.LANCE)
