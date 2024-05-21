@@ -487,14 +487,13 @@ public class MainGameApp extends GameApplication {
                 //changer de carte
                 if (numberOfTarget == 0){
                     isDonjon = false;
-                    bougePas = false;
                     FXGL.setLevelFromMap("mapFinal.tmx");
                     playerMapPrincipal = spawn("playerMapPrincipal");
                     viewport.bindToEntity(playerMapPrincipal,400,100);
                     playerMapPrincipal.setPosition(3000,2500);
                     getPhysicsWorld().setGravity(0,0);
                     setPlayerMapPrincipal(playerMapPrincipal);
-
+                    bougePas = false;
 
                     mobPassive = spawn("mobPassive");
                     Runnable runnable = new Runnable() {
