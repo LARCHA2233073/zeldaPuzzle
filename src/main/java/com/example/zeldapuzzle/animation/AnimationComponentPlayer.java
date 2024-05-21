@@ -34,7 +34,7 @@ public class AnimationComponentPlayer extends Component {
         animWalkRight = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterRight.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkUp = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterUp.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
         animWalkDown = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDown.png")), 9, 64, 64, Duration.seconds(1), 0, 8);
-        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(1), 0, 5);
+        animDeath = new AnimationChannel(new Image(new FileInputStream("src/main/resources/assets/textures/characterDeath.png")), 6, 64, 64, Duration.seconds(0.95), 0, 5);
         texture = new AnimatedTexture(animIdle);
     }
 

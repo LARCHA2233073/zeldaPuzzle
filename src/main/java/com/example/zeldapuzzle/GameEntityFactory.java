@@ -463,7 +463,10 @@ public class GameEntityFactory implements EntityFactory {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                physics.applyBodyForce(new Vec2((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal*5,(511.667d -getInput().getMouseYWorld() )*pourcentageForceMaximal*5),new Vec2((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal*5,(511.667d -getInput().getMouseYWorld() )*pourcentageForceMaximal*5));
+                physics.applyBodyForce(new Vec2((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal*5,
+                        (511.667d -getInput().getMouseYWorld() )*pourcentageForceMaximal*5),
+                        new Vec2((getInput().getMouseXWorld() - 1120.67 )*pourcentageForceMaximal*5,
+                        (511.667d -getInput().getMouseYWorld() )*pourcentageForceMaximal*5));
             }
         };
         physics.setBodyType(BodyType.DYNAMIC);

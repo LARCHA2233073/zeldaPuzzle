@@ -18,6 +18,7 @@ import com.almasb.fxgl.time.TimerAction;
 import com.example.zeldapuzzle.Inventaire.*;
 import com.example.zeldapuzzle.animation.AnimationComponentMobPassive;
 import com.example.zeldapuzzle.animation.AnimationComponentPlayer;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -325,7 +326,7 @@ public class MainGameApp extends GameApplication {
 
         //position mobPassive
         mobPassive = spawn("mobPassive");
-        Point2D positionMob = new Point2D(2300.0,2365.0);
+        Point2D positionMob = new Point2D(2800.0,2365.0);
         mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
 
         viewport = getGameScene().getViewport();
@@ -358,22 +359,23 @@ public class MainGameApp extends GameApplication {
          timerActionFeu = getGameScene().getTimer().runAtInterval(() -> {
             barreDeVie.setProgress(barreDeVie.getProgress() - 0.1);
             vieDuPersonnage -= 10;
-            if (vieDuPersonnage == 0) {
+            if (barreDeVie.getProgress() < 0) {
                 playerMapPrincipal.getComponent(AnimationComponentPlayer.class).startDeath();
+                barreDeVie.setProgress(0);
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         playerMapPrincipal.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(2088.0,2365.0));
                         playerMapPrincipal.getComponent(AnimationComponentPlayer.class).setDead(false);
-                        barreDeVie = new ProgressBar();
-                        barreDeVie.setStyle("-fx-accent: red;");
-                        barreDeVie.setPrefWidth(225);
-                        barreDeVie.setPrefHeight(21);
-                        barreDeVie.setProgress(1);
-                        vieDuPersonnage = 1;
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                //Update UI here
+                                barreDeVie.setProgress(1);
+                            }
+                        });
                     }
                 };
-                executor.schedule(runnable,1, TimeUnit.SECONDS);
+                executor.schedule(runnable, 950, TimeUnit.MILLISECONDS);
             }
         }, Duration.seconds(1));
          timerActionFeu.pause();
@@ -421,7 +423,7 @@ public class MainGameApp extends GameApplication {
                 double forceMaximal = 100;
 
                 //Commencement
-                player.getComponent(PhysicsComponent.class).setBodyType(BodyType.STATIC);
+
                 //Pendant
 
                 //Pour que la lance suive la souris
@@ -487,7 +489,7 @@ public class MainGameApp extends GameApplication {
                 //changer de carte
                 if (numberOfTarget == 0){
                     isDonjon = false;
-                    bougePas = false;
+                    numberOfTarget = 3;
                     FXGL.setLevelFromMap("mapFinal.tmx");
                     playerMapPrincipal = spawn("playerMapPrincipal");
                     viewport.bindToEntity(playerMapPrincipal,400,100);
@@ -495,12 +497,19 @@ public class MainGameApp extends GameApplication {
                     getPhysicsWorld().setGravity(0,0);
                     setPlayerMapPrincipal(playerMapPrincipal);
 
-
+                    Runnable runnable1 = new Runnable() {
+                        @Override
+                        public void run() {
+                            bougePas = false;
+                        }
+                    };
+                    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                    executor.schedule(runnable1, 1, TimeUnit.SECONDS);
                     mobPassive = spawn("mobPassive");
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
-                            Point2D positionMob = new Point2D(2300.0,2365.0);
+                            Point2D positionMob = new Point2D(2800.0,2365.0);
                             mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
                         }
                     };
@@ -536,6 +545,7 @@ public class MainGameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYERMAPDONGEON,EntityType.DESCENDRE) {
             @Override
             protected void onCollisionBegin(Entity playerDongeon, Entity descendre) {
+                bougePas = false;
                 if (positionAscenceur.equals("haut") || Objects.equals(positionAscenceur, "enMouvement")) {
                     ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.STATIC);
                     ascenceur.getComponent(PhysicsComponent.class).getBody().setType(BodyType.KINEMATIC);
@@ -547,7 +557,6 @@ public class MainGameApp extends GameApplication {
             @Override
             protected void onCollisionEnd(Entity playerDongeon, Entity ascenceur) {
                 bougePas = true;
-
             }
 
         });
@@ -678,7 +687,7 @@ public class MainGameApp extends GameApplication {
                     Runnable runnable1 = new Runnable() {
                         @Override
                         public void run() {
-                            Point2D positionMob = new Point2D(2300.0,2365.0);
+                            Point2D positionMob = new Point2D(2800.0,2365.0);
                             mobPassive.getComponent(PhysicsComponent.class).overwritePosition(positionMob);
                         }
                     };
@@ -875,7 +884,6 @@ private void setLevel(Level level){
         entity.removeFromWorld();
 
     }
-
     public static GameScene getGameScene(){
         return FXGL.getGameScene();
     }
